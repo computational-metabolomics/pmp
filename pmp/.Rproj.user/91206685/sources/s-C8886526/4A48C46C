@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1513777805260.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1137076176",
+    "id" : "4A48C46C",
+    "lastKnownWriteTime" : 1513785101,
+    "last_content_update" : 1513785101656,
+    "path" : "//its-rds/2015/viantm-01/users/jankevia/Github/pmp/pmp/R/normalisation.R",
+    "project_path" : "R/normalisation.R",
+    "properties" : {
+        "cursorPosition" : "2,33",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
