@@ -25,3 +25,10 @@ LazyData: true
 
 RoxygenNote: 6.0.1
 
+## Installation instructions
+
+Instal R devtools package
+
+Obtain Github authorisation token fro private repositories: https://github.com/settings/tokens
+
+Use this command from R: devtools::install_github("computational-metabolomics/pmp/pmp", auth_token = "YOUR_GITHUB_TOKEN")
