@@ -8,7 +8,7 @@
 #' @param remove If features abobe threshold shoule be removed or not
 #' @export
 
-filter_peaks_by_blank = function(df, fold_change, classes, blank_label, qc_label=NULL, remove=FALSE){
+filter_peaks_by_blank = function(df, fold_change, classes, blank_label, qc_label=NULL, remove=NULL){
 
   M_blanks = df[classes == blank_label,]
   if (!is.null(qc_label)){

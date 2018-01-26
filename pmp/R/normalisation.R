@@ -23,8 +23,8 @@ pqn_normalisation = function(df, classes, qc_label){
   coef = vector()
 
   for (i in 1:dim(df)[1]){
-
-    tempMat = rbind(ref_mean, df[i, ])
+    # By default R converts matrix with 1 row to vector, this will keep it as the matrix, so futher calculations don't fail
+    tempMat = rbind(rbind(ref_mean, df[i, ]),NULL)
     vecelim = which(apply(tempMat, 2, function(x) any(is.na(x))))
 
     if (length(vecelim)!=0){
