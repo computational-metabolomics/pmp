@@ -12,7 +12,7 @@ theme_Publication <- function(base_size=14){ #, base_family="helvetica") {
           axis.title = element_text(face = "bold",size = rel(1)),
           axis.title.y = element_text(angle=90,vjust =2),
           axis.title.x = element_text(vjust = -0.2),
-          axis.text = element_text(), 
+          axis.text = element_text(),
           axis.line = element_line(colour="black"),
           axis.ticks = element_line(),
           panel.grid.major = element_line(colour="#f0f0f0"),
@@ -27,17 +27,64 @@ theme_Publication <- function(base_size=14){ #, base_family="helvetica") {
           strip.background=element_rect(colour="#f0f0f0",fill="#f0f0f0"),
           strip.text = element_text(face="bold")
   ))
-  
+
 }
 
 scale_fill_Publication <- function(...){
   library(scales)
-  discrete_scale("fill","Publication",manual_pal(values = c("#386cb0","#fdb462","#7fc97f","#ef3b2c","#662506","#a6cee3","#fb9a99","#984ea3","#ffff33")), ...)
+  discrete_scale("fill","Publication",manual_pal(values = c("#386cb0","#ef3b2c","#7fc97f","#fdb462","#984ea3","#a6cee3","#778899","#fb9a99","#ffff33")), ...)
 }
 
 scale_colour_Publication <- function(...){
   library(scales)
-  discrete_scale("colour","Publication",manual_pal(values = c("#386cb0","#fdb462","#7fc97f","#ef3b2c","#662506","#a6cee3","#fb9a99","#984ea3","#ffff33")), ...)
-  
+  discrete_scale("colour","Publication",manual_pal(values = c("#386cb0","#ef3b2c","#7fc97f","#fdb462","#984ea3","#a6cee3","#778899","#fb9a99","#ffff33")), ...)
+
 }
 
+set_scale<-function(y=NULL,name='PCA',...){
+
+  library(scales)
+  pal=c("#386cb0","#ef3b2c","#7fc97f","#fdb462","#984ea3","#a6cee3","#778899","#fb9a99","#ffff33") #  default palette
+  if (name=='PCA') {
+    w=which(levels(y)=='QC') # NB returns length 0 if y is not a factor, so default colour palette
+    if (length(w)!=0)
+    {
+      # there are QCs so add black
+      pal=c('#000000',pal)
+    }
+  }
+  discrete_scale(c("colour","fill"),"Publication",manual_pal(values = pal), drop=FALSE, name=NULL,...) # sets both fill and colour aesthetics to chosen palette.
+}
+
+createClassAndColors <- function (class, QC_label="QC", Blank_label="Blank", QC_color="#000000",
+      Blank_color="#A65628",
+      manual_color=c("#386cb0","#ef3b2c","#7fc97f","#fdb462","#984ea3","#a6cee3","#778899","#fb9a99","#ffff33")
+)
+{
+  reorderNames <- sort(as.character(unique(class)))
+
+  hit1 <- which(reorderNames==QC_label)
+  if (length(hit1)==0) hit1 <- NULL
+
+  hit2 <- which(reorderNames==Blank_label)
+  if (length(hit2)==0) hit2 <- NULL
+
+  if (!is.null(c(hit1,hit2)))
+  {
+    remo <- c(1:length(reorderNames))[-c(hit1,hit2)]
+  } else
+  {
+    remo <- c(1:length(reorderNames))
+  }
+
+  reorderNames <- reorderNames[c(hit1, hit2,remo)]
+
+  class <- factor (class, levels=reorderNames, ordered=T)
+
+  extraColors <- NULL
+  if(!is.null(hit1)) extraColors[1] <- QC_color
+  if(!is.null(hit2)) extraColors[2] <- Blank_color
+
+  out <- list(class=class,manual_colors=c(extraColors,manual_color))
+  out
+}

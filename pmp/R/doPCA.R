@@ -1,4 +1,5 @@
-doPCA <- function (Data, classes, plotTitle="PCA",PQN, mv_impute, glogScaling, scale=F, labels="QC", qc_label, qc_shape=17, base_size = 12, pccomp=c(1,2), subtitle=NULL)
+doPCA <- function (Data, classes, plotTitle="PCA",PQN, mv_impute, glogScaling, scale=F, labels="QC", qc_label, qc_shape=17, base_size = 12, pccomp=c(1,2), subtitle=NULL,
+                   loadings=F, loadingsCol=NULL)
 {
   require (ggplot2)
   require (reshape2)
@@ -30,7 +31,10 @@ doPCA <- function (Data, classes, plotTitle="PCA",PQN, mv_impute, glogScaling, s
       slabels <- rep(NA,length(slabels))
   }
 
-  A <- data.frame (class=as.factor(classes),x=PCA$x[,pccomp[1]], y=PCA$x[,pccomp[2]], labels=slabels, shapes=shapes)
+  plotClass <- createClassAndColors(class=classes)
+
+
+  A <- data.frame (class=plotClass$class, x=PCA$x[,pccomp[1]], y=PCA$x[,pccomp[2]], labels=slabels, shapes=shapes)
   labx <- paste("PC",pccomp[1]," ",varPCA[pccomp[1]],"%", sep="")
   laby <- paste("PC",pccomp[2]," ",varPCA[pccomp[2]],"%", sep="")
 
@@ -42,12 +46,25 @@ doPCA <- function (Data, classes, plotTitle="PCA",PQN, mv_impute, glogScaling, s
       ggtitle(plotTitle, subtitle=subtitle)+
       geom_text(na.rm=T)+
       stat_ellipse()+
-      scale_colour_Publication()+ theme_Publication(base_size = base_size)
+     scale_colour_manual(values=plotClass$manual_colors)+ theme_Publication(base_size = base_size)
 
       # Looks like a bug in ggplot, label always appear in bold and weirdly scaled. Doesn't respond to fontface and family parameters
       #geom_text (x=Inf, y=-Inf, label=annotateText, hjust=1, vjust=-0.5, colour="black", size=3, fontface="plain", family="Times", lineheight=0.8)
       #annotate ("text", x=Inf, y=-Inf, label=annotateText, size=3, colour="black")
 
+
+   if (loadings==T)
+   {
+     if (is.null(loadingsCol)) loadingsCol <- rep(1,nrow(Data))
+     B <- data.frame (x=PCA$rotation[,pccomp[1]], y=PCA$rotation[,pccomp[2]], labels=rownames(Data), loadingsCol=loadingsCol)
+
+     out2 <- ggplot (data=B, aes(x=x, y=y, color=1, label=labels, shape=3))+
+       scale_shape_identity()+
+       xlab ("Loadings, PC1") + ylab ("Loadings, PC2")+
+       geom_text(na.rm=T, hjust=0, color=loadingsCol)+
+       theme_Publication(base_size = base_size)+ theme(legend.position="none")
+     out <- list(out,out2)
+   }
    out
 }
 

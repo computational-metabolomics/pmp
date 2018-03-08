@@ -1,4 +1,4 @@
-prepareData <- function (Data, classes, blank="BLANK", PQN=F, mv_impute=T, glogScaling=T, qc_label="QC", ignorelabel="Removed")
+prepareData <- function (Data, classes, blank="BLANK", PQN=F, mv_impute=T, glogScaling=T, qc_label="QC", ignorelabel="Removed", checkNA=T)
 {
     shits <- NULL
     if (!is.null(blank))
@@ -16,18 +16,26 @@ prepareData <- function (Data, classes, blank="BLANK", PQN=F, mv_impute=T, glogS
       classes <- classes[-c(shits)]
     }
 
-    # Remove rows with all NA's in QC sample or in analytical sample, this can happen if we process data from more than one batch.
-    AllNa <- function (x) all(is.na(x))
-
-    hits2 <- which(apply(Data[,classes==qc_label],1,AllNa)==T)
-    hits2 <- append(hits2, which(apply(Data[,-c(which(classes==qc_label))],1,AllNa)==T))
-    hits2 <- unique(hits2)
-
-    if (length(hits2)>0)
+    # Remove rows (features) with all NA's in QC sample or in analytical sample, this can happen if we process data from more than one batch.
+    if (checkNA==T)
     {
-      Data <- Data[-c(hits2),]
-    }
+      AllNa <- function (x) all(is.na(x))
 
+      if (is.null(qc_label))
+      {
+        hits2 <- which(apply(Data,1,AllNa)==T)
+      } else
+      {
+        hits2 <- which(apply(Data[,classes==qc_label],1,AllNa)==T)
+        hits2 <- append(hits2, which(apply(Data[,-c(which(classes==qc_label))],1,AllNa)==T))
+        hits2 <- unique(hits2)
+      }
+
+      if (length(hits2)>0)
+      {
+        Data <- Data[-c(hits2),]
+      }
+    }
     RSD <- doRSD (Data=Data, classes = classes)
 
     #pqn normalisation

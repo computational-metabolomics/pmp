@@ -61,6 +61,10 @@ doSummaryPlot <- function (Data, classes, plotTitle="PCA", blank="BLANK", PQN=F,
       subt <- paste("QC RSD%:", paste(paste (names(QC_RSD_sum),round(QC_RSD_sum,1), sep=" "),collapse=", "))
       subt2 <- paste0 (" QC RSD is <30% in ", round(length(which(QC_RSD<=30))/length(QC_RSD)*100,0),"% (", length(which(QC_RSD<=30)),"/",length(QC_RSD),") of features")
 
+    } else
+    {
+      subt <- NULL
+      subt2 <- NULL
     }
 
     ## PCA
