@@ -53,7 +53,7 @@ pqn_normalisation = function(df, classes, qc_label){
     vecelim = which(apply(tempMat, 1, function(x) any(is.na(x))))
 
     if (length(vecelim)!=0){
-      tempMat = tempMat[-vecelim,]
+      tempMat = tempMat[-c(vecelim),]
     }
 
     coef[i] = median(as.numeric(tempMat[, 2] / tempMat[, 1]), na.rm=TRUE)

@@ -10,7 +10,7 @@
 
 filter_peaks_by_blank = function(df, fold_change, classes, blank_label, qc_label=NULL, remove=NULL){
 
-  M_blanks = df[classes == blank_label,]
+  M_blanks = rbind(df[classes == blank_label,],NULL)
   if (!is.null(qc_label)){
     M_non_blanks = df[classes == qc_label, 1:length(df[1,]), drop=FALSE]
   } else {
