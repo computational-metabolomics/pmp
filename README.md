@@ -27,8 +27,16 @@ RoxygenNote: 6.0.1
 
 ## Installation instructions
 
-Instal R devtools package
+Instal Bioconductor dependencies and devtools package:
+
+`source("https://bioconductor.org/biocLite.R")`
+`biocLite("impute")`
+`biocLite("pcaMethods")`
+
+`install.packages ("devtools")`
 
 Obtain Github authorisation token fro private repositories: https://github.com/settings/tokens
 
-Use this command from R: devtools::install_github("computational-metabolomics/pmp/pmp", auth_token = "YOUR_GITHUB_TOKEN")
+Use this command from R:
+
+`devtools::install_github("computational-metabolomics/pmp/pmp", auth_token = "YOUR_GITHUB_TOKEN")`
