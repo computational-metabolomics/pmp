@@ -1,3 +1,23 @@
+#' Perform PCA analysis ot single data set of list of data sets
+#'
+#' @param Data Data frame.
+#' @param classes Vector of class labels.
+#' @param plotTitle Character value to display as the plot title
+#' @param PQN Can be set to T or F, to perform PQN normalisation
+#' @param mv_impute T or F, indicates if missing value imputation has to be carried
+#' @param glogScaling T or F, applie glog transformation to the given data
+#' @param scale Perform UV scaling on data
+#' @param labels Can be set to "QC" to label only QC samples. "none" to no include labels. If set to any other value will use column names of Data.
+#' @param qc_label Label used for QC samples. If set to NULL, assumes that no QC samples are present in data set
+#' @param qc_shape Shape symbol to use for QC samples
+#' @param base_size Font size for plot fonts
+#' @param pccomp PCA components to plot
+#' @param subtitle Subtitle to include in PCA plot
+#' @param loadings T or F, to include PCA loadings plot or not
+#' @param loadingsCol Colors to use for loadings plot
+#' @return Ggplot object with plot(s)
+#' @export
+
 doPCA <- function (Data, classes, plotTitle="PCA",PQN, mv_impute, glogScaling, scale=F, labels="QC", qc_label, qc_shape=17, base_size = 12, pccomp=c(1,2), subtitle=NULL,
                    loadings=F, loadingsCol=NULL)
 {
@@ -5,9 +25,6 @@ doPCA <- function (Data, classes, plotTitle="PCA",PQN, mv_impute, glogScaling, s
   require (reshape2)
   require (gridExtra)
   require (ggthemes)
-  # ggplot publication theme.
-  source ("//its-rds/2015/viantm-01/users/jankevia/Github/pmp/pmp/R/ggplot_theme_pub.R")
-  source ("//its-rds/2015/viantm-01/users/jankevia/Github/pmp/pmp/R/multiplot.R")
 
   ## PCA
   PCA <- prcomp(t(Data), center=T, scale=scale)

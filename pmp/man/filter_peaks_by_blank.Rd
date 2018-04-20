@@ -5,7 +5,7 @@
 \title{Blank filter}
 \usage{
 filter_peaks_by_blank(df, fold_change, classes, blank_label, qc_label = NULL,
-  remove = FALSE)
+  remove = NULL)
 }
 \arguments{
 \item{df}{Input data frame.}

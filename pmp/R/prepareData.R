@@ -1,3 +1,18 @@
+#' Wrapper function to transform data for statistical analysis
+#'
+#' @param Data Data frame.
+#' @param classes Vector of class labels.
+#' @param blank Label used for blank samples, if set to NULL no samples will be removed
+#' @param PQN Can be set to T or F, to perform PQN normalisation
+#' @param mv_impute T or F, indicates if missing value imputation has to be carried
+#' @param glogScaling T or F, applie glog transformation to the given data
+#' @param qc_label Label used for QC samples. If set to NULL, assumes that no QC samples are present in data set
+#' @param ignorelabel Label for samples which should be excluded from processed data
+#' @param checkNA removes rows, columns containing all NA's
+#' @return List of processed data table and RSD% per sample class
+#' @export
+
+
 prepareData <- function (Data, classes, blank="BLANK", PQN=F, mv_impute=T, glogScaling=T, qc_label="QC", ignorelabel="Removed", checkNA=T)
 {
     shits <- NULL
@@ -41,14 +56,12 @@ prepareData <- function (Data, classes, blank="BLANK", PQN=F, mv_impute=T, glogS
     #pqn normalisation
     if (PQN==T)
     {
-      source ("//its-rds/2015/viantm-01/users/jankevia/Github/pmp/pmp/R/normalisation.R")
       Data <- pqn_normalisation(df=Data, classes=classes, qc_label = qc_label)[[1]]
     }
 
     if (mv_impute==T)
     {
       #impute missing values
-      source ("//its-rds/2015/viantm-01/users/jankevia/Github/pmp/pmp/R/mv_imputation.R")
       vals <- mv_imputation(t(Data), 'knn', k=5, rowmax=1, colmax=1)
       Data <- t(vals)
     }
@@ -56,7 +69,6 @@ prepareData <- function (Data, classes, blank="BLANK", PQN=F, mv_impute=T, glogS
     #glog scaling
     if (glogScaling==T)
     {
-      source("//its-rds/2015/viantm-01/users/jankevia/Github/pmp/pmp/R/glog_transformation.R")
       Data <- glog_transformation(df=t(Data), classes=classes, qc_label=qc_label)
       Data <- t(Data)
     }

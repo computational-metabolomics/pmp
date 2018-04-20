@@ -1,3 +1,12 @@
+#' Plot violin plots from the doRSD fucntion output
+#'
+#' @param RSD OUtput of doRSD function
+#' @param plotTitle Main tilte for the plot
+#' @param base_size Font size for plot fonts
+#' @param subtitle Subtitle to include in PCA plot
+#' @return Ggplot object with plot(s)
+#' @export
+
 doRSDplot <- function (RSD, plotTitle=NULL, base_size = 12, subtitle=NULL)
 {
   RSDs <- unlist(RSD)

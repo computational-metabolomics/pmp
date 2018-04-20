@@ -5,12 +5,6 @@ doSummaryPlot <- function (Data, classes, plotTitle="PCA", blank="BLANK", PQN=F,
   require (gridExtra)
   require (ggthemes)
   # ggplot publication theme.
-  source ("//its-rds/2015/viantm-01/users/jankevia/Github/pmp/pmp/R/ggplot_theme_pub.R")
-  source ("//its-rds/2015/viantm-01/users/jankevia/Github/pmp/pmp/R/multiplot.R")
-  source ("//its-rds/2015/viantm-01/users/jankevia/Github/pmp/pmp/R/prepareData.R")
-  source ("//its-rds/2015/viantm-01/users/jankevia/Github/pmp/pmp/R/doRSD.R")
-  source ("//its-rds/2015/viantm-01/users/jankevia/Github/pmp/pmp/R/doRSDplot.R")
-  source ("//its-rds/2015/viantm-01/users/jankevia/Github/pmp/pmp/R/doPCA.R")
 
   Nbatches <- NULL
 

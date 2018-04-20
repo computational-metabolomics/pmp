@@ -15,7 +15,7 @@ mv_imputation(df, method, k = 10, rowmax = 0.5, colmax = 0.5)
 
 \item{rowmax}{Fraction of missing values per row.}
 
-\item{colmas}{Fraction of missing values per column.}
+\item{colmax}{Fraction of missing values per column.}
 }
 \description{
 Missing value imputation using different algorithms

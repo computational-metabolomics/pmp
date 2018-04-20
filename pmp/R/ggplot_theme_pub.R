@@ -85,6 +85,8 @@ createClassAndColors <- function (class, QC_label="QC", Blank_label="Blank", QC_
   if(!is.null(hit1)) extraColors[1] <- QC_color
   if(!is.null(hit2)) extraColors[2] <- Blank_color
 
+  if (!is.null(extraColors)) extraColors <- extraColors[!is.na(extraColors)]
+
   out <- list(class=class,manual_colors=c(extraColors,manual_color))
   out
 }
