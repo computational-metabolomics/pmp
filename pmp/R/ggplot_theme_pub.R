@@ -1,7 +1,14 @@
+#' @import ggplot2
+#' @import scales
+#' @import ggthemes
+NULL
+
+#' Ggplog theme, source ...
+#'
+#' @param base_size Ggplot font size
+#' @export
 
 theme_Publication <- function(base_size=14){ #, base_family="helvetica") {
-  library(grid)
-  library(ggthemes)
   (theme_foundation(base_size=base_size) #, base_family=base_family)
   + theme(plot.title = element_text(face = "bold",
                                     size = rel(1.2), hjust = 0.5),
@@ -30,20 +37,38 @@ theme_Publication <- function(base_size=14){ #, base_family="helvetica") {
 
 }
 
+#' Ggplot fill colors
+#'
+#' @param ... No parameters to specify
+#' @export
+
 scale_fill_Publication <- function(...){
-  library(scales)
+  #library(scales)
   discrete_scale("fill","Publication",manual_pal(values = c("#386cb0","#ef3b2c","#7fc97f","#fdb462","#984ea3","#a6cee3","#778899","#fb9a99","#ffff33")), ...)
 }
 
+
+#' Ggplot colors
+#'
+#'@param ... No parameters to specify
+#' @export
+
 scale_colour_Publication <- function(...){
-  library(scales)
+  #library(scales)
   discrete_scale("colour","Publication",manual_pal(values = c("#386cb0","#ef3b2c","#7fc97f","#fdb462","#984ea3","#a6cee3","#778899","#fb9a99","#ffff33")), ...)
 
 }
 
+#' Ggplot color scales function
+#'
+#'@param y vector or classes
+#'@param name type of plotted object
+#'@param ... Other parameters
+#' @export
+
 set_scale<-function(y=NULL,name='PCA',...){
 
-  library(scales)
+  #library(scales)
   pal=c("#386cb0","#ef3b2c","#7fc97f","#fdb462","#984ea3","#a6cee3","#778899","#fb9a99","#ffff33") #  default palette
   if (name=='PCA') {
     w=which(levels(y)=='QC') # NB returns length 0 if y is not a factor, so default colour palette
@@ -55,6 +80,18 @@ set_scale<-function(y=NULL,name='PCA',...){
   }
   discrete_scale(c("colour","fill"),"Publication",manual_pal(values = pal), drop=FALSE, name=NULL,...) # sets both fill and colour aesthetics to chosen palette.
 }
+
+
+#' Function to create sorted class labels and colors for reproducable Ggplot objects
+#'
+#' @param class Vector of class labels.
+#' @param Blank_label Label used for blank samples, if set to NULL no samples will be removed
+#' @param QC_label Label used for QC samples. If set to NULL, assumes that no QC samples are present in data set
+#' @param QC_color Color to use for QC samples
+#' @param Blank_color Color to use for blank samples
+#' @param manual_color Colors to usef for samples classes
+#' @return List of processed data table and RSD% per sample class
+#' @export
 
 createClassAndColors <- function (class, QC_label="QC", Blank_label="Blank", QC_color="#000000",
       Blank_color="#A65628",

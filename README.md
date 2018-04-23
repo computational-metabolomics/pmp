@@ -27,7 +27,7 @@ RoxygenNote: 6.0.1
 
 ## Installation instructions
 
-Instal Bioconductor dependencies and devtools package:
+Install Bioconductor dependencies and devtools package:
 
 `source("https://bioconductor.org/biocLite.R")`
 `biocLite("impute")`

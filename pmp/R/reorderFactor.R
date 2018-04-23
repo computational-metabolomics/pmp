@@ -1,3 +1,12 @@
+#' Function to create sorted class labels from claaa names
+#'
+#' @param labels Vector of class labels.
+#' @param Blank_label Label used for blank samples, if set to NULL no samples will be removed
+#' @param QC_label Label used for QC samples. If set to NULL, assumes that no QC samples are present in data set
+#' @return Vector of reordered class labels
+#' @export
+
+
 reorderFactorLevels <- function (labels, QC_label="QC", Blank_label="Blank")
 {
 

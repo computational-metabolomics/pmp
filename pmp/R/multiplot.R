@@ -1,3 +1,16 @@
+#' @import grid
+NULL
+
+#' Plot multiple ggplot objects
+#'
+#' @param ... ggplot objects
+#' @param plotlist List of ggplot objects
+#' @param file name of output pdf files
+#' @param cols number of columns
+#' @param layout layout matrix
+#' @export
+
+
 # Multiple plot function
 #
 # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
@@ -10,7 +23,6 @@
 #
 
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  library(grid)
 
   # Make a list from the ... arguments and plotlist
   plots <- c(list(...), plotlist)

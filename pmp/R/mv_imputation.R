@@ -1,6 +1,6 @@
-#' @import impute
-#' @import missForest
-#' @import pcaMethods
+#' @importFrom  impute impute.knn
+#' @importFrom missForest missForest
+#' @importFrom pcaMethods pca
 NULL
 
 #' Missing value imputation using different algorithms
@@ -23,16 +23,16 @@ mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5){
   }
 
   if (tolower(method) == "knn"){
-    suppressWarnings( suppressPackageStartupMessages( stopifnot( library("impute", quietly=TRUE, logical.return=TRUE, character.only=TRUE))))
+    #suppressWarnings( suppressPackageStartupMessages( stopifnot( library("impute", quietly=TRUE, logical.return=TRUE, character.only=TRUE))))
     obj = suppressWarnings(impute.knn(as.matrix(t(df)), k=k, rowmax=rowmax, colmax=colmax))
     df = as.data.frame(t(obj$data))
   } else if (tolower(method) == "rf"){
-    suppressWarnings( suppressPackageStartupMessages( stopifnot( library("missForest", quietly=TRUE, logical.return=TRUE, character.only=TRUE))))
+    #suppressWarnings( suppressPackageStartupMessages( stopifnot( library("missForest", quietly=TRUE, logical.return=TRUE, character.only=TRUE))))
     mf_out = missForest(df)
     print(mf_out$OOBerror)
     df = mf_out$ximp
   } else if (tolower(method) == "bpca"){
-    suppressWarnings( suppressPackageStartupMessages( stopifnot( library("pcaMethods", quietly=TRUE, logical.return=TRUE, character.only=TRUE))))
+    #suppressWarnings( suppressPackageStartupMessages( stopifnot( library("pcaMethods", quietly=TRUE, logical.return=TRUE, character.only=TRUE))))
     pcaOb = pcaMethods::pca(df, method ="bpca", scale="none")
     df = pcaOb@completeObs
     df[df<0] = min(df [df>0]) ##GUARD AGAINST NEGATIVE VALUES

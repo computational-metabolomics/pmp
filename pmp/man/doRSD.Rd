@@ -2,18 +2,18 @@
 % Please edit documentation in R/doRSD.R
 \name{doRSD}
 \alias{doRSD}
-\title{Calculate RSD% values per sample group}
+\title{Calculate RSD\% values per sample group}
 \usage{
 doRSD(Data, classes)
 }
 \arguments{
-\item{Data}{Data frame.}
+\item{Data}{Data frame}
 
-\item{classes}{Vector of class labels.}
+\item{classes}{Vector of class labels}
 }
 \value{
-List of RSD% values for each variable for each sample group
+List of RSD\% values for each variable for each sample group
 }
 \description{
-Calculate RSD% values per sample group
+Calculate RSD\% values per sample group
 }

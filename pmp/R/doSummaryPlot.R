@@ -1,11 +1,30 @@
+#' @importFrom grDevices pdf dev.off
+NULL
+
+#' Wrapper function to generate PCA plot and RSD statistics plot
+#'
+#' @param Data Data frame.
+#' @param classes Vector of class labels.
+#' @param blank Label used for blank samples, if set to NULL no samples will be removed
+#' @param PQN Can be set to T or F, to perform PQN normalisation
+#' @param mv_impute T or F, indicates if missing value imputation has to be carried
+#' @param glogScaling T or F, applie glog transformation to the given data
+#' @param scale Perform UV scaling on data
+#' @param qc_label Label used for QC samples. If set to NULL, assumes that no QC samples are present in data set
+#' @param ignorelabel Label for samples which should be excluded from processed data
+#' @param output File name for pdf output
+#' @param labels Can be set to "QC" to label only QC samples. "none" to no include labels. If set to any other value will use column names of Data.
+#' @param qc_shape Shape symbol to use for QC samples
+#' @param base_size Ggplot font size
+#' @param pccomp PCA components to plot
+#' @param plot If set to T will output pdf file, otherwise ggplot object
+#' @param plotTitle Title to use for plot output
+#' @return Summary plot as ggplot object or directly to the pdf file.
+#' @export
+
+
 doSummaryPlot <- function (Data, classes, plotTitle="PCA", blank="BLANK", PQN=F, mv_impute=T, glogScaling=T, scale=T, qc_label="QC", ignorelabel="Removed", output="PCA_plot.pdf", labels="QC", qc_shape=17, base_size = 12, pccomp=c(1,2), plot=T)
 {
-  require (ggplot2)
-  require (reshape2)
-  require (gridExtra)
-  require (ggthemes)
-  # ggplot publication theme.
-
   Nbatches <- NULL
 
   if (!is.data.frame(Data) & is.list(Data))

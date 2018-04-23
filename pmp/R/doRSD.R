@@ -1,8 +1,8 @@
-#' Calculate RSD% values per sample group
+#' Calculate RSD\% values per sample group
 #'
-#' @param Data Data frame.
-#' @param classes Vector of class labels.
-#' @return List of RSD% values for each variable for each sample group
+#' @param Data Data frame
+#' @param classes Vector of class labels
+#' @return List of RSD\% values for each variable for each sample group
 #' @export
 
 doRSD <- function(Data, classes)
