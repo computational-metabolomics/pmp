@@ -12,7 +12,7 @@ NULL
 #' @param colmax Fraction of missing values per column.
 #' @export
 
-mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5){
+mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5,maxp=1500){
 
   if(any(apply(df, 1, function(vec) all(is.na(vec))) == TRUE)) {
     stop("Error occurred. Rows with 100% missing values detected - please remove these rows using the peak filter tool")
@@ -24,7 +24,7 @@ mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5){
 
   if (tolower(method) == "knn"){
     #suppressWarnings( suppressPackageStartupMessages( stopifnot( library("impute", quietly=TRUE, logical.return=TRUE, character.only=TRUE))))
-    obj = suppressWarnings(impute.knn(as.matrix(t(df)), k=k, rowmax=rowmax, colmax=colmax))
+    obj = suppressWarnings(impute.knn(as.matrix(t(df)), k=k, rowmax=rowmax, colmax=colmax,maxp = maxp))
     df = as.data.frame(t(obj$data))
   } else if (tolower(method) == "rf"){
     #suppressWarnings( suppressPackageStartupMessages( stopifnot( library("missForest", quietly=TRUE, logical.return=TRUE, character.only=TRUE))))
