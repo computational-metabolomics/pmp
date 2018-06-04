@@ -100,6 +100,12 @@ createClassAndColors <- function (class, QC_label="QC", Blank_label="Blank", QC_
 {
   reorderNames <- sort(as.character(unique(class)))
 
+  # if too many levels then use rainbow scale with suitable number of colours
+  if (length(reorderNames)>length(manual_color))
+  {
+    manual_color=rainbow(length(reorderNames))
+  }
+  
   hit1 <- which(reorderNames==QC_label)
   if (length(hit1)==0) hit1 <- NULL
 
