@@ -98,7 +98,13 @@ createClassAndColors <- function (class, QC_label="QC", Blank_label="Blank", QC_
       manual_color=c("#386cb0","#ef3b2c","#7fc97f","#fdb462","#984ea3","#a6cee3","#778899","#fb9a99","#ffff33")
 )
 {
-  reorderNames <- sort(as.character(unique(class)))
+  if (!is.ordered(class))
+  {
+    reorderNames <- sort(as.character(unique(class)))
+  } else
+  {
+    reorderNames=levels(class)
+  }
 
   # if too many levels then use rainbow scale with suitable number of colours
   if (length(reorderNames)>length(manual_color))
