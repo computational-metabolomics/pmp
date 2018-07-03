@@ -10,9 +10,15 @@ NULL
 #' @param k Number of neighbour values to use.
 #' @param rowmax Fraction of missing values per row.
 #' @param colmax Fraction of missing values per column.
+#' @param maxp Number of features to run on single core. If set to NULL will use total number of features.
 #' @export
 
-mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5,maxp=1500){
+mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5,maxp=NULL){
+
+  if (is.null(maxp))
+  {
+    maxp <- max(dim(df))
+  }
 
   if(any(apply(df, 1, function(vec) all(is.na(vec))) == TRUE)) {
     stop("Error occurred. Rows with 100% missing values detected - please remove these rows using the peak filter tool")

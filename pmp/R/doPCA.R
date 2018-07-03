@@ -56,7 +56,7 @@ doPCA <- function (Data, classes, plotTitle="PCA",PQN, mv_impute, glogScaling, s
 
   labx <- paste0(labx," (",paste("PQN:",PQN,", glog scaling:",glogScaling, ", UV scaling:",scale,sep=""),")")
 
-   out <- ggplot2::ggplot (data=A, aes(x=pc1, y=pc2, color=class, label=labels, shape=shapes))+
+   out <- ggplot2::ggplot (data=A, aes_(x=~pc1, y=~pc2, color=~class, label=~labels, shape=~shapes))+
       geom_point(na.rm=T)+ scale_shape_identity()+
       xlab (labx) + ylab (laby)+
       ggtitle(plotTitle, subtitle=subtitle)+
@@ -74,7 +74,7 @@ doPCA <- function (Data, classes, plotTitle="PCA",PQN, mv_impute, glogScaling, s
      if (is.null(loadingsCol)) loadingsCol <- rep(1,nrow(Data))
      B <- data.frame (pc1=PCA$rotation[,pccomp[1]], pc2=PCA$rotation[,pccomp[2]], labels=rownames(Data), loadingsCol=loadingsCol)
 
-     out2 <- ggplot2::ggplot (data=B, aes(x=pc1, y=pc2, color=1, label=labels, shape=3))+
+     out2 <- ggplot2::ggplot (data=B, aes_(x=~pc1, y=~pc2, color=1, label=~labels, shape=3))+
        scale_shape_identity()+
        xlab ("Loadings, PC1") + ylab ("Loadings, PC2")+
        geom_text(na.rm=T, hjust=0, color=loadingsCol)+
