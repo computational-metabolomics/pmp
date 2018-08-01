@@ -39,4 +39,4 @@ Obtain Github authorisation token fro private repositories: https://github.com/s
 
 Use this command from R:
 
-`devtools::install_github("computational-metabolomics/pmp/pmp", auth_token = "YOUR_GITHUB_TOKEN")`
+`devtools::install_github("computational-metabolomics/pmp", auth_token = "YOUR_GITHUB_TOKEN")`
