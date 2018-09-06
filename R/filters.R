@@ -70,7 +70,7 @@ filter_peaks_by_fraction = function(df, min_frac, classes=NULL, method="QC", qc_
       subset_cl = df[idxs,]
       frac = apply(subset_cl, 2, FUN)
       fracs = rbind(fracs, round(frac,2))
-      fracs_flags = rbind(fracs_flags, as.numeric(frac > min_frac))
+      fracs_flags = rbind(fracs_flags, as.numeric(frac >= min_frac))
       rn_fracs = c(rn_fracs, paste("fraction_", cl, sep=""))
       rn_fracs_flags = c(rn_fracs_flags, paste("fraction_flag_", cl, sep=""))
     }
