@@ -5,8 +5,9 @@
 \title{Perform PCA analysis ot single data set of list of data sets}
 \usage{
 doPCA(Data, classes, plotTitle = "PCA", PQN, mv_impute, glogScaling,
-  scale = F, labels = "QC", qc_label, qc_shape = 17, base_size = 12,
-  pccomp = c(1, 2), subtitle = NULL, loadings = F, loadingsCol = NULL)
+  scale = F, labels = "QC", qc_label, qc_shape = 17,
+  base_size = 12, pccomp = c(1, 2), subtitle = NULL, loadings = F,
+  loadingsCol = NULL)
 }
 \arguments{
 \item{Data}{Data frame.}

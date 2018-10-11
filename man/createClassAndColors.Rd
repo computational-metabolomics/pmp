@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggplot_theme_pub.R
 \name{createClassAndColors}
 \alias{createClassAndColors}
-\title{Function to create sorted class labels and colors for reproducable Ggplot objects}
+\title{Function to create sorted class labels and colors for reproducable ggplot objects}
 \usage{
 createClassAndColors(class, QC_label = "QC", Blank_label = "Blank",
   QC_color = "#000000", Blank_color = "#A65628",
@@ -26,5 +26,5 @@ createClassAndColors(class, QC_label = "QC", Blank_label = "Blank",
 List of processed data table and RSD% per sample class
 }
 \description{
-Function to create sorted class labels and colors for reproducable Ggplot objects
+Function to create sorted class labels and colors for reproducable ggplot objects
 }

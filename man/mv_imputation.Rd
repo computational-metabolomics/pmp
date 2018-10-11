@@ -4,7 +4,8 @@
 \alias{mv_imputation}
 \title{Missing value imputation using different algorithms}
 \usage{
-mv_imputation(df, method, k = 10, rowmax = 0.5, colmax = 0.5)
+mv_imputation(df, method, k = 10, rowmax = 0.5, colmax = 0.5,
+  maxp = NULL)
 }
 \arguments{
 \item{df}{Data frame.}
@@ -16,6 +17,8 @@ mv_imputation(df, method, k = 10, rowmax = 0.5, colmax = 0.5)
 \item{rowmax}{Fraction of missing values per row.}
 
 \item{colmax}{Fraction of missing values per column.}
+
+\item{maxp}{Number of features to run on single core. If set to NULL will use total number of features.}
 }
 \description{
 Missing value imputation using different algorithms

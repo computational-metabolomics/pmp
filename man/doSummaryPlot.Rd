@@ -4,10 +4,11 @@
 \alias{doSummaryPlot}
 \title{Wrapper function to generate PCA plot and RSD statistics plot}
 \usage{
-doSummaryPlot(Data, classes, plotTitle = "PCA", blank = "BLANK", PQN = F,
-  mv_impute = T, glogScaling = T, scale = T, qc_label = "QC",
-  ignorelabel = "Removed", output = "PCA_plot.pdf", labels = "QC",
-  qc_shape = 17, base_size = 12, pccomp = c(1, 2), plot = T)
+doSummaryPlot(Data, classes, plotTitle = "PCA", blank = "BLANK",
+  PQN = F, mv_impute = T, glogScaling = T, scale = T,
+  qc_label = "QC", ignorelabel = "Removed", output = "PCA_plot.pdf",
+  labels = "QC", qc_shape = 17, base_size = 12, pccomp = c(1, 2),
+  plot = T)
 }
 \arguments{
 \item{Data}{Data frame.}

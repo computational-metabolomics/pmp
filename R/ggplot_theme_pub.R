@@ -1,6 +1,7 @@
 #' @import ggplot2
 #' @import scales
 #' @import ggthemes
+#' @importFrom grDevices rainbow
 NULL
 
 #' Ggplog theme, source ...
@@ -66,7 +67,7 @@ scale_colour_Publication <- function(...){
 #'@param ... Other parameters
 #' @export
 
-set_scale<-function(y=NULL,name='PCA',...){
+set_scale <- function(y=NULL,name='PCA',...){
 
   #library(scales)
   pal=c("#386cb0","#ef3b2c","#7fc97f","#fdb462","#984ea3","#a6cee3","#778899","#fb9a99","#ffff33") #  default palette
@@ -82,7 +83,7 @@ set_scale<-function(y=NULL,name='PCA',...){
 }
 
 
-#' Function to create sorted class labels and colors for reproducable Ggplot objects
+#' Function to create sorted class labels and colors for reproducable ggplot objects
 #'
 #' @param class Vector of class labels.
 #' @param Blank_label Label used for blank samples, if set to NULL no samples will be removed
@@ -109,7 +110,7 @@ createClassAndColors <- function (class, QC_label="QC", Blank_label="Blank", QC_
   # if too many levels then use rainbow scale with suitable number of colours
   if (length(reorderNames)>length(manual_color))
   {
-    manual_color=rainbow(length(reorderNames))
+    manual_color=grDevices::rainbow(length(reorderNames))
   }
   
   hit1 <- which(reorderNames==QC_label)

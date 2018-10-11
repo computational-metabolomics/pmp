@@ -2,5 +2,5 @@
 ^\.Rproj\.user$
 ^\.git$
 ^\.Rhistory
-^\LICENSE
+LICENSE
 ^\README.md
