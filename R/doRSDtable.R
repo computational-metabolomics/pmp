@@ -11,8 +11,8 @@ doRSDtable <- function (RSD, QC_label="QC", Blank_label="Blank")
 {
   tableCNames <- names(RSD)
 
-  tableCNames <- reorderFactorLevels(labels = tableCNames, QC_label = QC_label, Blank_label = Blank_label)
-
+  #tableCNames <- reorderFactorLevels(labels = tableCNames, QC_label = QC_label, Blank_label = Blank_label)
+  tableCNames <- createClassAndColors(class = tableCNames, QC_label = QC_label, Blank_label = Blank_label)$class
 
   tableData <- lapply(RSD, summary)
 
