@@ -1,4 +1,4 @@
-#' Function to create sorted class labels from claaa names
+#' Function to create sorted class labels from class names
 #'
 #' @param labels Vector of class labels.
 #' @param Blank_label Label used for blank samples, if set to NULL no samples will be removed
