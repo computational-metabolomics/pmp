@@ -1,4 +1,6 @@
-#' @importFrom grDevices pdf dev.off
+#' @importFrom gridExtra grid.arrange
+#' @importFrom ggplot2 ggsave
+#' 
 NULL
 
 #' Wrapper function to generate PCA plot and RSD statistics plot
@@ -23,7 +25,7 @@ NULL
 #' @export
 
 
-doSummaryPlot <- function (Data, classes, plotTitle="PCA", blank="BLANK", PQN=F, mv_impute=T, glogScaling=T, scale=T, qc_label="QC", ignorelabel="Removed", output="PCA_plot.pdf", labels="QC", qc_shape=17, base_size = 12, pccomp=c(1,2), plot=T)
+doSummaryPlot <- function (Data, classes, plotTitle="PCA", blank="BLANK", PQN=F, mv_impute=T, glogScaling=T, scale=T, qc_label="QC", ignorelabel="Removed", output="PCA_plot.pdf", labels="QC", qc_shape=17, base_size = 10, pccomp=c(1,2), plot=T)
 {
   Nbatches <- NULL
 
@@ -92,9 +94,12 @@ doSummaryPlot <- function (Data, classes, plotTitle="PCA", blank="BLANK", PQN=F,
 
   if (plot==T)
   {
-    pdf (output, width=14, height=7*Nbatches)
-      multiplot(plotlist=plots, layout=matrix (1:length(plots), ncol=2, byrow = T))
-    dev.off ()
+    plots <- gridExtra::grid.arrange(grobs=plots, ncol=2)
+    ggplot2::ggsave(filename = output, plot=plots, width=180, height = 90*Nbatches, units = "mm")
+    #pdf (output, width=14, height=7*Nbatches)
+    #  multiplot(plotlist=plots, layout=matrix (1:length(plots), ncol=2, byrow = T))
+    #dev.off ()
+    
   } else
   {
     return(plots)

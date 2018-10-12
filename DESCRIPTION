@@ -8,7 +8,7 @@ Description: Tools and filters for peak matrix scaling, normalisation and filter
 License: GPL-3
 biocViews: 
 Depends: R(>= 3.1.0)
-Imports: impute, pcaMethods, missForest, ggplot2, scales, ggthemes
+Imports: impute, pcaMethods, missForest, ggplot2, scales, ggthemes, gridExtra
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0

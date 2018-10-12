@@ -7,7 +7,7 @@
 doSummaryPlot(Data, classes, plotTitle = "PCA", blank = "BLANK",
   PQN = F, mv_impute = T, glogScaling = T, scale = T,
   qc_label = "QC", ignorelabel = "Removed", output = "PCA_plot.pdf",
-  labels = "QC", qc_shape = 17, base_size = 12, pccomp = c(1, 2),
+  labels = "QC", qc_shape = 17, base_size = 10, pccomp = c(1, 2),
   plot = T)
 }
 \arguments{
