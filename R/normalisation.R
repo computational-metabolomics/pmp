@@ -1,13 +1,14 @@
-#' SMU normalisation
+#' Normalise peak table to the total sum of peak intensities
 #' @param df Data frame.
-#' @return Normalised data frame.
+#' @return Normalised peak matrix.
 
-smu_normalisation = function(df){
-  return (sweep(df, 1, rowSums(df, na.rm=TRUE) / 100, FUN="/"))
+normalise_to_sum = function(df){
+  df <- check_peak_matrix_orientation(peak_data = df)
+  return (sweep(df, 2, colSums(df, na.rm=TRUE) / 100, FUN="/"))
 }
 
 
-#' PQN normalisation
+#' Normalise peak table using PQN method
 #'
 #' @param df Data frame.
 #' @param classes Vector of class labels.
