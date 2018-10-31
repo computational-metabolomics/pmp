@@ -2,7 +2,7 @@
 % Please edit documentation in R/normalisation.R
 \name{pqn_normalisation}
 \alias{pqn_normalisation}
-\title{PQN normalisation}
+\title{Normalise peak table using PQN method}
 \usage{
 pqn_normalisation(df, classes, qc_label)
 }
@@ -17,5 +17,5 @@ pqn_normalisation(df, classes, qc_label)
 List of normalised data set and correction coefficients
 }
 \description{
-PQN normalisation
+Normalise peak table using PQN method
 }

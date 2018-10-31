@@ -18,10 +18,7 @@ normalise_to_sum = function(df){
 
 pqn_normalisation = function(df, classes, qc_label){
 
-  if (length(classes)!=ncol(df)) {
-    cat("Length of sample labels doesn't match data matrix dimensions .Input data frame should be in format: features rows, samples columns.", "\n")
-    stop()
-  }
+  df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
 
   ref = df[,classes == qc_label]
 
