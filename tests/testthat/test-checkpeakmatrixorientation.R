@@ -1,19 +1,29 @@
-context("test-checkpeakmatrixorientation")
+context("test-check_peakmatrix_orientation")
 
 test_that("Output data matrix is in correct orientation", {
-  out <- checkPeakMatrixOrientation(df=t(testData$data),classes = testData$class)
+  out <- check_peak_matrix_orientation(peak_data =t(testData$data), classes = testData$class)
   expect_equal(out, testData$data)
 })
 
 test_that("Output data matrix is in correct orientation if no transpose is needed", {
-  out <- checkPeakMatrixOrientation(df=testData$data,classes = testData$class)
+  out <- check_peak_matrix_orientation(peak_data =testData$data, classes = testData$class)
   expect_equal(out, testData$data)
 })
 
 test_that("Function fails", {
-  expect_error(checkPeakMatrixOrientation(df=testData$data, classes=testData$class[1:3]))
+  expect_error(check_peak_matrix_orientation(peak_data =testData$data, classes=testData$class[1:3]))
 })
 
 test_that("Function fails", {
-  expect_error(checkPeakMatrixOrientation(df=testData$data[,1:6], classes=testData$class))
+  expect_error(check_peak_matrix_orientation(peak_data =testData$data[,1:6], classes=testData$class))
+})
+
+test_that("Function works if class labels are not provided", {
+  out <- check_peak_matrix_orientation (peak_data = testData$data)
+  expect_equal (out, testData$data)
+})
+
+test_that("Function works if class labels are not provided and matrix needs to be transposed", {
+  expect_warning (out <- check_peak_matrix_orientation (peak_data = t(testData$data)))
+  expect_equal(out, testData$data)
 })
