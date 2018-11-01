@@ -5,20 +5,22 @@
 \title{Blank filter}
 \usage{
 filter_peaks_by_blank(df, fold_change, classes, blank_label,
-  qc_label = NULL, remove = NULL)
+  qc_label = NULL, remove = NULL, fraction_in_blank = 0)
 }
 \arguments{
-\item{df}{Input data frame.}
+\item{df}{Peak intensity matrix}
 
-\item{fold_change}{Threshold of fold change for blank filter.}
+\item{fold_change}{Minimum fold change between analytical and blank samples.}
 
-\item{classes}{Vector of class labels.}
+\item{classes}{Vector of class labels}
 
-\item{blank_label}{Class label for blank samples}
+\item{blank_label}{Class label used to identify blank samples}
 
-\item{qc_label}{Class label for QC sample}
+\item{qc_label}{Class label for QC sample. If not NULL will use QC samples to calculate the mean intensity}
 
-\item{remove}{If features abobe threshold shoule be removed or not}
+\item{remove}{Remove blank samples from peak matrix or not}
+
+\item{fraction_in_blank}{Number between 0 to 1 to specify fraction in how many blanks peaks should be present.}
 }
 \description{
 Blank filter
