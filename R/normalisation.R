@@ -1,9 +1,12 @@
 #' Normalise peak table to the total sum of peak intensities
-#' @param df Data frame.
+#' @param df Data frame
+#' @param check_df If set to TRUE will check if input data needs to be transposed, so that features are in rows.
 #' @return Normalised peak matrix.
 
-normalise_to_sum = function(df){
-  df <- check_peak_matrix_orientation(peak_data = df)
+normalise_to_sum = function(df, check_df = TRUE){
+  if (check_df ==T){
+    df <- check_peak_matrix_orientation(peak_data = df)
+  }
   return (sweep(df, 2, colSums(df, na.rm=TRUE) / 100, FUN="/"))
 }
 

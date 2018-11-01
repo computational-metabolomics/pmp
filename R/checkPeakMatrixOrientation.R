@@ -12,7 +12,8 @@ check_peak_matrix_orientation <- function (peak_data, classes=NULL)
     peak_data <- t(peak_data)
     warning ("Peak table transposed to have features as rows and samples in columns. \n
              As there were no class labels availiable please check that you peak table is
-             still properly rotated.")
+             still properly rotated, samples as columns and features in rows.
+             Use \'check_df = TRUE\' to keep original peak matrix orientation.")
   }
   
   if (!is.null(classes)){

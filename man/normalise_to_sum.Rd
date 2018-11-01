@@ -4,10 +4,12 @@
 \alias{normalise_to_sum}
 \title{Normalise peak table to the total sum of peak intensities}
 \usage{
-normalise_to_sum(df)
+normalise_to_sum(df, check_df = TRUE)
 }
 \arguments{
-\item{df}{Data frame.}
+\item{df}{Data frame}
+
+\item{check_df}{If set to TRUE will check if input data needs to be transposed, so that features are in rows.}
 }
 \value{
 Normalised peak matrix.
