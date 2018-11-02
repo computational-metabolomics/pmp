@@ -7,7 +7,7 @@
 filter_samples_by_mv(df, max_perc_mv)
 }
 \arguments{
-\item{df}{Input data frame.}
+\item{df}{Peak intensity matrix}
 
 \item{max_perc_mv}{Threshold of missing value percentage.}
 }

@@ -35,3 +35,20 @@ test_that("Test that filter_peaks_by_rsd returns expected outpu", {
   out <- filter_peaks_by_rsd(df=t(testData$data), max_rsd = 20, classes = testData$class, qc_label = "QC")
   expect_equal (out, testData$filter_peaks_by_rsd)
 })
+
+context ("test-filter_peaks_by_rsd")
+
+test_that("Test that filter_peaks_by_rsd returns expected outpu", {
+  out <- filter_peaks_by_rsd(df=t(testData$data), max_rsd = 20, classes = testData$class, qc_label = "QC")
+  expect_equal (out, testData$filter_peaks_by_rsd)
+})
+
+context ("test-filter_samples_by_mv")
+
+test_that("Test that filter_peaks_by_rsd returns expected outpu", {
+  
+  out <- testData$data
+  out[c(1:25),c(2,9)] <- NA
+  expect_warning(out <- filter_samples_by_mv (df = t(out), max_perc_mv = 0.8))
+  expect_equal (out, testData$filter_samples_by_mv)
+})

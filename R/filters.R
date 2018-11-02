@@ -62,7 +62,7 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_labe
 #' @param qc_label Class label for QC sample
 #' @export
 
-filter_peaks_by_fraction = function(df, min_frac, classes=NULL, method="QC", qc_label="QC"){
+filter_peaks_by_fraction <- function(df, min_frac, classes=NULL, method="QC", qc_label="QC"){
   
   df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
   FUN <- function(irr) return(length(which(!is.na(irr)))/length(irr))
@@ -100,15 +100,15 @@ filter_peaks_by_fraction = function(df, min_frac, classes=NULL, method="QC", qc_
   return(list(df = df[idxs, , drop=FALSE], flags = flags))
 }
 
-#' Filter features by RSD% of QC samples
+#' Filter features by RSD\% of QC samples
 #'
 #' @param df Peak intensity matrix
-#' @param max_rsd Threshold of QC RSD% value
+#' @param max_rsd Threshold of QC RSD\% value
 #' @param classes Vector of class labels
 #' @param qc_label Class label for QC sample
 #' @export
 
-filter_peaks_by_rsd = function(df, max_rsd, classes, qc_label){
+filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label){
   
   df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
   
@@ -128,18 +128,20 @@ filter_peaks_by_rsd = function(df, max_rsd, classes, qc_label){
 
 #' Missing values filter
 #'
-#' @param df Input data frame.
+#' @param df Peak intensity matrix
 #' @param max_perc_mv Threshold of missing value percentage.
 #' @export
 
-filter_samples_by_mv = function(df, max_perc_mv){
+filter_samples_by_mv <- function(df, max_perc_mv){
 
+  df <- check_peak_matrix_orientation(peak_data = df, classes = NULL)
+  
   FUN = function(irr) return(length(which(is.na(irr)))/length(irr))
-  perc_mv = apply(df,1,FUN)
+  perc_mv = apply(df,2,FUN)
   idxs =  perc_mv <= max_perc_mv
 
   flags = cbind(perc_mv=round(perc_mv,2), flags=as.numeric(idxs))
 
-  return(list(df = df[idxs, 1:length(df[1,]), drop=FALSE], flags = flags))
+  return(list(df = df[ ,idxs, drop=FALSE], flags = flags))
 }
 
