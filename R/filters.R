@@ -1,6 +1,6 @@
 #' Blank filter
 #'
-#' @param df Peak intensity matrix
+#' @param fd Peak intensity matrix
 #' @param fold_change Minimum fold change between analytical and blank samples.
 #' @param classes Vector of class labels
 #' @param blank_label Class label used to identify blank samples
@@ -9,7 +9,7 @@
 #' @param fraction_in_blank Number between 0 to 1 to specify fraction in how many blanks peaks should be present.  
 #' @export
 
-filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_label=NULL, remove=NULL, fraction_in_blank=0){
+filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_label=NULL, remove=TRUE, fraction_in_blank=0){
   
   df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
   
@@ -47,8 +47,8 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_labe
 
   df <- df[idxs, ]
 
-  if (!is.null(remove)){
-    df <- subset(df, classes != blank_label)
+  if (remove){
+    df <- df[ ,classes != blank_label]
   }
   return(list(df = df, flags = flags))
 }
