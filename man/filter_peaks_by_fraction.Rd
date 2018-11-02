@@ -8,11 +8,11 @@ filter_peaks_by_fraction(df, min_frac, classes = NULL, method = "QC",
   qc_label = "QC")
 }
 \arguments{
-\item{df}{Input data frame.}
+\item{df}{Peak intensity matrix}
 
 \item{min_frac}{Threshold of fraction of detection}
 
-\item{classes}{Vector of class labels.}
+\item{classes}{Vector of class labels}
 
 \item{method}{Method to use, default is QC}
 

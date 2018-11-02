@@ -1,6 +1,6 @@
 #' Blank filter
 #'
-#' @param fd Peak intensity matrix
+#' @param df Peak intensity matrix
 #' @param fold_change Minimum fold change between analytical and blank samples.
 #' @param classes Vector of class labels
 #' @param blank_label Class label used to identify blank samples
@@ -55,48 +55,49 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_labe
 
 #' Filter by fraction of detected features in QC sample
 #'
-#' @param df Input data frame.
+#' @param df Peak intensity matrix
 #' @param min_frac Threshold of fraction of detection
-#' @param classes Vector of class labels.
+#' @param classes Vector of class labels
 #' @param method Method to use, default is QC
 #' @param qc_label Class label for QC sample
 #' @export
 
 filter_peaks_by_fraction = function(df, min_frac, classes=NULL, method="QC", qc_label="QC"){
-
-  FUN = function(irr) return(length(which(!is.na(irr)))/length(irr))
+  
+  df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
+  FUN <- function(irr) return(length(which(!is.na(irr)))/length(irr))
 
   if (method == "within" || method == "QC"){
-    fracs = data.frame(matrix(ncol=length(colnames(df)), nrow=0))
-    fracs_flags = data.frame(matrix(ncol=length(colnames(df)), nrow=0))
-    rn_fracs = c()
-    rn_fracs_flags = c()
+    fracs <- data.frame(matrix(ncol=dim(df)[1], nrow=0))
+    fracs_flags <- data.frame(matrix(ncol=dim(df)[1], nrow=0))
+    rn_fracs <- c()
+    rn_fracs_flags <- c()
     if (method == "within"){
-      cls = unique(classes)
+      cls <- unique(classes)
     } else {
-      cls = c(qc_label)
+      cls <- c(qc_label)
     }
     for (cl in cls){
-      idxs = cl == classes
-      subset_cl = df[idxs,]
-      frac = apply(subset_cl, 2, FUN)
-      fracs = rbind(fracs, round(frac,2))
-      fracs_flags = rbind(fracs_flags, as.numeric(frac >= min_frac))
-      rn_fracs = c(rn_fracs, paste("fraction_", cl, sep=""))
-      rn_fracs_flags = c(rn_fracs_flags, paste("fraction_flag_", cl, sep=""))
+      idxs <- cl == classes
+      subset_cl <- df[ ,idxs]
+      frac <- apply(subset_cl, 1, FUN)
+      fracs <- rbind(fracs, round(frac,2))
+      fracs_flags <- rbind(fracs_flags, as.numeric(frac >= min_frac))
+      rn_fracs <- c(rn_fracs, paste("fraction_", cl, sep=""))
+      rn_fracs_flags <- c(rn_fracs_flags, paste("fraction_flag_", cl, sep=""))
     }
-    colnames(fracs) = colnames(df)
-    colnames(fracs_flags) = colnames(df)
-    rownames(fracs) = rn_fracs
-    rownames(fracs_flags) = rn_fracs_flags
-    flags = t(rbind(fracs, fracs_flags))
-    idxs = colSums(fracs_flags) > 0
+    colnames(fracs) <- rownames(df)
+    colnames(fracs_flags) <- rownames(df)
+    rownames(fracs) <- rn_fracs
+    rownames(fracs_flags) <- rn_fracs_flags
+    flags <- t(rbind(fracs, fracs_flags))
+    idxs <- colSums(fracs_flags) > 0
   } else if (method == "across"){
-    frac = apply(df, 2, FUN)
-    idxs = frac > min_frac
-    flags = cbind(fraction=round(frac,2), fraction_flags=as.numeric(idxs))
+    frac <- apply(df, 1, FUN)
+    idxs <- frac > min_frac
+    flags <- cbind(fraction=round(frac, 2), fraction_flags=as.numeric(idxs))
   }
-  return(list(df = df[,idxs, drop=FALSE], flags = flags))
+  return(list(df = df[idxs, , drop=FALSE], flags = flags))
 }
 
 #' Filter features by QC samples RSD

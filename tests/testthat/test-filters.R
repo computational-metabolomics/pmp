@@ -14,7 +14,18 @@ test_that("Test that filter_peaks_by_blank returns expected output and remove bl
 
 context("test-filter_peaks_by_fraction")
 
-test_that ("Test that filter_peaks_by_fraction returns expected output", {
-  out <- 1+1
-  expect_equal(out, 2)
+test_that ("Test that filter_peaks_by_fraction returns expected output, method=QC", {
+  out <- filter_peaks_by_fraction(df = testData$data, min_frac = 1, classes = testData$class, method = "QC", qc_label = "QC")
+  expect_equal(out, testData$filter_peaks_by_fraction)
 })
+
+test_that ("Test that filter_peaks_by_fraction returns expected output, method=within", {
+  out <- filter_peaks_by_fraction(df = testData$data, min_frac = 1, classes = testData$class, method = "within", qc_label = "QC")
+  expect_equal(out, testData$filter_peaks_by_fraction_within)
+})
+
+test_that ("Test that filter_peaks_by_fraction returns expected output, method=across", {
+  out <- filter_peaks_by_fraction(df=t(testData$data), min_frac = 0.6, classes = testData$class, method = "across", qc_label = "QC")
+  expect_equal(out, testData$filter_peaks_by_fraction_across)
+})
+
