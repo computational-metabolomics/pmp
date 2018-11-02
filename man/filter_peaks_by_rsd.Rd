@@ -2,19 +2,19 @@
 % Please edit documentation in R/filters.R
 \name{filter_peaks_by_rsd}
 \alias{filter_peaks_by_rsd}
-\title{Filter features by QC samples RSD}
+\title{Filter features by RSD% of QC samples}
 \usage{
 filter_peaks_by_rsd(df, max_rsd, classes, qc_label)
 }
 \arguments{
-\item{df}{Input data frame.}
+\item{df}{Peak intensity matrix}
 
-\item{max_rsd}{Threshold of QC RSD value.}
+\item{max_rsd}{Threshold of QC RSD% value}
 
-\item{classes}{Vector of class labels.}
+\item{classes}{Vector of class labels}
 
-\item{qc_label}{Class label for QC sample.}
+\item{qc_label}{Class label for QC sample}
 }
 \description{
-Filter features by QC samples RSD
+Filter features by RSD% of QC samples
 }

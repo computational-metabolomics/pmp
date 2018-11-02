@@ -2,7 +2,7 @@
 % Please edit documentation in R/filters.R
 \name{filter_peaks_by_fraction}
 \alias{filter_peaks_by_fraction}
-\title{Filter by fraction of detected features in QC sample}
+\title{Filter features by fraction of missing values}
 \usage{
 filter_peaks_by_fraction(df, min_frac, classes = NULL, method = "QC",
   qc_label = "QC")
@@ -19,5 +19,5 @@ filter_peaks_by_fraction(df, min_frac, classes = NULL, method = "QC",
 \item{qc_label}{Class label for QC sample}
 }
 \description{
-Filter by fraction of detected features in QC sample
+Filter features by fraction of missing values
 }

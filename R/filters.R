@@ -53,7 +53,7 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_labe
   return(list(df = df, flags = flags))
 }
 
-#' Filter by fraction of detected features in QC sample
+#' Filter features by fraction of missing values
 #'
 #' @param df Peak intensity matrix
 #' @param min_frac Threshold of fraction of detection
@@ -94,33 +94,36 @@ filter_peaks_by_fraction = function(df, min_frac, classes=NULL, method="QC", qc_
     idxs <- colSums(fracs_flags) > 0
   } else if (method == "across"){
     frac <- apply(df, 1, FUN)
-    idxs <- frac > min_frac
+    idxs <- frac >= min_frac
     flags <- cbind(fraction=round(frac, 2), fraction_flags=as.numeric(idxs))
   }
   return(list(df = df[idxs, , drop=FALSE], flags = flags))
 }
 
-#' Filter features by QC samples RSD
+#' Filter features by RSD% of QC samples
 #'
-#' @param df Input data frame.
-#' @param max_rsd Threshold of QC RSD value.
-#' @param classes Vector of class labels.
-#' @param qc_label Class label for QC sample.
+#' @param df Peak intensity matrix
+#' @param max_rsd Threshold of QC RSD% value
+#' @param classes Vector of class labels
+#' @param qc_label Class label for QC sample
 #' @export
 
 filter_peaks_by_rsd = function(df, max_rsd, classes, qc_label){
+  
+  df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
+  
+  df_qcs <- df[ ,classes == qc_label, drop=FALSE]
 
-  df_qcs = df[classes == qc_label, 1:length(df[1,]), drop=FALSE]
-
-  FUN = function(x) sd(x,na.rm=T)/mean(x,na.rm=T)*100.0
-  rsd_values = apply(df_qcs, 2, FUN)
+  FUN <- function(x) sd(x,na.rm=T)/mean(x,na.rm=T)*100.0
+  
+  rsd_values <- apply(df_qcs, 1, FUN)
 
   idxs = rsd_values < max_rsd
   idxs[is.na(idxs)] = FALSE
 
   flags = cbind(rsd_QC=round(rsd_values,2), rsd_flags=as.numeric(idxs))
 
-  return(list(df = df[,idxs, drop=FALSE], flags = flags))
+  return(list(df = df[idxs, , drop=FALSE], flags = flags))
 }
 
 #' Missing values filter
