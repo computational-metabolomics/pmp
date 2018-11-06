@@ -2,7 +2,7 @@
 % Please edit documentation in R/filters.R
 \name{filter_samples_by_mv}
 \alias{filter_samples_by_mv}
-\title{Missing values filter}
+\title{Filter samples by missing values}
 \usage{
 filter_samples_by_mv(df, max_perc_mv)
 }
@@ -12,5 +12,14 @@ filter_samples_by_mv(df, max_perc_mv)
 \item{max_perc_mv}{Threshold of missing value percentage.}
 }
 \description{
-Missing values filter
+Missing values in mass spectrometry metabolomic datasets occur widely and can originate from a number of sources, 
+including for both technical and biological reasons. In order for robust conclusions to be drawn from down-stream
+statistical testing procedures, the issue of missing values must first be addressed. This tool facilitates the 
+removal of samples containing a user-defined maximum percentage of missing values.
+}
+\examples{
+
+attach (testData)
+out <- filter_samples_by_mv (df = testData$data, max_perc_mv = 0.8)
+
 }

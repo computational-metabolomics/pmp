@@ -14,10 +14,27 @@ filter_peaks_by_fraction(df, min_frac, classes = NULL, method = "QC",
 
 \item{classes}{Vector of class labels}
 
-\item{method}{Method to use, default is QC}
+\item{method}{Method to use. 'QC' - withing QC samples, within' - within each sample class or
+'across' - across all samples}
 
 \item{qc_label}{Class label for QC sample}
 }
 \description{
-Filter features by fraction of missing values
+Metabolomics datasets often contain 'features' with irreproducible peak intensity values, 
+or with large numbers of missing values. This tool facilitates the remove of such features 
+from a data matrix, based upon the relative proportion (minimum fraction) of samples containing 
+non-missing values.
+}
+\examples{
+attach (testData)
+
+out <- filter_peaks_by_fraction(df = testData$data, min_frac = 1, classes = testData$class, 
+    method = "QC", qc_label = "QC")
+    
+out <- filter_peaks_by_fraction(df = testData$data, min_frac = 1, classes = testData$class, 
+    method = "across", qc_label = "QC")
+
+out <- filter_peaks_by_fraction(df = testData$data, min_frac = 1, classes = testData$class, 
+    method = "within", qc_label = "QC")
+
 }
