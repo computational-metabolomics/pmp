@@ -2,17 +2,17 @@
 % Please edit documentation in R/glog_transformation.R
 \name{glog}
 \alias{glog}
-\title{Internal glog function}
+\title{variance stabilising generalised logarithm transformation}
 \usage{
 glog(y, alpha, lambda)
 }
 \arguments{
-\item{y}{values.}
+\item{y}{values to be tranformed}
 
 \item{alpha}{alpha.}
 
-\item{lambda}{lambda.}
+\item{lambda}{transform parameter}
 }
 \description{
-Internal glog function
+https://doi.org/10.1186/1471-2105-8-234
 }
