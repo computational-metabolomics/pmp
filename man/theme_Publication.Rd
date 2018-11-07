@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggplot_theme_pub.R
 \name{theme_Publication}
 \alias{theme_Publication}
-\title{Ggplog theme, source ...}
+\title{Ggplot publication theme}
 \usage{
 theme_Publication(base_size = 14)
 }
@@ -10,5 +10,6 @@ theme_Publication(base_size = 14)
 \item{base_size}{Ggplot font size}
 }
 \description{
-Ggplog theme, source ...
+This ggplot2 theme is modified from original by  Koundinya Desiraju.
+Availaible from here: https://rpubs.com/Koundy/71792
 }

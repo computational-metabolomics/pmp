@@ -4,7 +4,10 @@
 #' @importFrom grDevices rainbow
 NULL
 
-#' Ggplog theme, source ...
+#' Ggplot publication theme
+#' 
+#' This ggplot2 theme is modified from original by  Koundinya Desiraju.
+#' Availaible from here: https://rpubs.com/Koundy/71792
 #'
 #' @param base_size Ggplot font size
 #' @export
@@ -39,6 +42,9 @@ theme_Publication <- function(base_size=14){ #, base_family="helvetica") {
 }
 
 #' Ggplot fill colors
+#' 
+#' This ggplot2 theme is modified from original by  Koundinya Desiraju.
+#' Availaible from here: https://rpubs.com/Koundy/71792
 #'
 #' @param ... No parameters to specify
 #' @export
@@ -50,6 +56,9 @@ scale_fill_Publication <- function(...){
 
 
 #' Ggplot colors
+#' 
+#' This ggplot2 theme is modified from original by  Koundinya Desiraju.
+#' Availaible from here: https://rpubs.com/Koundy/71792
 #'
 #'@param ... No parameters to specify
 #' @export

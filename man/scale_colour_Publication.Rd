@@ -10,5 +10,6 @@ scale_colour_Publication(...)
 \item{...}{No parameters to specify}
 }
 \description{
-Ggplot colors
+This ggplot2 theme is modified from original by  Koundinya Desiraju.
+Availaible from here: https://rpubs.com/Koundy/71792
 }

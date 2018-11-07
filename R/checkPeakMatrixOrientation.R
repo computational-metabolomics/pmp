@@ -1,8 +1,18 @@
-#' Check is input/output data are in format features in rows, samples in columns. Check if class labels are provided for all samples.
+#' Check if peak matrix is in format features in rows, samples in columns. 
+#' 
+#' All functions in pmp pacakge expect input peak matrix to have samples as columns and
+#' measured features in rows. This function will check input matrix orientation and will
+#' transpose it if needed. If class labels are provided this function will check if the 
+#' length of labels matches number of samples in peak matrix.
 #'
 #' @param peak_data peak matrix
 #' @param classes Vector of class labels
 #' @return matrix where samples are represented in columns and features in rows
+#' @examples 
+#' 
+#' attach (testData)
+#' out <- check_peak_matrix_orientation (peak_data=t(testData$data))
+#' 
 #' @export
 
 check_peak_matrix_orientation <- function (peak_data, classes=NULL)
