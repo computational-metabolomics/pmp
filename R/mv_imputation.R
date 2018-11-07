@@ -5,18 +5,24 @@ NULL
 
 #' Missing value imputation using different algorithms
 #'
-#' @param df Data frame.
-#' @param method Missing value imputation method.
-#' @param k Number of neighbour values to use.
+#' @param df A peak matrix with features in the rows, samples in the columns
+#' @param method Missing value imputation method. Supported methods are "knn", "rf", "bpca", "sv", "mn" and "md".
+#' @param k Number of neighbors to be used in the imputation 
 #' @param rowmax Fraction of missing values per row.
 #' @param colmax Fraction of missing values per column.
 #' @param maxp Number of features to run on single core. If set to NULL will use total number of features.
+#' @param check_df If set to TRUE will check if input data needs to be transposed, so that features are in rows.
 #' @export
 
-mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5,maxp=NULL){
-
-  if (is.null(maxp))
-  {
+mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5, maxp=NULL, check_df=TRUE){
+  
+  if (check_df ==T){
+    
+    df <- check_peak_matrix_orientation(peak_data = df)
+  }
+  
+  if (is.null(maxp)){
+    
     maxp <- max(dim(df))
   }
 
@@ -25,39 +31,51 @@ mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5,maxp=NULL){
   }
 
   if(any(apply(df, 2, function(vec) all(is.na(vec))) == TRUE)) {
-    stop("Error occurred. Columns with 100% missing values detected - please remove these columns using the peak filter tool")
+    stop("Error occurred. Columns with 100% missing values detected - please remove these columns using the sample filter tool")
   }
 
   if (tolower(method) == "knn"){
-    #suppressWarnings( suppressPackageStartupMessages( stopifnot( library("impute", quietly=TRUE, logical.return=TRUE, character.only=TRUE))))
-    obj = suppressWarnings(impute.knn(as.matrix(t(df)), k=k, rowmax=rowmax, colmax=colmax,maxp = maxp))
-    df = as.data.frame(t(obj$data))
+  
+    obj <- suppressWarnings(impute.knn(as.matrix(df), k=k, rowmax=rowmax, colmax=colmax,maxp = maxp))
+    df <- obj$data
+    
   } else if (tolower(method) == "rf"){
-    #suppressWarnings( suppressPackageStartupMessages( stopifnot( library("missForest", quietly=TRUE, logical.return=TRUE, character.only=TRUE))))
-    mf_out = missForest(df)
+    
+    mf_out = missForest(t(df))
     print(mf_out$OOBerror)
-    df = mf_out$ximp
+    df = t(mf_out$ximp)
+    
   } else if (tolower(method) == "bpca"){
-    #suppressWarnings( suppressPackageStartupMessages( stopifnot( library("pcaMethods", quietly=TRUE, logical.return=TRUE, character.only=TRUE))))
-    pcaOb = pcaMethods::pca(df, method ="bpca", scale="none")
-    df = pcaOb@completeObs
+    
+    pcaOb = pcaMethods::pca(t(df), method ="bpca", scale="none")
+    df = t(pcaOb@completeObs)
     df[df<0] = min(df [df>0]) ##GUARD AGAINST NEGATIVE VALUES
+    
   } else if (tolower(method) == "sv"){
+    
     df[is.na(df)] = min(df, na.rm=TRUE)/2 ##SMV
+    
   } else if (tolower(method) == "mn"){
-    meanrep = function(mat) apply(mat, 2, mean, na.rm=TRUE) ###MEAN REP
+    
+    meanrep = function(mat) apply(mat, 1, mean, na.rm=TRUE) ###MEAN REP
     meanVec = meanrep(df)
-    for (i in 1:(ncol(df))){
-      df[, i][is.na(df[, i])] = meanVec[i]
+    for (i in 1:(nrow(df))){
+      df[i, ][is.na(df[i, ])] = meanVec[i]
     }
+    
   } else if (tolower(method) == "md"){
-    medianrep = function(mat) apply(mat, 2, median, na.rm=TRUE)
+    
+    medianrep = function(mat) apply(mat, 1, median, na.rm=TRUE)
     medianVec = medianrep(df)
-    for (i in 1:(ncol(df))){
-      df[, i][is.na(df[, i])] = medianVec[i]
+    for (i in 1:(nrow(df))){
+      df[i, ][is.na(df[i, ])] = medianVec[i]
     }
+    
   } else {
+    
     stop("Error occurred. No method selected")
   }
+  
+  df <- as.data.frame(df)
   return(df)
 }
