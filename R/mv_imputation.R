@@ -16,7 +16,7 @@ NULL
 
 mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5, maxp=NULL, check_df=TRUE){
   
-  if (check_df ==T){
+  if (check_df == T){
     
     df <- check_peak_matrix_orientation(peak_data = df)
   }
@@ -41,32 +41,32 @@ mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5, maxp=NULL, ch
     
   } else if (tolower(method) == "rf"){
     
-    mf_out = missForest(t(df))
+    mf_out <- missForest(t(df))
     print(mf_out$OOBerror)
-    df = t(mf_out$ximp)
+    df <- t(mf_out$ximp)
     
   } else if (tolower(method) == "bpca"){
     
-    pcaOb = pcaMethods::pca(t(df), method ="bpca", scale="none")
-    df = t(pcaOb@completeObs)
-    df[df<0] = min(df [df>0]) ##GUARD AGAINST NEGATIVE VALUES
+    pcaOb <- pcaMethods::pca(t(df), method ="bpca", scale="none")
+    df <- t(pcaOb@completeObs)
+    df[df<0] <- min(df [df>0]) ##GUARD AGAINST NEGATIVE VALUES
     
   } else if (tolower(method) == "sv"){
     
-    df[is.na(df)] = min(df, na.rm=TRUE)/2 ##SMV
+    df[is.na(df)] <- min(df, na.rm=TRUE)/2 ##SMV
     
   } else if (tolower(method) == "mn"){
     
-    meanrep = function(mat) apply(mat, 1, mean, na.rm=TRUE) ###MEAN REP
-    meanVec = meanrep(df)
+    meanrep <- function(mat) apply(mat, 1, mean, na.rm=TRUE) ###MEAN REP
+    meanVec <- meanrep(df)
     for (i in 1:(nrow(df))){
       df[i, ][is.na(df[i, ])] = meanVec[i]
     }
     
   } else if (tolower(method) == "md"){
     
-    medianrep = function(mat) apply(mat, 1, median, na.rm=TRUE)
-    medianVec = medianrep(df)
+    medianrep <- function(mat) apply(mat, 1, median, na.rm=TRUE)
+    medianVec <- medianrep(df)
     for (i in 1:(nrow(df))){
       df[i, ][is.na(df[i, ])] = medianVec[i]
     }
