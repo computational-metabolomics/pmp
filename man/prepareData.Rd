@@ -25,7 +25,7 @@ prepareData(Data, classes, blank = "BLANK", PQN = F, mv_impute = T,
 
 \item{ignorelabel}{Label for samples which should be excluded from processed data}
 
-\item{checkNA}{removes rows, columns containing all NA's}
+\item{checkNA}{removes rows or columns containing all NA's, also will chek if only all QC or analytical samples contain missing values}
 }
 \value{
 List of processed data table and RSD% per sample class
