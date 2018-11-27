@@ -26,7 +26,7 @@ jglog <- function(y, y0, lambda){
   return(zj)
 }
 
-#' Internal glog function to estimate SSE error
+#' Internal glog function to estimate SSE
 #'
 #' @param y values.
 #' @param alpha alpha.
@@ -57,43 +57,42 @@ SSE <- function(lambda, alpha, y){
 
 glog_transformation <- function(df, classes, qc_label){
 
+  if (length(which(classes %in% qc_label))==0){
+    stop ("QC sample label is not present in sample class label. 
+          Please check your data and qc_label parameter.")
+  }
+  
   df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
   
-  x <- df[, classes == qc_label]
+  df_qc <- df[, classes == qc_label]
 
   # y0 gets hardocded always to 0, and later is used for alpha in glog itself
   y0 <- 0
-  N <- ncol(x)
-  
-  # Why max dimension here and not number of features?
-  L <- max(dim(x))
 
   scal_fact <- 1
   pow_fact <- 1
-  offset <- min(x, na.rm=TRUE)
-  x <- x-offset
+  offset <- min(df_qc, na.rm=TRUE)
+  df_qc <- df_qc-offset
 
   step_threshold <- 1e-16
 
-  # Why this is here if x-min(x) always will give at least one 0?
-  small = min(x, na.rm=TRUE) 
-
-  if(min(apply(x, 1, var, na.rm=TRUE))==0)
+  if(min(apply(df_qc, 1, var, na.rm=TRUE))==0)
   {
-    varbs <- apply(x, 1, var, na.rm=TRUE)
+    varbs <- apply(df_qc, 1, var, na.rm=TRUE)
     newminVar <- sort(unique(varbs))[2]
   }else{
-    newminVar <- min(apply(x, 1, var, na.rm=TRUE))
+    newminVar <- min(apply(df_qc, 1, var, na.rm=TRUE))
   }
 
-  low_lim <- -small^2
-  upper_lim <- max(pmax(apply(x, 1, var, na.rm=TRUE), max(apply(x, 1, var, na.rm=TRUE))/newminVar))
+  low_lim <- 0
+  upper_lim <- max(pmax(apply(df_qc, 1, var, na.rm=TRUE), max(apply(df_qc, 1, var, na.rm=TRUE))/newminVar))
 
-  lambda <- optimize(SSE, interval=c(low_lim, upper_lim), y0, x, tol=step_threshold)
+  # What does y0 which is set to 0 is doing here?
+  lambda <- optimize(f=SSE, interval=c(low_lim, upper_lim), y0, df_qc, tol=step_threshold)
 
   lambda <- as.numeric(lambda[[1]])
 
-  # What is this?
+  # If SSE optimisation fails use fixed lambda value
   lambda_std <- 5.0278*10^(-09)
 
   error_flag <- F
@@ -108,21 +107,18 @@ glog_transformation <- function(df, classes, qc_label){
     error_flag <- TRUE
   }
 
-  x <- df
-  N <- dim(x)[2]
-
   if(error_flag)
   {
     lambda <- lambda_std
-    scal_fact <- apply(x, 2, sum, na.rm=TRUE)
+    scal_fact <- apply(df, 2, sum, na.rm=TRUE)
     scal_fact <- mean(scal_fact)
     scal_fact <- 1/scal_fact
   }
 
-  x <- x*scal_fact
-  x <- x^pow_fact
-  x <- x-min(x, na.rm=TRUE)
-  df_glog <- as.data.frame(glog(x, y0, lambda))
+  df <- df*scal_fact
+  df <- df^pow_fact
+  df <- df-min(df, na.rm=TRUE)
+  df_glog <- as.data.frame(glog(df, y0, lambda))
 
   return(df_glog)
 }
