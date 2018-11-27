@@ -5,8 +5,10 @@
 #' @return List of RSD\% values for each variable for each sample group
 #' @export
 
-doRSD <- function(Data, classes)
-{
+doRSD <- function(Data, classes){
+  
+  Data <- check_peak_matrix_orientation(peak_data = Data, classes = classes)
+  
   cl <- unique (classes)
   out <- vector("list",length(cl))
   names (out) <- cl
