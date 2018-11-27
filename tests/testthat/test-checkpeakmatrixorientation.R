@@ -27,3 +27,7 @@ test_that("Function works if class labels are not provided and matrix needs to b
   expect_warning (out <- check_peak_matrix_orientation (peak_data = t(testData$data)))
   expect_equal(out, testData$data)
 })
+
+test_that("Function returns warning if input peak matrix has the same number of samples and features", {
+  expect_warning (out <- check_peak_matrix_orientation (peak_data = t(testData$data[1:9, ])))
+})
