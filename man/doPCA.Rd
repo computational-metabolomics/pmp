@@ -2,7 +2,7 @@
 % Please edit documentation in R/doPCA.R
 \name{doPCA}
 \alias{doPCA}
-\title{Perform PCA analysis ot single data set of list of data sets}
+\title{Perform PCA analysis ot single data set or list of data sets}
 \usage{
 doPCA(Data, classes, plotTitle = "PCA", PQN, mv_impute, glogScaling,
   scale = F, labels = "QC", qc_label, qc_shape = 17,
@@ -44,5 +44,5 @@ doPCA(Data, classes, plotTitle = "PCA", PQN, mv_impute, glogScaling,
 Ggplot object with plot(s)
 }
 \description{
-Perform PCA analysis ot single data set of list of data sets
+Perform PCA analysis ot single data set or list of data sets
 }

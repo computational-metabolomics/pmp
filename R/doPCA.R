@@ -2,7 +2,7 @@
 #' @import ggplot2
 NULL
 
-#' Perform PCA analysis ot single data set of list of data sets
+#' Perform PCA analysis ot single data set or list of data sets
 #'
 #' @param Data Data frame.
 #' @param classes Vector of class labels.
