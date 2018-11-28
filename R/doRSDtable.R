@@ -16,7 +16,7 @@ doRSDtable <- function (RSD, QC_label="QC", Blank_label="Blank")
 
   tableData <- lapply(RSD, summary)
 
-  # So summary table doesn't return NA count if there are no NA's. Honestly?
+  # Summary function doesn't return NA count if there are no NA's
   for (i in 1:length(tableData))
   {
     if (length(tableData[[i]])<7)
