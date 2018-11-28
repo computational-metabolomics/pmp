@@ -2,7 +2,7 @@
 % Please edit documentation in R/glog_transformation.R
 \name{SSE}
 \alias{SSE}
-\title{Internal glog function to estimate SSE error}
+\title{Internal glog function to estimate SSE}
 \usage{
 SSE(lambda, alpha, y)
 }
@@ -14,5 +14,5 @@ SSE(lambda, alpha, y)
 \item{y}{values.}
 }
 \description{
-Internal glog function to estimate SSE error
+Internal glog function to estimate SSE
 }
