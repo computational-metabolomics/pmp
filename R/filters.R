@@ -129,6 +129,34 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL, method="QC", qc
   return(list(df = df[idxs, , drop=FALSE], flags = flags))
 }
 
+
+#' Remove features from peak intensity matrix
+#'
+#' Filter to remove features
+#'
+#' @param df Peak intensity matrix
+#' @param rem_index Logical vector containing TRUE vales for features to remove
+#' @examples 
+#' 
+#' attach (testData)
+#' rem_index <- testData$remove_peaks$rem_index
+#' 
+#' out <- remove_peaks(df=testData$data, rem_index = rem_index)
+#' 
+#' @export
+
+remove_peaks <- function(df, rem_index){
+  
+  df <- check_peak_matrix_orientation(peak_data = df)
+  if (is.logical(rem_index)){
+    df <- df[!rem_index,]
+    df
+  } else {
+    stop ("Vector of indexes to remove from peak matrix should be logical vector of TRUE/FALSE vaues.")
+  }
+}
+
+
 #' Filter features by RSD\% of QC samples
 #'
 #' Metabolomics datasets often contain 'features' with irreproducible peak intensity values, or with large numbers of 
@@ -152,18 +180,19 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label){
   df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
   
   df_qcs <- df[ ,classes == qc_label, drop=FALSE]
-
+  
   FUN <- function(x) sd(x,na.rm=T)/mean(x,na.rm=T)*100.0
   
   rsd_values <- apply(df_qcs, 1, FUN)
-
+  
   idxs = rsd_values < max_rsd
   idxs[is.na(idxs)] = FALSE
-
+  
   flags = cbind(rsd_QC=round(rsd_values,2), rsd_flags=as.numeric(idxs))
-
+  
   return(list(df = df[idxs, , drop=FALSE], flags = flags))
 }
+
 
 #' Filter samples by missing values
 #'
