@@ -2,17 +2,17 @@
 % Please edit documentation in R/glog_transformation.R
 \name{SSE}
 \alias{SSE}
-\title{Internal glog function}
+\title{Internal glog function to estimate SSE}
 \usage{
 SSE(lambda, alpha, y)
 }
 \arguments{
-\item{lambda}{lambda.}
+\item{lambda}{transform parameter}
 
 \item{alpha}{alpha.}
 
 \item{y}{values.}
 }
 \description{
-Internal glog function
+Internal glog function to estimate SSE
 }

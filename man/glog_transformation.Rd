@@ -2,17 +2,17 @@
 % Please edit documentation in R/glog_transformation.R
 \name{glog_transformation}
 \alias{glog_transformation}
-\title{Performs glog transformation on the data set. Using QC samples to estimate lamda and alpha parameters.}
+\title{Performs glog transformation on the data set, using QC samples to estimate lamda and alpha parameters.}
 \usage{
 glog_transformation(df, classes, qc_label)
 }
 \arguments{
-\item{df}{Data frame.}
+\item{df}{Peak intensity matrix}
 
-\item{classes}{Vector of sample classes.}
+\item{classes}{Vector of class labels}
 
-\item{qc_label}{Lable for QC sample.}
+\item{qc_label}{Class label for QC sample}
 }
 \description{
-Performs glog transformation on the data set. Using QC samples to estimate lamda and alpha parameters.
+https://doi.org/10.1186/1471-2105-8-234
 }

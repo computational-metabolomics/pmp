@@ -1,13 +1,17 @@
-#' SMU normalisation
-#' @param df Data frame.
-#' @return Normalised data frame.
+#' Normalise peak table to the total sum of peak intensities
+#' @param df Data frame
+#' @param check_df If set to TRUE will check if input data needs to be transposed, so that features are in rows.
+#' @return Normalised peak matrix.
 
-smu_normalisation = function(df){
-  return (sweep(df, 1, rowSums(df, na.rm=TRUE) / 100, FUN="/"))
+normalise_to_sum = function(df, check_df = TRUE){
+  if (check_df ==T){
+    df <- check_peak_matrix_orientation(peak_data = df)
+  }
+  return (sweep(df, 2, colSums(df, na.rm=TRUE) / 100, FUN="/"))
 }
 
 
-#' PQN normalisation
+#' Normalise peak table using PQN method
 #'
 #' @param df Data frame.
 #' @param classes Vector of class labels.
@@ -17,10 +21,7 @@ smu_normalisation = function(df){
 
 pqn_normalisation = function(df, classes, qc_label){
 
-  if (length(classes)!=ncol(df)) {
-    cat("Length of sample labels doesn't match data matrix dimensions .Input data frame should be in format: features rows, samples columns.", "\n")
-    stop()
-  }
+  df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
 
   ref = df[,classes == qc_label]
 

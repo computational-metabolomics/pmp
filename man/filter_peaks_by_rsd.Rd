@@ -2,19 +2,28 @@
 % Please edit documentation in R/filters.R
 \name{filter_peaks_by_rsd}
 \alias{filter_peaks_by_rsd}
-\title{Filter features by QC samples RSD}
+\title{Filter features by RSD\% of QC samples}
 \usage{
 filter_peaks_by_rsd(df, max_rsd, classes, qc_label)
 }
 \arguments{
-\item{df}{Input data frame.}
+\item{df}{Peak intensity matrix}
 
-\item{max_rsd}{Threshold of QC RSD value.}
+\item{max_rsd}{Threshold of QC RSD\% value}
 
-\item{classes}{Vector of class labels.}
+\item{classes}{Vector of class labels}
 
-\item{qc_label}{Class label for QC sample.}
+\item{qc_label}{Class label for QC sample}
 }
 \description{
-Filter features by QC samples RSD
+Metabolomics datasets often contain 'features' with irreproducible peak intensity values, or with large numbers of 
+missing values. This tool facilitates the remove of such features from a data matrix, based upon relative standard 
+deviation of intensity values for a given feature within specified QC samples.
+}
+\examples{
+
+attach (testData)
+out <- filter_peaks_by_rsd(df=testData$data, max_rsd = 20, classes = testData$class, 
+   qc_label = "QC")
+
 }
