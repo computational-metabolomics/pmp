@@ -3,4 +3,5 @@
 ^\.git$
 ^\.Rhistory
 LICENSE
-^\README.md
+^\README.rst
+.travis.yml
