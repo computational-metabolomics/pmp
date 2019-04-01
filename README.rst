@@ -2,7 +2,7 @@
 PMP: Peak Matrix Processing
 ==============================================
 
-|Git| |Bioconda| |Build Status (Travis)| |License|
+|Git| |Bioconda| |Build Status (Travis)| |License| |Coverage|
 
 
 ------------
