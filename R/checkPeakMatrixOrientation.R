@@ -17,6 +17,9 @@
 
 check_peak_matrix_orientation <- function (peak_data, classes=NULL)
 {
+  # flag indicating df status of peak_data
+  isdf=is(peak_data,'data.frame')
+
   dims <- dim(peak_data)
   if (dims[1] < dims[2] & is.null(classes)){
     peak_data <- t(peak_data)
@@ -45,9 +48,9 @@ check_peak_matrix_orientation <- function (peak_data, classes=NULL)
   }
   
   # return a data.frame if the input was a data.frame
-  if (is(peak_data,"data.frame")) {
+  if (isdf) {
     peak_data=as.data.frame(peak_data)
-   }
+  }
   
   return(peak_data)
 }
