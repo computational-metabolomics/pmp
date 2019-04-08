@@ -44,5 +44,10 @@ check_peak_matrix_orientation <- function (peak_data, classes=NULL)
     }
   }
   
-  return(as.data.frame(peak_data))
+  # return a data.frame if the input was a data.frame
+  if (is(peak_data,"data.frame")) {
+    peak_data=as.data.frame(peak_data)
+   }
+  
+  return(peak_data)
 }
