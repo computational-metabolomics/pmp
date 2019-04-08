@@ -44,5 +44,5 @@ check_peak_matrix_orientation <- function (peak_data, classes=NULL)
     }
   }
   
-  peak_data
+  return(as.data.frame(peak_data))
 }
