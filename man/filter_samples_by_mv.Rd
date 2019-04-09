@@ -4,12 +4,14 @@
 \alias{filter_samples_by_mv}
 \title{Filter samples by missing values}
 \usage{
-filter_samples_by_mv(df, max_perc_mv)
+filter_samples_by_mv(df, max_perc_mv, classes = NULL)
 }
 \arguments{
 \item{df}{Peak intensity matrix}
 
 \item{max_perc_mv}{Threshold of missing value percentage.}
+
+\item{classes}{Vector of class labels}
 }
 \description{
 Missing values in mass spectrometry metabolomic datasets occur widely and can originate from a number of sources, 

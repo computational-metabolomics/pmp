@@ -203,6 +203,7 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label){
 #'
 #' @param df Peak intensity matrix
 #' @param max_perc_mv Threshold of missing value percentage.
+#' @param classes Vector of class labels
 #' 
 #' @examples 
 #' 
@@ -211,9 +212,9 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label){
 #' 
 #' @export
 
-filter_samples_by_mv <- function(df, max_perc_mv){
+filter_samples_by_mv <- function(df, max_perc_mv, classes=NULL){
 
-  df <- check_peak_matrix_orientation(peak_data = df, classes = NULL)
+  df <- check_peak_matrix_orientation(peak_data=df, classes=classes)
   
   FUN = function(irr) return(length(which(is.na(irr)))/length(irr))
   perc_mv = apply(df,2,FUN)
