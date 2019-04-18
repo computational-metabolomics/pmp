@@ -23,8 +23,12 @@ pqn_normalisation <- function(df, classes, qc_label){
 
   df <- check_peak_matrix_orientation(peak_data=df, classes=classes)
 
-  ref <- df[ ,classes == qc_label]
-
+  if (qc_label=="all"){
+    ref=df
+  } else {
+    ref=df[ ,classes == qc_label]
+  }
+    
   ref_mean <- apply(ref, 1, mean, na.rm=TRUE)
   coef <- vector()
 
