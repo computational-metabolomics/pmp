@@ -1,7 +1,7 @@
 Package: pmp
 Type: Package
 Title: Peak matrix processing
-Version: 0.2.2
+Version: 0.2.3
 Author: Ralf Weber and Andris Jankevics
 Maintainer: Andris Jankevics <a.jankevics@bham.ac.uk>
 Description: Tools and filters for peak matrix scaling, normalisation and filtering.
