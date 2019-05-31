@@ -2,7 +2,8 @@
 % Please edit documentation in R/glog_transformation.R
 \name{glog_transformation}
 \alias{glog_transformation}
-\title{Performs glog transformation on the data set, using QC samples to estimate lamda and alpha parameters.}
+\title{Performs glog transformation on the data set, 
+using QC samples to estimate lambda.}
 \usage{
 glog_transformation(df, classes, qc_label)
 }

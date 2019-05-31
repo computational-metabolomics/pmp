@@ -15,7 +15,7 @@ glog <- function(y, y0=0, lambda){
 #' https://doi.org/10.1186/1471-2105-8-234
 #'
 #' @param y values.
-#' @param alpha offset applied to y (default = 0).
+#' @param y0 offset applied to y (default = 0).
 #' @param lambda lambda.
 
 jglog <- function(y, y0=0, lambda){

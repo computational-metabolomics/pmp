@@ -2,14 +2,14 @@
 % Please edit documentation in R/glog_transformation.R
 \name{glog}
 \alias{glog}
-\title{variance stabilising generalised logarithm transformation}
+\title{variance stabilising (extended) generalised logarithm transformation}
 \usage{
-glog(y, alpha, lambda)
+glog(y, y0 = 0, lambda)
 }
 \arguments{
 \item{y}{values to be tranformed}
 
-\item{alpha}{alpha.}
+\item{y0}{offset applied to y (default = 0).}
 
 \item{lambda}{transform parameter}
 }
