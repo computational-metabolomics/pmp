@@ -1,3 +1,8 @@
+#' @importFrom stats optimize 
+#' 
+
+NULL
+
 #' variance stabilising (extended) generalised logarithm transformation
 #'
 #' https://doi.org/10.1186/1471-2105-8-234
