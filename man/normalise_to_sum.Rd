@@ -17,3 +17,8 @@ Normalised peak matrix.
 \description{
 Normalise peak table to the total sum of peak intensities
 }
+\examples{
+attach (testData)
+out <- normalise_to_sum (testData$data)
+
+}

@@ -25,3 +25,8 @@ mv_imputation(df, method, k = 10, rowmax = 0.5, colmax = 0.5,
 \description{
 Missing value imputation using different algorithms
 }
+\examples{
+attach (testData)
+out <- mv_imputation(df=t(testData$data), method = "knn")
+
+}

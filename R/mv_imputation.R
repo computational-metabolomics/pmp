@@ -12,6 +12,10 @@ NULL
 #' @param colmax Fraction of missing values per column.
 #' @param maxp Number of features to run on single core. If set to NULL will use total number of features.
 #' @param check_df If set to TRUE will check if input data needs to be transposed, so that features are in rows.
+#' @examples 
+#' attach (testData)
+#' out <- mv_imputation(df=t(testData$data), method = "knn")
+#' 
 #' @export
 
 mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5, maxp=NULL, check_df=TRUE){

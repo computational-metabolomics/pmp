@@ -60,6 +60,11 @@ SSE <- function(lambda, y0=0, y){
 #' @param df Peak intensity matrix
 #' @param classes Vector of class labels
 #' @param qc_label Class label for QC sample
+#' @examples 
+#' attach (testData)
+#' out <- mv_imputation(df=testData$data, method = "knn")
+#' out <- glog_transformation (df=out, classes = testData$class, qc_label = "QC")
+#' 
 #' @export glog_transformation
 
 glog_transformation <- function(df, classes, qc_label){

@@ -2,6 +2,11 @@
 #' @param df Data frame
 #' @param check_df If set to TRUE will check if input data needs to be transposed, so that features are in rows.
 #' @return Normalised peak matrix.
+#' @examples 
+#' attach (testData)
+#' out <- normalise_to_sum (testData$data)
+#'
+#' @export
 
 normalise_to_sum <- function(df, check_df=TRUE){
   if (check_df == T){
@@ -17,6 +22,10 @@ normalise_to_sum <- function(df, check_df=TRUE){
 #' @param classes Vector of class labels. 
 #' @param qc_label Label used for QC samples. If set to "all", all samples will be used to calculate correction factor
 #' @return List of normalised data set and correction coefficients
+#' @examples 
+#' attach (testData)
+#' pqn_normalisation(df=testData$data, classes=testData$class, qc_label = "QC")
+#' 
 #' @export
 
 pqn_normalisation <- function(df, classes, qc_label){
