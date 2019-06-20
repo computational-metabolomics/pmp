@@ -1,0 +1,19 @@
+---
+title: "Peak Matrix Processing for -omics data sets"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Peak Matrix Processing for -omics data sets}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(pmp)
+```
