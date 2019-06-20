@@ -26,9 +26,9 @@ NULL
 
 filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_label=NULL, remove=TRUE, fraction_in_blank=0){
   
-  df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
+  df <- check_peak_matrix_orientation(peak_data=df, classes=classes)
   
-  M_blanks <- rbind(df[ ,classes == blank_label], NULL)
+  M_blanks <- rbind(df[ , classes == blank_label], NULL)
   
   if (!is.null(qc_label)){
     M_non_blanks <- df[seq_len(dim(df)[1]), classes == qc_label, drop=FALSE]
@@ -36,14 +36,14 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_labe
     M_non_blanks <- df[seq_len(dim(df)[1]), classes != blank_label, drop=FALSE]
   }
 
-  FUN <- function(x) median(x,na.rm=T)
+  FUN <- function(x) median(x, na.rm=TRUE)
 
   median_intensity_blanks <- apply(M_blanks, 1, FUN)
   median_intensity_non_blanks <- apply(M_non_blanks, 1, FUN)
 
   fold_change_exp <- median_intensity_non_blanks / median_intensity_blanks
   
-  blank_fraction <- 1-(apply (is.na(M_blanks), 1, sum)  / ncol(M_blanks))
+  blank_fraction <- 1 - (apply(is.na(M_blanks), 1, sum)  / ncol(M_blanks))
   
   idxs <- fold_change_exp >= fold_change & blank_fraction >= fraction_in_blank
 
@@ -65,7 +65,7 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_labe
   if (remove){
     df <- df[ ,classes != blank_label]
   }
-  return(list(df = df, flags = flags))
+  return(list(df=df, flags=flags))
 }
 
 #' Filter features by fraction of missing values
@@ -98,7 +98,7 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_labe
 
 filter_peaks_by_fraction <- function(df, min_frac, classes=NULL, method="QC", qc_label="QC"){
   
-  df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
+  df <- check_peak_matrix_orientation(peak_data=df, classes=classes)
   FUN <- function(irr) return(length(which(!is.na(irr)))/length(irr))
 
   if (method == "within" || method == "QC"){
@@ -131,7 +131,7 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL, method="QC", qc
     idxs <- frac >= min_frac
     flags <- cbind(fraction=round(frac, 2), fraction_flags=as.numeric(idxs))
   }
-  return(list(df = df[idxs, , drop=FALSE], flags = flags))
+  return(list(df = df[idxs, , drop=FALSE], flags=flags))
 }
 
 
@@ -152,9 +152,9 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL, method="QC", qc
 
 remove_peaks <- function(df, rem_index){
   
-  df <- check_peak_matrix_orientation(peak_data = df)
+  df <- check_peak_matrix_orientation(peak_data=df)
   if (is.logical(rem_index)){
-    df <- df[!rem_index,]
+    df <- df[!rem_index, ]
     df
   } else {
     stop ("Vector of indexes to remove from peak matrix should be logical vector of TRUE/FALSE vaues.")
@@ -182,20 +182,20 @@ remove_peaks <- function(df, rem_index){
 
 filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label){
   
-  df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
+  df <- check_peak_matrix_orientation(peak_data=df, classes=classes)
   
   df_qcs <- df[ ,classes == qc_label, drop=FALSE]
   
-  FUN <- function(x) sd(x,na.rm=T)/mean(x,na.rm=T)*100.0
+  FUN <- function(x) sd(x,na.rm=TRUE) / mean(x,na.rm=TRUE) * 100.0
   
   rsd_values <- apply(df_qcs, 1, FUN)
   
-  idxs = rsd_values < max_rsd
-  idxs[is.na(idxs)] = FALSE
+  idxs <- rsd_values < max_rsd
+  idxs[is.na(idxs)] <- FALSE
   
-  flags = cbind(rsd_QC=round(rsd_values,2), rsd_flags=as.numeric(idxs))
+  flags <- cbind(rsd_QC=round(rsd_values, 2), rsd_flags=as.numeric(idxs))
   
-  return(list(df = df[idxs, , drop=FALSE], flags = flags))
+  return(list(df=df[idxs, , drop=FALSE], flags=flags))
 }
 
 
@@ -221,12 +221,11 @@ filter_samples_by_mv <- function(df, max_perc_mv, classes=NULL){
 
   df <- check_peak_matrix_orientation(peak_data=df, classes=classes)
   
-  FUN = function(irr) return(length(which(is.na(irr)))/length(irr))
-  perc_mv = apply(df,2,FUN)
-  idxs =  perc_mv <= max_perc_mv
+  FUN <- function(irr) return(length(which(is.na(irr))) / length(irr))
+  perc_mv <- apply(df, 2, FUN)
+  idxs <-  perc_mv <= max_perc_mv
 
-  flags = cbind(perc_mv=round(perc_mv,2), flags=as.numeric(idxs))
+  flags <- cbind(perc_mv=round(perc_mv, 2), flags=as.numeric(idxs))
 
-  return(list(df = df[ ,idxs, drop=FALSE], flags = flags))
+  return(list(df = df[ ,idxs, drop=FALSE], flags=flags))
 }
-
