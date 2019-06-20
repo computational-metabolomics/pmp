@@ -22,6 +22,9 @@ mv_imputation(df, method, k = 10, rowmax = 0.5, colmax = 0.5,
 
 \item{check_df}{If set to TRUE will check if input data needs to be transposed, so that features are in rows.}
 }
+\value{
+data frame of missing value imputed peak intensity matrix
+}
 \description{
 Missing value imputation using different algorithms
 }

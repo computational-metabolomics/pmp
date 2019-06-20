@@ -19,6 +19,9 @@ filter_peaks_by_fraction(df, min_frac, classes = NULL, method = "QC",
 
 \item{qc_label}{Class label for QC sample}
 }
+\value{
+List of filtered peak intensity matrix and matrix with flags
+}
 \description{
 Metabolomics datasets often contain 'features' with irreproducible peak intensity values, 
 or with large numbers of missing values. This tool facilitates the remove of such features 

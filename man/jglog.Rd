@@ -13,7 +13,10 @@ jglog(y, y0 = 0, lambda)
 
 \item{y0}{offset applied to y (default = 0).}
 
-\item{lambda}{lambda.}
+\item{lambda}{lambda}
+}
+\value{
+numeric, optimised glog parameter
 }
 \description{
 Internal function for max. likelihood optimisation of glog params

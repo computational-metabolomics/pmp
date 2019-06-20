@@ -10,6 +10,7 @@ NULL
 #' @param y values to be tranformed
 #' @param y0 offset applied to y (default = 0).
 #' @param lambda transform parameter
+#' @return vector of transformed values
 
 glog <- function(y, y0=0, lambda){
     z <- log((y - y0) + sqrt((y - y0)^2 + lambda))
@@ -21,7 +22,8 @@ glog <- function(y, y0=0, lambda){
 #'
 #' @param y values.
 #' @param y0 offset applied to y (default = 0).
-#' @param lambda lambda.
+#' @param lambda lambda
+#' @return numeric, optimised glog parameter
 
 jglog <- function(y, y0=0, lambda){
     z <- glog(y, y0, lambda)
@@ -38,6 +40,7 @@ jglog <- function(y, y0=0, lambda){
 #' @param y values.
 #' @param y0 offset applied to y (default=0)
 #' @param lambda transform parameter
+#' @return numeric, sum of squared difference
 
 SSE <- function(lambda, y0=0, y){
     # calculate ML estimate
@@ -65,6 +68,7 @@ SSE <- function(lambda, y0=0, y){
 #' out <- mv_imputation(df=testData$data, method = "knn")
 #' out <- glog_transformation (df=out, classes = testData$class, qc_label = "QC")
 #' 
+#' @return data frame, peak inntensity matrix after glog transformation
 #' @export glog_transformation
 
 glog_transformation <- function(df, classes, qc_label){

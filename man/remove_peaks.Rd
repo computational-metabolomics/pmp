@@ -11,11 +11,13 @@ remove_peaks(df, rem_index)
 
 \item{rem_index}{Logical vector containing TRUE vales for features to remove}
 }
+\value{
+data frame, filtered peak intensity matrix
+}
 \description{
 Filter to remove features
 }
 \examples{
-
 attach (testData)
 rem_index <- testData$remove_peaks$rem_index
 

@@ -13,6 +13,9 @@ SSE(lambda, y0 = 0, y)
 
 \item{y}{values.}
 }
+\value{
+numeric, sum of squared difference
+}
 \description{
 Internal function to estimate SSE for optimising glog params
 }

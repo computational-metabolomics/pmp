@@ -14,6 +14,9 @@ glog_transformation(df, classes, qc_label)
 
 \item{qc_label}{Class label for QC sample}
 }
+\value{
+data frame, peak inntensity matrix after glog transformation
+}
 \description{
 https://doi.org/10.1186/1471-2105-8-234
 }

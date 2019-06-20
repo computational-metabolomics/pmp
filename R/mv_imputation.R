@@ -12,6 +12,8 @@ NULL
 #' @param colmax Fraction of missing values per column.
 #' @param maxp Number of features to run on single core. If set to NULL will use total number of features.
 #' @param check_df If set to TRUE will check if input data needs to be transposed, so that features are in rows.
+#' @return data frame of missing value imputed peak intensity matrix
+#' 
 #' @examples 
 #' attach (testData)
 #' out <- mv_imputation(df=t(testData$data), method = "knn")

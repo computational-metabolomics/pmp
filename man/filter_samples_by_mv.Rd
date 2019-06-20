@@ -13,6 +13,9 @@ filter_samples_by_mv(df, max_perc_mv, classes = NULL)
 
 \item{classes}{Vector of class labels}
 }
+\value{
+List of filtered peak intensity matrix and matrix with flags
+}
 \description{
 Missing values in mass spectrometry metabolomic datasets occur widely and can originate from a number of sources, 
 including for both technical and biological reasons. In order for robust conclusions to be drawn from down-stream

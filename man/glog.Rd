@@ -13,6 +13,9 @@ glog(y, y0 = 0, lambda)
 
 \item{lambda}{transform parameter}
 }
+\value{
+vector of transformed values
+}
 \description{
 https://doi.org/10.1186/1471-2105-8-234
 }
