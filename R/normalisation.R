@@ -41,7 +41,7 @@ pqn_normalisation <- function(df, classes, qc_label){
   ref_mean <- apply(ref, 1, mean, na.rm=TRUE)
   coef <- vector()
 
-  for (i in 1:dim(df)[2]){
+  for (i in seq_len(dim(df)[2])){
     tempMat <- cbind(ref_mean, df[,i])
     vecelim <- which(apply(tempMat, 1, function(x) any(is.na(x))))
 

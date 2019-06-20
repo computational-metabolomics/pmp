@@ -63,7 +63,7 @@ mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5, maxp=NULL, ch
     
     meanrep <- function(mat) apply(mat, 1, mean, na.rm=TRUE) ###MEAN REP
     meanVec <- meanrep(df)
-    for (i in 1:(nrow(df))){
+    for (i in seq_len(nrow(df))){
       df[i, ][is.na(df[i, ])] = meanVec[i]
     }
     
@@ -71,7 +71,7 @@ mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5, maxp=NULL, ch
     
     medianrep <- function(mat) apply(mat, 1, median, na.rm=TRUE)
     medianVec <- medianrep(df)
-    for (i in 1:(nrow(df))){
+    for (i in seq_len(nrow(df))){
       df[i, ][is.na(df[i, ])] = medianVec[i]
     }
     

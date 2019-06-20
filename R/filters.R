@@ -31,9 +31,9 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_labe
   M_blanks <- rbind(df[ ,classes == blank_label], NULL)
   
   if (!is.null(qc_label)){
-    M_non_blanks <- df[1:dim(df)[1], classes == qc_label, drop=FALSE]
+    M_non_blanks <- df[seq_len(dim(df)[1]), classes == qc_label, drop=FALSE]
   } else {
-    M_non_blanks <- df[1:dim(df)[1], classes != blank_label, drop=FALSE]
+    M_non_blanks <- df[seq_len(dim(df)[1]), classes != blank_label, drop=FALSE]
   }
 
   FUN <- function(x) median(x,na.rm=T)
