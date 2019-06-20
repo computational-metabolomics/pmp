@@ -66,7 +66,8 @@ SSE <- function(lambda, y0=0, y){
 #' @examples 
 #' attach (testData)
 #' out <- mv_imputation(df=testData$data, method = "knn")
-#' out <- glog_transformation (df=out, classes = testData$class, qc_label = "QC")
+#' out <- glog_transformation (df=out, classes = testData$class,
+#'  qc_label = "QC")
 #' 
 #' @return data frame, peak inntensity matrix after glog transformation
 #' @export glog_transformation
@@ -115,7 +116,8 @@ glog_transformation <- function(df, classes, qc_label){
     
     # search for optimal value of lambda. NB y0 set to default of 0 as not being
     # implemented here
-    lambda <- optimize(f=SSE, interval=c(low_lim, upper_lim),y0=0, y=df_qc, tol=step_threshold)
+    lambda <- optimize(f=SSE, interval=c(low_lim, upper_lim),y0=0, y=df_qc,
+        tol=step_threshold)
     
     # make value of objective is numeric
     lambda <- as.numeric(lambda[[1]])

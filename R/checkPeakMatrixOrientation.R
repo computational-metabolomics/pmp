@@ -1,8 +1,11 @@
 #' Check if peak matrix is in format features in rows, samples in columns. 
 #' 
-#' All functions in pmp pacakge expect input peak matrix to have samples as columns and
-#' measured features in rows. This function will check input matrix orientation and will
-#' transpose it if needed. If class labels are provided this function will check if the 
+#' All functions in pmp pacakge expect input peak matrix to have samples
+#'  as columns and
+#' measured features in rows. This function will check input matrix
+#'  orientation and will
+#' transpose it if needed. If class labels are provided this function will
+#'  check if the 
 #' length of labels matches number of samples in peak matrix.
 #'
 #' @param peak_data peak matrix
@@ -22,10 +25,11 @@ check_peak_matrix_orientation <- function (peak_data, classes=NULL)
   
   if (dims[1] < dims[2] & is.null(classes)){
     peak_data <- t(peak_data)
-    warning ("Peak table was transposed to have features as rows and samples in columns. \n
-             As there were no class labels availiable please check that peak table is
-             still properly rotated, samples as columns and features in rows.
-             Use \'check_df = FALSE\' to keep original peak matrix orientation.")
+    warning ("Peak table was transposed to have features as rows and samples
+    in columns. \n
+    As there were no class labels availiable please check that peak table is \n
+    still properly rotated, samples as columns and features in rows. \n
+    Use \'check_df = FALSE\' to keep original peak matrix orientation.")
   }
   
   if (!is.null(classes)){

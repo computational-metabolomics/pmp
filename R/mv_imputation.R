@@ -6,12 +6,15 @@ NULL
 #' Missing value imputation using different algorithms
 #'
 #' @param df A peak matrix with features in the rows, samples in the columns
-#' @param method Missing value imputation method. Supported methods are "knn", "rf", "bpca", "sv", "mn" and "md".
+#' @param method Missing value imputation method. Supported methods are "knn",
+#'  "rf", "bpca", "sv", "mn" and "md".
 #' @param k Number of neighbors to be used in the imputation 
 #' @param rowmax Fraction of missing values per row.
 #' @param colmax Fraction of missing values per column.
-#' @param maxp Number of features to run on single core. If set to NULL will use total number of features.
-#' @param check_df If set to TRUE will check if input data needs to be transposed, so that features are in rows.
+#' @param maxp Number of features to run on single core. If set to NULL will
+#'  use total number of features.
+#' @param check_df If set to TRUE will check if input data needs to be
+#'  transposed, so that features are in rows.
 #' @return data frame of missing value imputed peak intensity matrix
 #' 
 #' @examples 
@@ -20,7 +23,8 @@ NULL
 #' 
 #' @export
 
-mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5, maxp=NULL, check_df=TRUE){
+mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5, maxp=NULL,
+  check_df=TRUE){
   
   if (check_df == TRUE){
     
@@ -33,16 +37,19 @@ mv_imputation = function(df, method, k=10, rowmax=0.5, colmax=0.5, maxp=NULL, ch
   }
 
   if(any(apply(df, 1, function(vec) all(is.na(vec))) == TRUE)) {
-    stop("Error occurred. Rows with 100% missing values detected - please remove these rows using the peak filter tool")
+    stop("Error occurred. Rows with 100% missing values detected - please
+         remove these rows using the peak filter tool")
   }
 
   if(any(apply(df, 2, function(vec) all(is.na(vec))) == TRUE)) {
-    stop("Error occurred. Columns with 100% missing values detected - please remove these columns using the sample filter tool")
+    stop("Error occurred. Columns with 100% missing values detected - please
+         remove these columns using the sample filter tool")
   }
 
   if (tolower(method) == "knn"){
   
-    obj <- suppressWarnings(impute.knn(as.matrix(df), k=k, rowmax=rowmax, colmax=colmax, maxp = maxp))
+    obj <- suppressWarnings(impute.knn(as.matrix(df), k=k, rowmax=rowmax,
+                                       colmax=colmax, maxp = maxp))
     df <- obj$data
     
   } else if (tolower(method) == "rf"){

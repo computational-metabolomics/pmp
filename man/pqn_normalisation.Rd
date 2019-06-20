@@ -11,7 +11,8 @@ pqn_normalisation(df, classes, qc_label)
 
 \item{classes}{Vector of class labels.}
 
-\item{qc_label}{Label used for QC samples. If set to "all", all samples will be used to calculate correction factor}
+\item{qc_label}{Label used for QC samples. If set to "all", all samples will
+be used to calculate correction factor}
 }
 \value{
 List of normalised data set and correction coefficients

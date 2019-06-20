@@ -19,14 +19,17 @@ filter_peaks_by_rsd(df, max_rsd, classes, qc_label)
 List of filtered peak intensity matrix and matrix with flags
 }
 \description{
-Metabolomics datasets often contain 'features' with irreproducible peak intensity values, or with large numbers of 
-missing values. This tool facilitates the remove of such features from a data matrix, based upon relative standard 
-deviation of intensity values for a given feature within specified QC samples.
+Metabolomics datasets often contain 'features' with irreproducible peak
+ intensity values, or with large numbers of 
+missing values. This tool facilitates the remove of such features from a
+ data matrix, based upon relative standard 
+deviation of intensity values for a given feature within specified QC
+ samples.
 }
 \examples{
 
 attach (testData)
-out <- filter_peaks_by_rsd(df=testData$data, max_rsd = 20, classes = testData$class, 
-   qc_label = "QC")
+out <- filter_peaks_by_rsd(df=testData$data, max_rsd = 20,
+ classes = testData$class, qc_label = "QC")
 
 }

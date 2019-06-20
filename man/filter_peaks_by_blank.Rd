@@ -16,23 +16,30 @@ filter_peaks_by_blank(df, fold_change, classes, blank_label,
 
 \item{blank_label}{Class label used to identify blank samples}
 
-\item{qc_label}{Class label for QC sample. If not NULL will use QC samples to calculate the mean intensity}
+\item{qc_label}{Class label for QC sample. If not NULL will use QC samples
+to calculate the mean intensity}
 
 \item{remove}{Remove blank samples from peak matrix or not}
 
-\item{fraction_in_blank}{Number between 0 to 1 to specify fraction in how many blanks peaks should be present}
+\item{fraction_in_blank}{Number between 0 to 1 to specify fraction in how
+many blanks peaks should be present}
 }
 \value{
 List of filtered peak intensity matrix and matrix with flags
 }
 \description{
-Metabolomics datasets often contain many 'features' of non-biological origin e.g. 
-those associated with extraction and analysis solvents. This tool facilitates the removal 
-of such features from the data matrix, as defined using an appropriate 'blank' sample.
+Metabolomics datasets often contain many 'features' of non-biological
+ origin e.g. 
+those associated with extraction and analysis solvents. This tool
+ facilitates the removal 
+of such features from the data matrix, as defined using an appropriate
+ 'blank' sample.
 }
 \examples{
 attach (testData)
-out <- filter_peaks_by_blank(df = testData$data, fold_change = 1.2, classes = testData$class,
-blank_label = "Blank", qc_label = NULL, remove = FALSE, fraction_in_blank = 0)
+out <- filter_peaks_by_blank(df = testData$data, fold_change = 1.2,
+ classes = testData$class,
+blank_label = "Blank", qc_label = NULL, remove = FALSE,
+ fraction_in_blank = 0)
 
 }

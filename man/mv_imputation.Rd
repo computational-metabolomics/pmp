@@ -10,7 +10,8 @@ mv_imputation(df, method, k = 10, rowmax = 0.5, colmax = 0.5,
 \arguments{
 \item{df}{A peak matrix with features in the rows, samples in the columns}
 
-\item{method}{Missing value imputation method. Supported methods are "knn", "rf", "bpca", "sv", "mn" and "md".}
+\item{method}{Missing value imputation method. Supported methods are "knn",
+"rf", "bpca", "sv", "mn" and "md".}
 
 \item{k}{Number of neighbors to be used in the imputation}
 
@@ -18,9 +19,11 @@ mv_imputation(df, method, k = 10, rowmax = 0.5, colmax = 0.5,
 
 \item{colmax}{Fraction of missing values per column.}
 
-\item{maxp}{Number of features to run on single core. If set to NULL will use total number of features.}
+\item{maxp}{Number of features to run on single core. If set to NULL will
+use total number of features.}
 
-\item{check_df}{If set to TRUE will check if input data needs to be transposed, so that features are in rows.}
+\item{check_df}{If set to TRUE will check if input data needs to be
+transposed, so that features are in rows.}
 }
 \value{
 data frame of missing value imputed peak intensity matrix

@@ -15,9 +15,12 @@ check_peak_matrix_orientation(peak_data, classes = NULL)
 matrix where samples are represented in columns and features in rows
 }
 \description{
-All functions in pmp pacakge expect input peak matrix to have samples as columns and
-measured features in rows. This function will check input matrix orientation and will
-transpose it if needed. If class labels are provided this function will check if the 
+All functions in pmp pacakge expect input peak matrix to have samples
+ as columns and
+measured features in rows. This function will check input matrix
+ orientation and will
+transpose it if needed. If class labels are provided this function will
+ check if the 
 length of labels matches number of samples in peak matrix.
 }
 \examples{

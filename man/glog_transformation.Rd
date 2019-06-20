@@ -23,6 +23,7 @@ https://doi.org/10.1186/1471-2105-8-234
 \examples{
 attach (testData)
 out <- mv_imputation(df=testData$data, method = "knn")
-out <- glog_transformation (df=out, classes = testData$class, qc_label = "QC")
+out <- glog_transformation (df=out, classes = testData$class,
+ qc_label = "QC")
 
 }

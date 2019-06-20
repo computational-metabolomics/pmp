@@ -5,26 +5,34 @@ NULL
 
 #' Filter peaks by blank
 #'
-#' Metabolomics datasets often contain many 'features' of non-biological origin e.g. 
-#' those associated with extraction and analysis solvents. This tool facilitates the removal 
-#' of such features from the data matrix, as defined using an appropriate 'blank' sample.
+#' Metabolomics datasets often contain many 'features' of non-biological
+#'  origin e.g. 
+#' those associated with extraction and analysis solvents. This tool
+#'  facilitates the removal 
+#' of such features from the data matrix, as defined using an appropriate
+#'  'blank' sample.
 #'
 #' @param df Peak intensity matrix
 #' @param fold_change Minimum fold change between analytical and blank samples.
 #' @param classes Vector of class labels
 #' @param blank_label Class label used to identify blank samples
-#' @param qc_label Class label for QC sample. If not NULL will use QC samples to calculate the mean intensity
+#' @param qc_label Class label for QC sample. If not NULL will use QC samples
+#'  to calculate the mean intensity
 #' @param remove Remove blank samples from peak matrix or not
-#' @param fraction_in_blank Number between 0 to 1 to specify fraction in how many blanks peaks should be present
+#' @param fraction_in_blank Number between 0 to 1 to specify fraction in how
+#'  many blanks peaks should be present
 #' @return List of filtered peak intensity matrix and matrix with flags
 #' @examples 
 #' attach (testData)
-#' out <- filter_peaks_by_blank(df = testData$data, fold_change = 1.2, classes = testData$class,
-#' blank_label = "Blank", qc_label = NULL, remove = FALSE, fraction_in_blank = 0)
+#' out <- filter_peaks_by_blank(df = testData$data, fold_change = 1.2,
+#'  classes = testData$class,
+#' blank_label = "Blank", qc_label = NULL, remove = FALSE,
+#'  fraction_in_blank = 0)
 #' 
 #' @export
 
-filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_label=NULL, remove=TRUE, fraction_in_blank=0){
+filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
+  qc_label=NULL, remove=TRUE, fraction_in_blank=0){
   
   df <- check_peak_matrix_orientation(peak_data=df, classes=classes)
   
@@ -51,13 +59,15 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_labe
   idxs[which(is.na(median_intensity_blanks))] <- TRUE
 
   if (is.null(qc_label)){
-      flags <- cbind(median_non_blanks=median_intensity_non_blanks, median_blanks=median_intensity_blanks, 
-                    fold_change=fold_change_exp, blank_flags=as.numeric(idxs), 
-                    blank_fraction_flags=as.numeric(blank_fraction))
+      flags <- cbind(median_non_blanks=median_intensity_non_blanks,
+        median_blanks=median_intensity_blanks, 
+        fold_change=fold_change_exp, blank_flags=as.numeric(idxs), 
+        blank_fraction_flags=as.numeric(blank_fraction))
   } else {
-      flags <- cbind(median_QCs=median_intensity_non_blanks, median_blanks=median_intensity_blanks, 
-                    fold_change=fold_change_exp, blank_flags=as.numeric(idxs),
-                    blank_fraction_flags=as.numeric(blank_fraction))
+      flags <- cbind(median_QCs=median_intensity_non_blanks,
+        median_blanks=median_intensity_blanks, 
+        fold_change=fold_change_exp, blank_flags=as.numeric(idxs),
+        blank_fraction_flags=as.numeric(blank_fraction))
   }
 
   df <- df[idxs, ]
@@ -70,15 +80,19 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_labe
 
 #' Filter features by fraction of missing values
 #'
-#' Metabolomics datasets often contain 'features' with irreproducible peak intensity values, 
-#' or with large numbers of missing values. This tool facilitates the remove of such features 
-#' from a data matrix, based upon the relative proportion (minimum fraction) of samples containing 
+#' Metabolomics datasets often contain 'features' with irreproducible peak
+#'  intensity values, 
+#' or with large numbers of missing values. This tool facilitates the remove
+#'  of such features 
+#' from a data matrix, based upon the relative proportion (minimum fraction)
+#'  of samples containing 
 #' non-missing values.
 #'
 #' @param df Peak intensity matrix
 #' @param min_frac Threshold of fraction of detection
 #' @param classes Vector of class labels
-#' @param method Method to use. 'QC' - withing QC samples, within' - within each sample class or
+#' @param method Method to use. 'QC' - withing QC samples, within' - within
+#'  each sample class or
 #' 'across' - across all samples
 #' @param qc_label Class label for QC sample
 #' @return List of filtered peak intensity matrix and matrix with flags
@@ -86,18 +100,22 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_labe
 #' @examples 
 #' attach (testData)
 #' 
-#' out <- filter_peaks_by_fraction(df = testData$data, min_frac = 1, classes = testData$class, 
-#'     method = "QC", qc_label = "QC")
+#' out <- filter_peaks_by_fraction(df = testData$data, min_frac = 1,
+#'  classes = testData$class, 
+#'  method = "QC", qc_label = "QC")
 #'     
-#' out <- filter_peaks_by_fraction(df = testData$data, min_frac = 1, classes = testData$class, 
-#'     method = "across", qc_label = "QC")
+#' out <- filter_peaks_by_fraction(df = testData$data, min_frac = 1,
+#'  classes = testData$class, 
+#'  method = "across", qc_label = "QC")
 #' 
-#' out <- filter_peaks_by_fraction(df = testData$data, min_frac = 1, classes = testData$class, 
-#'     method = "within", qc_label = "QC")
+#' out <- filter_peaks_by_fraction(df = testData$data, min_frac = 1,
+#'  classes = testData$class, 
+#'  method = "within", qc_label = "QC")
 #' 
 #' @export
 
-filter_peaks_by_fraction <- function(df, min_frac, classes=NULL, method="QC", qc_label="QC"){
+filter_peaks_by_fraction <- function(df, min_frac, classes=NULL, method="QC",
+  qc_label="QC"){
   
   df <- check_peak_matrix_orientation(peak_data=df, classes=classes)
   FUN <- function(irr) return(length(which(!is.na(irr)))/length(irr))
@@ -160,16 +178,20 @@ remove_peaks <- function(df, rem_index){
     df <- df[!rem_index, ]
     df
   } else {
-    stop ("Vector of indexes to remove from peak matrix should be logical vector of TRUE/FALSE vaues.")
+    stop ("Vector of indexes to remove from peak matrix should be logical
+          vector of TRUE/FALSE vaues.")
   }
 }
 
 
 #' Filter features by RSD\% of QC samples
 #'
-#' Metabolomics datasets often contain 'features' with irreproducible peak intensity values, or with large numbers of 
-#' missing values. This tool facilitates the remove of such features from a data matrix, based upon relative standard 
-#' deviation of intensity values for a given feature within specified QC samples.
+#' Metabolomics datasets often contain 'features' with irreproducible peak
+#'  intensity values, or with large numbers of 
+#' missing values. This tool facilitates the remove of such features from a
+#'  data matrix, based upon relative standard 
+#' deviation of intensity values for a given feature within specified QC
+#'  samples.
 #'
 #' @param df Peak intensity matrix
 #' @param max_rsd Threshold of QC RSD\% value
@@ -179,8 +201,8 @@ remove_peaks <- function(df, rem_index){
 #' @examples 
 #' 
 #' attach (testData)
-#' out <- filter_peaks_by_rsd(df=testData$data, max_rsd = 20, classes = testData$class, 
-#'    qc_label = "QC")
+#' out <- filter_peaks_by_rsd(df=testData$data, max_rsd = 20,
+#'  classes = testData$class, qc_label = "QC")
 #' 
 #' @export
 
@@ -205,10 +227,14 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label){
 
 #' Filter samples by missing values
 #'
-#' Missing values in mass spectrometry metabolomic datasets occur widely and can originate from a number of sources, 
-#' including for both technical and biological reasons. In order for robust conclusions to be drawn from down-stream
-#' statistical testing procedures, the issue of missing values must first be addressed. This tool facilitates the 
-#' removal of samples containing a user-defined maximum percentage of missing values.
+#' Missing values in mass spectrometry metabolomic datasets occur widely and
+#'  can originate from a number of sources, 
+#' including for both technical and biological reasons. In order for robust
+#'  conclusions to be drawn from down-stream
+#' statistical testing procedures, the issue of missing values must first be
+#'  addressed. This tool facilitates the 
+#' removal of samples containing a user-defined maximum percentage of missing
+#'  values.
 #'
 #' @param df Peak intensity matrix
 #' @param max_perc_mv Threshold of missing value percentage.
