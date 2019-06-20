@@ -17,14 +17,12 @@ filter_samples_by_mv(df, max_perc_mv, classes = NULL)
 List of filtered peak intensity matrix and matrix with flags
 }
 \description{
-Missing values in mass spectrometry metabolomic datasets occur widely and
- can originate from a number of sources, 
-including for both technical and biological reasons. In order for robust
- conclusions to be drawn from down-stream
-statistical testing procedures, the issue of missing values must first be
- addressed. This tool facilitates the 
-removal of samples containing a user-defined maximum percentage of missing
- values.
+Missing values in mass spectrometry metabolomic datasets occur widely and 
+can originate from a number of sources, including for both technical and 
+biological reasons. In order for robust conclusions to be drawn from 
+down-stream statistical testing procedures, the issue of missing values 
+must first be addressed. This tool facilitates the removal of samples 
+containing a user-defined maximum percentage of missing values.
 }
 \examples{
 

@@ -11,7 +11,7 @@ pqn_normalisation(df, classes, qc_label)
 
 \item{classes}{Vector of class labels.}
 
-\item{qc_label}{Label used for QC samples. If set to "all", all samples will
+\item{qc_label}{Label used for QC samples. If set to 'all', all samples will
 be used to calculate correction factor}
 }
 \value{
@@ -22,6 +22,6 @@ Normalise peak table using PQN method
 }
 \examples{
 attach (testData)
-pqn_normalisation(df=testData$data, classes=testData$class, qc_label = "QC")
+pqn_normalisation(df=testData$data, classes=testData$class, qc_label = 'QC')
 
 }

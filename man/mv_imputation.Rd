@@ -10,8 +10,8 @@ mv_imputation(df, method, k = 10, rowmax = 0.5, colmax = 0.5,
 \arguments{
 \item{df}{A peak matrix with features in the rows, samples in the columns}
 
-\item{method}{Missing value imputation method. Supported methods are "knn",
-"rf", "bpca", "sv", "mn" and "md".}
+\item{method}{Missing value imputation method. Supported methods are 'knn',
+'rf', 'bpca', 'sv', 'mn' and 'md'.}
 
 \item{k}{Number of neighbors to be used in the imputation}
 
@@ -33,6 +33,6 @@ Missing value imputation using different algorithms
 }
 \examples{
 attach (testData)
-out <- mv_imputation(df=t(testData$data), method = "knn")
+out <- mv_imputation(df=t(testData$data), method = 'knn')
 
 }

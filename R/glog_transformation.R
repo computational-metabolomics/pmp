@@ -12,7 +12,7 @@ NULL
 #' @param lambda transform parameter
 #' @return vector of transformed values
 
-glog <- function(y, y0=0, lambda){
+glog <- function(y, y0 = 0, lambda) {
     z <- log((y - y0) + sqrt((y - y0)^2 + lambda))
 }
 
@@ -25,13 +25,13 @@ glog <- function(y, y0=0, lambda){
 #' @param lambda lambda
 #' @return numeric, optimised glog parameter
 
-jglog <- function(y, y0=0, lambda){
+jglog <- function(y, y0 = 0, lambda) {
     z <- glog(y, y0, lambda)
     D <- log(sqrt((y - y0)^2 + lambda))
     
     # average over all features (bins)
-    gmn <- exp(apply(D, 2, mean, na.rm=TRUE)) 
-    zj <- z * gmn # ML estimate
+    gmn <- exp(apply(D, 2, mean, na.rm = TRUE))
+    zj <- z * gmn  # ML estimate
     return(zj)
 }
 
@@ -42,15 +42,15 @@ jglog <- function(y, y0=0, lambda){
 #' @param lambda transform parameter
 #' @return numeric, sum of squared difference
 
-SSE <- function(lambda, y0=0, y){
+SSE <- function(lambda, y0 = 0, y) {
     # calculate ML estimate
     z <- jglog(y, y0, lambda)
     
     # average over all features
-    mean_spec <- apply(z, 1, mean, na.rm=TRUE)
+    mean_spec <- apply(z, 1, mean, na.rm = TRUE)
     
     # calculate sum of squared difference between true and estimate
-    s <- sum((z - mean_spec)^2, na.rm=TRUE)
+    s <- sum((z - mean_spec)^2, na.rm = TRUE)
     
     return(s)
 }
@@ -65,30 +65,30 @@ SSE <- function(lambda, y0=0, y){
 #' @param qc_label Class label for QC sample
 #' @examples 
 #' attach (testData)
-#' out <- mv_imputation(df=testData$data, method = "knn")
+#' out <- mv_imputation(df=testData$data, method = 'knn')
 #' out <- glog_transformation (df=out, classes = testData$class,
-#'  qc_label = "QC")
+#'  qc_label = 'QC')
 #' 
 #' @return data frame, peak inntensity matrix after glog transformation
 #' @export glog_transformation
 
-glog_transformation <- function(df, classes, qc_label){
+glog_transformation <- function(df, classes, qc_label) {
     
     # check if qc_label is present in the classes vector
-    if (length(which(classes %in% qc_label)) == 0){
+    if (length(which(classes %in% qc_label)) == 0) {
         # error if not
-        stop ("QC sample label is not present in sample class label. 
-          Please check your data and qc_label parameter.")
+        stop("QC sample label is not present in sample class label. 
+    Please check your data and qc_label parameter.")
     }
     
     # check peak matrix orientation (samples in columns)
-    df <- check_peak_matrix_orientation(peak_data=df, classes=classes)
+    df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
     
     # data for the QC samples only
-    df_qc <- df[ , classes == qc_label]
-
+    df_qc <- df[, classes == qc_label]
+    
     # set offset to the minimum of the QC samples
-    offset <- min(df_qc, na.rm=TRUE)
+    offset <- min(df_qc, na.rm = TRUE)
     
     # set minimum of qc data to 0
     df_qc <- df_qc - offset
@@ -97,11 +97,11 @@ glog_transformation <- function(df, classes, qc_label){
     step_threshold <- 1e-16
     
     # variance of all features
-    VF=apply(df_qc, 1, var, na.rm=TRUE)
+    VF = apply(df_qc, 1, var, na.rm = TRUE)
     
     # if variance of any feature = 0
-    if(min(VF)==0) {
-        # set min value to minimum greater than 0 
+    if (min(VF) == 0) {
+        # set min value to minimum greater than 0
         newminVar <- sort(unique(VF))[2]
     } else {
         # else use the minimum value
@@ -112,27 +112,27 @@ glog_transformation <- function(df, classes, qc_label){
     low_lim <- 0
     
     # set upper limit of optimisation based on variance
-    upper_lim <- max(pmax(VF, max(VF) / newminVar))
+    upper_lim <- max(pmax(VF, max(VF)/newminVar))
     
-    # search for optimal value of lambda. NB y0 set to default of 0 as not being
-    # implemented here
-    lambda <- optimize(f=SSE, interval=c(low_lim, upper_lim),y0=0, y=df_qc,
-        tol=step_threshold)
+    # search for optimal value of lambda. 
+    # NB y0 set to default of 0 as not being implemented here
+    lambda <- optimize(f = SSE, interval = c(low_lim, upper_lim), y0 = 0,
+        y = df_qc, tol = step_threshold)
     
     # make value of objective is numeric
     lambda <- as.numeric(lambda[[1]])
     print(lambda)
     
     # If SSE optimisation fails use fixed lambda value
-    lambda_std <- 5.0278*10^(-9)
+    lambda_std <- 5.0278 * 10^(-9)
     error_flag <- FALSE
     
     # if optimisation reached upper limit then trigger use of fixed value
-    if (abs(upper_lim-lambda) <= 1e-5) {
+    if (abs(upper_lim - lambda) <= 1e-05) {
         cat("Error!Lambda tending to infinity!Using standard\n")
         error_flag <- TRUE
-    # if optimisation reached lower limit then trigger use of fixed value
-    } else if (abs(low_lim-lambda) <= 1e-5) {
+        # if optimisation reached lower limit then trigger use of fixed value
+    } else if (abs(low_lim - lambda) <= 1e-05) {
         cat("Error!Lambda tending to -infinity!Using standard\n")
         error_flag <- TRUE
     }
@@ -140,18 +140,18 @@ glog_transformation <- function(df, classes, qc_label){
     # if flag triggered then apply scale factor
     if (error_flag) {
         # set lambda to default
-        lambda <- lambda_std 
+        lambda <- lambda_std
         
         # set scaling factor to 1 / mean (total signal) over all samples
-        scal_fact <- apply(df, 2, sum, na.rm=TRUE)
+        scal_fact <- apply(df, 2, sum, na.rm = TRUE)
         scal_fact <- mean(scal_fact)
-        scal_fact <- 1 / scal_fact
+        scal_fact <- 1/scal_fact
         # apply scaling factor
-        df <- df*scal_fact
+        df <- df * scal_fact
     }
     
     # set minimum over all values to 0
-    df <- df-min(df, na.rm=TRUE)
+    df <- df - min(df, na.rm = TRUE)
     # apply glog using optimised values
     df_glog <- as.data.frame(glog(df, 0, lambda))
     
