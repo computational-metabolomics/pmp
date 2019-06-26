@@ -3,6 +3,44 @@
 #' @importFrom pcaMethods pca
 NULL
 
+#' Replace missing values for specific peak matrix feature
+#' @param x Index of matrix feature
+#' @param df A peak matrix with features in the rows, samples in the columns
+#' @param vals Vector object with the same length as number of features in 
+#' peak matrix to replca NA values with
+#' 
+#' @return feature at specified index 'x' with replaced missing values
+#' 
+replace_na <- function(x, df, vals){
+    col_vals <- df[x, ]
+    na_val <- vals[x]
+    col_vals[is.na(col_vals)] <- na_val
+    col_vals
+}
+
+
+#' Imput missing values using mode of each feature
+#' @param df A peak matrix with features in the rows, samples in the columns
+#' @param method Mode to use for missing value imputation. 'mn' for meand and 
+#' 'md'for median.
+#' 
+#' @return data frame of missing value imputed peak intensity matrix
+#' 
+impute_mode <- function (df, method){
+    if (method=="mn"){
+        replacement_vals <- apply(df, 1, mean, na.rm=TRUE)
+    }
+    
+    if (method=="md"){
+        replacement_vals <- apply(df, 1, median, na.rm=TRUE)
+    }
+    feature_names <- rownames(df)
+    df <- do.call(rbind, lapply(seq_len(nrow(df)), replace_na, df=df, 
+                                vals=replacement_vals))
+    rownames(df) <- feature_names
+    df
+}
+
 #' Missing value imputation using different algorithms
 #'
 #' @param df A peak matrix with features in the rows, samples in the columns
@@ -59,17 +97,9 @@ mv_imputation = function(df, method, k = 10, rowmax = 0.5, colmax = 0.5,
     } else if (tolower(method) == "sv") {
         df[is.na(df)] <- min(df, na.rm = TRUE)/2  ##SMV
     } else if (tolower(method) == "mn") {
-        meanrep <- function(mat) apply(mat, 1, mean, na.rm = TRUE)  ###MEAN REP
-        meanVec <- meanrep(df)
-        for (i in seq_len(nrow(df))) {
-            df[i, ][is.na(df[i, ])] <- meanVec[i]
-        }
-    } else if (tolower(method) == "md") {
-        medianrep <- function(mat) apply(mat, 1, median, na.rm = TRUE)
-        medianVec <- medianrep(df)
-        for (i in seq_len(nrow(df))) {
-            df[i, ][is.na(df[i, ])] <- medianVec[i]
-        }
+        df <- impute_mode(df=df, method="mn")
+    } else if (tolower(method)=="md") {
+        df <- impute_mode(df=df, method="md")
     } else {
         stop("Error occurred. No method selected")
     }
