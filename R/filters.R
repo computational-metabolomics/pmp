@@ -29,7 +29,8 @@ NULL
 #' 
 #' @export
 
-filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, qc_label = NULL, remove = TRUE, fraction_in_blank = 0) {
+filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, 
+qc_label = NULL, remove = TRUE, fraction_in_blank = 0) {
     
     df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
     
