@@ -27,12 +27,10 @@ mv_imputation = function(df, method, k = 10, rowmax = 0.5, colmax = 0.5,
     maxp = NULL, check_df = TRUE) {
     
     if (check_df == TRUE) {
-        
         df <- check_peak_matrix_orientation(peak_data = df)
     }
     
     if (is.null(maxp)) {
-        
         maxp <- max(dim(df))
     }
     
@@ -47,48 +45,34 @@ mv_imputation = function(df, method, k = 10, rowmax = 0.5, colmax = 0.5,
     }
     
     if (tolower(method) == "knn") {
-        
         obj <- suppressWarnings(impute.knn(as.matrix(df), k = k, 
             rowmax = rowmax, colmax = colmax, maxp = maxp))
         df <- obj$data
-        
     } else if (tolower(method) == "rf") {
-        
         mf_out <- missForest(t(df))
         print(mf_out$OOBerror)
         df <- t(mf_out$ximp)
-        
     } else if (tolower(method) == "bpca") {
-        
         pcaOb <- pcaMethods::pca(t(df), method = "bpca", scale = "none")
         df <- t(pcaOb@completeObs)
         df[df < 0] <- min(df[df > 0])  ##GUARD AGAINST NEGATIVE VALUES
-        
     } else if (tolower(method) == "sv") {
-        
         df[is.na(df)] <- min(df, na.rm = TRUE)/2  ##SMV
-        
     } else if (tolower(method) == "mn") {
-        
         meanrep <- function(mat) apply(mat, 1, mean, na.rm = TRUE)  ###MEAN REP
         meanVec <- meanrep(df)
         for (i in seq_len(nrow(df))) {
             df[i, ][is.na(df[i, ])] <- meanVec[i]
         }
-        
     } else if (tolower(method) == "md") {
-        
         medianrep <- function(mat) apply(mat, 1, median, na.rm = TRUE)
         medianVec <- medianrep(df)
         for (i in seq_len(nrow(df))) {
             df[i, ][is.na(df[i, ])] <- medianVec[i]
         }
-        
     } else {
-        
         stop("Error occurred. No method selected")
     }
     
-    df <- as.data.frame(df)
-    return(df)
+    return(as.data.frame(df))
 }
