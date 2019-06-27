@@ -32,7 +32,7 @@ NULL
 filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, 
 qc_label = NULL, remove = TRUE, fraction_in_blank = 0) {
     
-    df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
+    df <- check_peak_matrix(peak_data = df, classes = classes)
     
     M_blanks <- rbind(df[, classes == blank_label], NULL)
     
@@ -112,7 +112,7 @@ qc_label = NULL, remove = TRUE, fraction_in_blank = 0) {
 filter_peaks_by_fraction <- function(df, min_frac, classes = NULL,
     method = "QC", qc_label = "QC") {
     
-    df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
+    df <- check_peak_matrix(peak_data = df, classes = classes)
     FUN <- function(irr) return(length(which(!is.na(irr)))/length(irr))
     
     if (method == "within" || method == "QC") {
@@ -170,7 +170,7 @@ filter_peaks_by_fraction <- function(df, min_frac, classes = NULL,
 
 remove_peaks <- function(df, rem_index) {
     
-    df <- check_peak_matrix_orientation(peak_data = df)
+    df <- check_peak_matrix(peak_data = df)
     if (is.logical(rem_index)) {
         df <- df[!rem_index, ]
         df
@@ -204,7 +204,7 @@ remove_peaks <- function(df, rem_index) {
 
 filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label) {
     
-    df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
+    df <- check_peak_matrix(peak_data = df, classes = classes)
     
     df_qcs <- df[, classes == qc_label, drop = FALSE]
     
@@ -244,7 +244,7 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label) {
 
 filter_samples_by_mv <- function(df, max_perc_mv, classes = NULL) {
     
-    df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
+    df <- check_peak_matrix(peak_data = df, classes = classes)
     
     FUN <- function(irr) return(length(which(is.na(irr)))/length(irr))
     perc_mv <- apply(df, 2, FUN)

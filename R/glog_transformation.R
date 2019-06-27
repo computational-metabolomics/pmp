@@ -81,8 +81,8 @@ glog_transformation <- function(df, classes, qc_label) {
     Please check your data and qc_label parameter.")
     }
     
-    # check peak matrix orientation (samples in columns)
-    df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
+    # check peak matrix
+    df <- check_peak_matrix(peak_data = df, classes = classes)
     
     # data for the QC samples only
     df_qc <- df[, classes == qc_label]

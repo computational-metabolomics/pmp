@@ -11,7 +11,7 @@
 
 normalise_to_sum <- function(df, check_df = TRUE) {
     if (check_df == TRUE) {
-        df <- check_peak_matrix_orientation(peak_data = df)
+        df <- check_peak_matrix(peak_data = df)
     }
     return(sweep(df, 2, colSums(df, na.rm = TRUE)/100, FUN = "/"))
 }
@@ -32,7 +32,7 @@ normalise_to_sum <- function(df, check_df = TRUE) {
 
 pqn_normalisation <- function(df, classes, qc_label) {
     
-    df <- check_peak_matrix_orientation(peak_data = df, classes = classes)
+    df <- check_peak_matrix(peak_data = df, classes = classes)
     
     if (qc_label == "all") {
         ref = df

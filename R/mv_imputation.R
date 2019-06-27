@@ -65,7 +65,7 @@ mv_imputation = function(df, method, k = 10, rowmax = 0.5, colmax = 0.5,
     maxp = NULL, check_df = TRUE) {
     
     if (check_df == TRUE) {
-        df <- check_peak_matrix_orientation(peak_data = df)
+        df <- check_peak_matrix(peak_data = df)
     }
     
     if (is.null(maxp)) {

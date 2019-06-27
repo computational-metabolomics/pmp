@@ -1,5 +1,5 @@
-#' Check if peak matrix is in format features in rows, samples in columns and 
-#' that all cell contain numeric values. 
+#' Check if peak matrix is in format features in rows, samples in columns 
+#' and that all cell contain numeric values. 
 #' 
 #' All functions in pmp pacakge expect input peak matrix to have samples 
 #' as columns and measured features in rows. This function will check input 
@@ -12,12 +12,12 @@
 #' @return matrix where samples are represented in columns and features in rows
 #' @examples 
 #' 
-#' attach (testData)
-#' out <- check_peak_matrix_orientation (peak_data=t(testData$data))
+#' attach(testData)
+#' out <- check_peak_matrix(peak_data=t(testData$data))
 #' 
 #' @export
 
-check_peak_matrix_orientation <- function(peak_data, classes = NULL) {
+check_peak_matrix <- function(peak_data, classes = NULL) {
     dims <- dim(peak_data)
     is_data_frame <- is.data.frame(peak_data)
     
