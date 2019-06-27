@@ -2,7 +2,8 @@
 % Please edit documentation in R/checkPeakMatrixOrientation.R
 \name{check_peak_matrix_orientation}
 \alias{check_peak_matrix_orientation}
-\title{Check if peak matrix is in format features in rows, samples in columns.}
+\title{Check if peak matrix is in format features in rows, samples in columns and 
+that all cell contain numeric values.}
 \usage{
 check_peak_matrix_orientation(peak_data, classes = NULL)
 }

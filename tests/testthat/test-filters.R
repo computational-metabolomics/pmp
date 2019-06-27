@@ -74,5 +74,20 @@ test_that("Remove peaks filter fails if input is not logical vector", {
   
 })
 
+test_that("Blank filter fails if one column is a factor", {
+  data <- as.data.frame(testData$data)
+  data$QC_2 <- as.factor(data$QC_2)
+  testthat::expect_error(filter_peaks_by_blank(df=data, 
+    fold_change=1.2, classes=testData$class, 
+    blank_label="Blank", qc_label=NULL, remove=FALSE, 
+    fraction_in_blank=0))
+})
 
+test_that("Blank filter fails if all data are data type 'character'", {
+  data <- as.character(testData$data)
+  testthat::expect_error(filter_peaks_by_blank(df=data, 
+                                               fold_change=1.2, classes=testData$class, 
+                                               blank_label="Blank", qc_label=NULL, remove=FALSE, 
+                                               fraction_in_blank=0))
+})
 

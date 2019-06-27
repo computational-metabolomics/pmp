@@ -1,4 +1,5 @@
-#' Check if peak matrix is in format features in rows, samples in columns. 
+#' Check if peak matrix is in format features in rows, samples in columns and 
+#' that all cell contain numeric values. 
 #' 
 #' All functions in pmp pacakge expect input peak matrix to have samples 
 #' as columns and measured features in rows. This function will check input 
@@ -27,6 +28,11 @@ check_peak_matrix_orientation <- function(peak_data, classes = NULL) {
     As there were no class labels availiable please check that peak table is \n
     still properly rotated, samples as columns and features in rows. \n
     Use 'check_df = FALSE' to keep original peak matrix orientation.")
+    }
+    
+    if (!all(apply (peak_data, 2, typeof)!="factor" & 
+        apply(peak_data, 2, typeof)!="character")){
+        stop ("Peak matrix contains non-numeric values. Check your inputs!")
     }
     
     if (!is.null(classes)) {
