@@ -11,7 +11,7 @@ jglog(y, y0 = 0, lambda)
 \arguments{
 \item{y}{values.}
 
-\item{y0}{offset applied to y (default = 0).}
+\item{y0}{offset applied to y (default=0).}
 
 \item{lambda}{lambda}
 }

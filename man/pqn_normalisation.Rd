@@ -22,6 +22,6 @@ Normalise peak table using PQN method
 }
 \examples{
 attach (testData)
-pqn_normalisation(df=testData$data, classes=testData$class, qc_label = 'QC')
+pqn_normalisation(df=testData$data, classes=testData$class, qc_label='QC')
 
 }

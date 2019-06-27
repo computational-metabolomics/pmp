@@ -9,7 +9,7 @@ glog(y, y0 = 0, lambda)
 \arguments{
 \item{y}{values to be tranformed}
 
-\item{y0}{offset applied to y (default = 0).}
+\item{y0}{offset applied to y (default=0).}
 
 \item{lambda}{transform parameter}
 }

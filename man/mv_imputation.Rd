@@ -33,6 +33,6 @@ Missing value imputation using different algorithms
 }
 \examples{
 attach (testData)
-out <- mv_imputation(df=t(testData$data), method = 'knn')
+out <- mv_imputation(df=t(testData$data), method='knn')
 
 }

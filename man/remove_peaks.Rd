@@ -20,7 +20,6 @@ Filter to remove features
 \examples{
 attach (testData)
 rem_index <- testData$remove_peaks$rem_index
-
-out <- remove_peaks(df=testData$data, rem_index = rem_index)
+out <- remove_peaks(df=testData$data, rem_index=rem_index)
 
 }

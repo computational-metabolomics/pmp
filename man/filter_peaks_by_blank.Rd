@@ -35,8 +35,8 @@ as defined using an appropriate blank' sample.
 }
 \examples{
 attach (testData)
-out <- filter_peaks_by_blank(df = testData$data, fold_change = 1.2, 
-classes = testData$class, blank_label = 'Blank', qc_label = NULL, 
-remove = FALSE, fraction_in_blank = 0)
+out <- filter_peaks_by_blank(df=testData$data, fold_change=1.2, 
+classes=testData$class, blank_label='Blank', qc_label=NULL, 
+remove=FALSE, fraction_in_blank=0)
 
 }

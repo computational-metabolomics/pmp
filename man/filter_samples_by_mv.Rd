@@ -27,6 +27,6 @@ containing a user-defined maximum percentage of missing values.
 \examples{
 
 attach (testData)
-out <- filter_samples_by_mv (df = testData$data, max_perc_mv = 0.8)
+out <- filter_samples_by_mv (df=testData$data, max_perc_mv=0.8)
 
 }

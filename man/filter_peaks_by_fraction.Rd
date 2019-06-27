@@ -32,13 +32,13 @@ values.
 \examples{
 attach (testData)
 
-out <- filter_peaks_by_fraction(df = testData$data, min_frac = 1, 
-classes = testData$class, method = 'QC', qc_label = 'QC')
+out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
+classes=testData$class, method='QC', qc_label='QC')
     
-out <- filter_peaks_by_fraction(df = testData$data, min_frac = 1, 
-classes = testData$class, method = 'across', qc_label = 'QC')
+out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
+classes=testData$class, method='across', qc_label='QC')
 
-out <- filter_peaks_by_fraction(df = testData$data, min_frac = 1, 
-classes = testData$class, method = 'within', qc_label = 'QC')
+out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
+classes=testData$class, method='within', qc_label='QC')
 
 }

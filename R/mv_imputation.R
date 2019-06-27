@@ -18,7 +18,6 @@ replace_na <- function(x, df, vals){
     col_vals
 }
 
-
 #' Imput missing values using mode of each feature
 #' @param df A peak matrix with features in the rows, samples in the columns
 #' @param method Mode to use for missing value imputation. 'mn' for meand and 
@@ -36,7 +35,7 @@ impute_mode <- function (df, method){
     }
     feature_names <- rownames(df)
     df <- do.call(rbind, lapply(seq_len(nrow(df)), replace_na, df=df, 
-                                vals=replacement_vals))
+        vals=replacement_vals))
     rownames(df) <- feature_names
     df
 }
@@ -57,15 +56,15 @@ impute_mode <- function (df, method){
 #' 
 #' @examples 
 #' attach (testData)
-#' out <- mv_imputation(df=t(testData$data), method = 'knn')
+#' out <- mv_imputation(df=t(testData$data), method='knn')
 #' 
 #' @export
 
-mv_imputation = function(df, method, k = 10, rowmax = 0.5, colmax = 0.5, 
-    maxp = NULL, check_df = TRUE) {
+mv_imputation <- function(df, method, k=10, rowmax=0.5, colmax=0.5, 
+    maxp=NULL, check_df=TRUE) {
     
     if (check_df == TRUE) {
-        df <- check_peak_matrix(peak_data = df)
+        df <- check_peak_matrix(peak_data=df)
     }
     
     if (is.null(maxp)) {
@@ -83,19 +82,19 @@ mv_imputation = function(df, method, k = 10, rowmax = 0.5, colmax = 0.5,
     }
     
     if (tolower(method) == "knn") {
-        obj <- suppressWarnings(impute.knn(as.matrix(df), k = k, 
-            rowmax = rowmax, colmax = colmax, maxp = maxp))
+        obj <- suppressWarnings(impute.knn(as.matrix(df), k=k, 
+            rowmax=rowmax, colmax=colmax, maxp=maxp))
         df <- obj$data
     } else if (tolower(method) == "rf") {
         mf_out <- missForest(t(df))
         print(mf_out$OOBerror)
         df <- t(mf_out$ximp)
     } else if (tolower(method) == "bpca") {
-        pcaOb <- pcaMethods::pca(t(df), method = "bpca", scale = "none")
+        pcaOb <- pcaMethods::pca(t(df), method="bpca", scale="none")
         df <- t(pcaOb@completeObs)
         df[df < 0] <- min(df[df > 0])  ##GUARD AGAINST NEGATIVE VALUES
     } else if (tolower(method) == "sv") {
-        df[is.na(df)] <- min(df, na.rm = TRUE)/2  ##SMV
+        df[is.na(df)] <- min(df, na.rm=TRUE)/2  ##SMV
     } else if (tolower(method) == "mn") {
         df <- impute_mode(df=df, method="mn")
     } else if (tolower(method)=="md") {

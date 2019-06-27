@@ -17,7 +17,7 @@
 #' 
 #' @export
 
-check_peak_matrix <- function(peak_data, classes = NULL) {
+check_peak_matrix <- function(peak_data, classes=NULL) {
     dims <- dim(peak_data)
     is_data_frame <- is.data.frame(peak_data)
     
@@ -27,7 +27,7 @@ check_peak_matrix <- function(peak_data, classes = NULL) {
     in columns. \n
     As there were no class labels availiable please check that peak table is \n
     still properly rotated, samples as columns and features in rows. \n
-    Use 'check_df = FALSE' to keep original peak matrix orientation.")
+    Use 'check_df=FALSE' to keep original peak matrix orientation.")
     }
     
     if (!all(apply (peak_data, 2, typeof)!="factor" & 

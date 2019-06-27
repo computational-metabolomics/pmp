@@ -9,11 +9,11 @@
 #'
 #' @export
 
-normalise_to_sum <- function(df, check_df = TRUE) {
+normalise_to_sum <- function(df, check_df=TRUE) {
     if (check_df == TRUE) {
-        df <- check_peak_matrix(peak_data = df)
+        df <- check_peak_matrix(peak_data=df)
     }
-    return(sweep(df, 2, colSums(df, na.rm = TRUE)/100, FUN = "/"))
+    return(sweep(df, 2, colSums(df, na.rm=TRUE)/100, FUN="/"))
 }
 
 
@@ -26,21 +26,21 @@ normalise_to_sum <- function(df, check_df = TRUE) {
 #' @return List of normalised data set and correction coefficients
 #' @examples 
 #' attach (testData)
-#' pqn_normalisation(df=testData$data, classes=testData$class, qc_label = 'QC')
+#' pqn_normalisation(df=testData$data, classes=testData$class, qc_label='QC')
 #' 
 #' @export
 
 pqn_normalisation <- function(df, classes, qc_label) {
     
-    df <- check_peak_matrix(peak_data = df, classes = classes)
+    df <- check_peak_matrix(peak_data=df, classes=classes)
     
     if (qc_label == "all") {
-        ref = df
+        ref <- df
     } else {
-        ref = df[, classes == qc_label]
+        ref <- df[, classes == qc_label]
     }
     
-    ref_mean <- apply(ref, 1, mean, na.rm = TRUE)
+    ref_mean <- apply(ref, 1, mean, na.rm=TRUE)
     coef <- vector()
     
     for (i in seq_len(dim(df)[2])) {
@@ -51,8 +51,8 @@ pqn_normalisation <- function(df, classes, qc_label) {
             tempMat <- tempMat[-c(vecelim), ]
         }
         
-        coef[i] <- median(as.numeric(tempMat[, 2]/tempMat[, 1]), na.rm = TRUE)
+        coef[i] <- median(as.numeric(tempMat[, 2]/tempMat[, 1]), na.rm=TRUE)
     }
-    out <- list(df = df/coef[col(df)], coef = coef)
+    out <- list(df=df/coef[col(df)], coef=coef)
     return(out)
 }
