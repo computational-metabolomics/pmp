@@ -5,7 +5,7 @@ test_that("normalise to sum returns correct output", {
 })
 
 test_that("normalise to sum returns correct output when matrix needs to be transposed", {
-  expect_warning (out <- normalise_to_sum (t(testData$data)))
+  expect_warning (out <- normalise_to_sum(t(testData$data)))
   expect_equal(out, testData$normalise_to_sum)
 })
 
@@ -27,4 +27,11 @@ test_that("PQN normalisation returns correct output when matrix needs to be tran
   out <- pqn_normalisation(df=t(testData$data), classes=testData$class, 
     qc_label="QC")
   expect_equal(out, testData$pqn_normalisation)
+})
+
+test_that("PQN normalisation doesn't crash if only one feature is selected for normalisation", {
+  out <- matrix(nrow=3, ncol=9)
+  out <- rbind(out, testData$data[1, ])
+  out <- pqn_normalisation(df=out, classes=testData$class, qc_label="QC")
+  expect_true(nrow(out$df) == 4)
 })
