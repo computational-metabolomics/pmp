@@ -2,7 +2,7 @@
 PMP: Peak Matrix Processing
 ==============================================
 
-|Git| |Bioconda| |Build Status (Travis)| |License| |Coverage|
+|Git| |Bioconda| |Build Status (Travis)| |Build Status (AppVeyor)| |License| |Coverage|
 
 
 ------------
@@ -37,6 +37,9 @@ References
 
 .. |Build Status (Travis)| image:: https://img.shields.io/travis/computational-metabolomics/pmp/master.svg?label=Travis
    :target: https://travis-ci.org/computational-metabolomics/pmp
+
+.. |Build Status (AppVeyor)| image:: https://ci.appveyor.com/api/projects/status/github/computational-metabolomics/pmp?branch=master&svg=true
+   :target: https://ci.appveyor.com/project/computational-metabolomics/pmp
 
 .. |Build Status (AppVeyor)| image:: https://ci.appveyor.com/api/projects/status/github/computational-metabolomics/pmp?branch=master&svg=true
    :target: https://ci.appveyor.com/project/computational-metabolomcis/pmp
