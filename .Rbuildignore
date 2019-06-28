@@ -6,3 +6,5 @@
 LICENSE
 README.rst
 .travis.yml
+^.*\.html
+^appveyor\.yml$
