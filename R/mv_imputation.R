@@ -20,7 +20,7 @@ replace_na <- function(x, df, vals){
 
 #' Imput missing values using mode of each feature
 #' @param df A peak matrix with features in the rows, samples in the columns
-#' @param method Mode to use for missing value imputation. 'mn' for meand and 
+#' @param method Mode to use for missing value imputation. 'mn' for mean and 
 #' 'md'for median.
 #' 
 #' @return data frame of missing value imputed peak intensity matrix
