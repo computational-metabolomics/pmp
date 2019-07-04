@@ -62,6 +62,8 @@ SSE <- function(lambda, y0=0, y) {
 #' @param df Peak intensity matrix
 #' @param classes Vector of class labels
 #' @param qc_label Class label for QC sample
+#' @param store_lambda If value of optimised lambda parameter needs to be
+#' returned
 #' @examples 
 #' attach (testData)
 #' out <- mv_imputation(df=testData$data, method='knn')
@@ -71,7 +73,7 @@ SSE <- function(lambda, y0=0, y) {
 #' @return data frame, peak inntensity matrix after glog transformation
 #' @export glog_transformation
 
-glog_transformation <- function(df, classes, qc_label) {
+glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
     # check if qc_label is present in the classes vector
     if (length(which(classes %in% qc_label))==0) {
         stop("QC sample label is not present in sample class label.
@@ -147,5 +149,9 @@ glog_transformation <- function(df, classes, qc_label) {
     # apply glog using optimised values
     df_glog <- as.data.frame(glog(df, 0, lambda))
     
-    return(df_glog)
+    if (store_lambda){
+        return(list(df_glog, lambda))
+    } else {
+        return(df_glog)
+    }
 }

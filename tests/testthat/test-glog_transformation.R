@@ -27,3 +27,12 @@ test_that("If feature variance is 0 replace it with small value", {
       qc_label="QC")[3,], regexp='Error!Lambda')
     testthat::expect_true(all(out[1:3] == out[4:6]))
 })
+
+test_that("glog function returns optimised lambda value if requested", {
+  out <- mv_imputation(df=testData$data, method="knn")
+  out <- glog_transformation (df=out, classes=testData$class, 
+    qc_label="QC", store_lambda=TRUE)
+  lambda <- as.integer(7865716)
+  testthat::expect_true(length(out) == 2)
+  testthat::expect_true(lambda == as.integer(out[[2]]))
+})
