@@ -127,7 +127,7 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
         }
         for (cl in cls) {
             idxs <- cl == classes
-            subset_cl <- df[, idxs]
+            subset_cl <- df[, idxs, drop=FALSE]
             frac <- apply(subset_cl, 1, FUN)
             fracs <- rbind(fracs, round(frac, 2))
             fracs_flags <- rbind(fracs_flags, as.numeric(frac >= min_frac))
