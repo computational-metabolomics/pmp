@@ -1,3 +1,5 @@
-pmp v0.99.0 (Release date: 2019-06-21)
+pmp v0.2.4 (Release date: 2019-08-07)
 =========================
-  Initial release!
+  Updated documetation and usage examples
+  Refactored glog scaling function
+  PQN normalisation supports using all samples to calculate correction factor
