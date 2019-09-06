@@ -2,7 +2,7 @@
 % Please edit documentation in R/glog_transformation.R
 \name{glog_transformation}
 \alias{glog_transformation}
-\title{Performs glog transformation on the data set, 
+\title{Performs glog transformation on the data set,
 using QC samples to estimate lambda.}
 \usage{
 glog_transformation(df, classes, qc_label, store_lambda = FALSE)
@@ -27,6 +27,6 @@ https://doi.org/10.1186/1471-2105-8-234
 attach (testData)
 out <- mv_imputation(df=testData$data, method='knn')
 out <- glog_transformation (df=out, classes=testData$class,
- qc_label='QC')
+    qc_label='QC')
 
 }

@@ -3,7 +3,7 @@
 \name{jglog}
 \alias{jglog}
 \title{Internal function for max. likelihood optimisation of glog params
-Calculates the alternative Jacobian fcn described in 
+Calculates the alternative Jacobian fcn described in
 https://doi.org/10.1186/1471-2105-8-234}
 \usage{
 jglog(y, y0 = 0, lambda)
@@ -20,6 +20,6 @@ numeric, optimised glog parameter
 }
 \description{
 Internal function for max. likelihood optimisation of glog params
-Calculates the alternative Jacobian fcn described in 
+Calculates the alternative Jacobian fcn described in
 https://doi.org/10.1186/1471-2105-8-234
 }

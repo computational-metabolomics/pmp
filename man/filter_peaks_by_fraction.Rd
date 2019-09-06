@@ -5,7 +5,7 @@
 \title{Filter features by fraction of missing values}
 \usage{
 filter_peaks_by_fraction(df, min_frac, classes = NULL, method = "QC",
-  qc_label = "QC")
+    qc_label = "QC")
 }
 \arguments{
 \item{df}{Peak intensity matrix}

@@ -7,7 +7,7 @@ NULL
 #' @param x Index of matrix feature
 #' @param df A peak matrix with features in the rows, samples in the columns
 #' @param vals Vector object with the same length as number of features in 
-#' peak matrix to replca NA values with
+#'peak matrix to replca NA values with
 #' 
 #' @return feature at specified index 'x' with replaced missing values
 #' 
@@ -21,7 +21,7 @@ replace_na <- function(x, df, vals){
 #' Imput missing values using mode of each feature
 #' @param df A peak matrix with features in the rows, samples in the columns
 #' @param method Mode to use for missing value imputation. 'mn' for mean and 
-#' 'md'for median.
+#''md'for median.
 #' 
 #' @return data frame of missing value imputed peak intensity matrix
 #' 
@@ -44,14 +44,14 @@ impute_mode <- function (df, method){
 #'
 #' @param df A peak matrix with features in the rows, samples in the columns
 #' @param method Missing value imputation method. Supported methods are 'knn',
-#'  'rf', 'bpca', 'sv', 'mn' and 'md'.
+#''rf', 'bpca', 'sv', 'mn' and 'md'.
 #' @param k Number of neighbors to be used in the imputation 
 #' @param rowmax Fraction of missing values per row.
 #' @param colmax Fraction of missing values per column.
 #' @param maxp Number of features to run on single core. If set to NULL will
-#'  use total number of features.
+#'use total number of features.
 #' @param check_df If set to TRUE will check if input data needs to be
-#'  transposed, so that features are in rows.
+#'transposed, so that features are in rows.
 #' @return data frame of missing value imputed peak intensity matrix
 #' 
 #' @examples 

@@ -1,7 +1,7 @@
 #' Normalise peak table to the total sum of peak intensities
 #' @param df Data frame
 #' @param check_df If set to TRUE will check if input data needs to be
-#'  transposed, so that features are in rows.
+#'transposed, so that features are in rows.
 #' @return Normalised peak matrix.
 #' @examples 
 #' attach (testData)
@@ -22,7 +22,7 @@ normalise_to_sum <- function(df, check_df=TRUE) {
 #' @param df Data frame.
 #' @param classes Vector of class labels. 
 #' @param qc_label Label used for QC samples. If set to 'all', all samples will
-#'  be used to calculate correction factor
+#'be used to calculate correction factor
 #' @return List of normalised data set and correction coefficients
 #' @examples 
 #' attach (testData)

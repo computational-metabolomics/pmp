@@ -15,10 +15,10 @@ NULL
 #' @param classes Vector of class labels
 #' @param blank_label Class label used to identify blank samples
 #' @param qc_label Class label for QC sample. If not NULL will use QC samples 
-#' to calculate the mean intensity
+#'to calculate the mean intensity
 #' @param remove Remove blank samples from peak matrix or not
 #' @param fraction_in_blank Number between 0 to 1 to specify fraction in how 
-#' many blanks peaks should be present
+#'many blanks peaks should be present
 #' @return List of filtered peak intensity matrix and matrix with flags
 #' 
 #' @examples
@@ -90,7 +90,7 @@ qc_label=NULL, remove=TRUE, fraction_in_blank=0) {
 #' @param min_frac Threshold of fraction of detection
 #' @param classes Vector of class labels
 #' @param method Method to use. 'QC' - withing QC samples, within' - within 
-#' each sample class or across' - across all samples
+#'each sample class or across' - across all samples
 #' @param qc_label Class label for QC sample
 #' 
 #' @return List of filtered peak intensity matrix and matrix with flags
@@ -196,7 +196,7 @@ remove_peaks <- function(df, rem_index) {
 #' 
 #' attach (testData)
 #' out <- filter_peaks_by_rsd(df=testData$data, max_rsd=20,
-#'  classes=testData$class, qc_label='QC')
+#'    classes=testData$class, qc_label='QC')
 #' 
 #' @export
 

@@ -5,7 +5,7 @@
 \title{Missing value imputation using different algorithms}
 \usage{
 mv_imputation(df, method, k = 10, rowmax = 0.5, colmax = 0.5,
-  maxp = NULL, check_df = TRUE)
+    maxp = NULL, check_df = TRUE)
 }
 \arguments{
 \item{df}{A peak matrix with features in the rows, samples in the columns}
