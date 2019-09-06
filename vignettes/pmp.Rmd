@@ -1,19 +1,67 @@
 ---
 title: "Peak Matrix Processing for -omics data sets"
-output: rmarkdown::html_vignette
+author: 
+    name: "Andris Jankevics"
+    affiliation: Phenome Centre Birmingham, University of Birmingham
+    email: a.jankevics@bham.ac.uk
+
+package: pmp
+
+date: "`r Sys.Date()`"
+output: 
+    BiocStyle::html_document:
+        toc: true
+        toc_depth: 2  
+        number_sections: true  
+        toc_float: true
+
 vignette: >
-  %\VignetteIndexEntry{Peak Matrix Processing for -omics data sets}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+    %\VignetteIndexEntry{Peak Matrix Processing for -omics data sets}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+    collapse = TRUE,
+    comment = "#>"
 )
 ```
+
+# Introduction
+
+R package pmp (Peak Matrix Processing for -omics data sets) contains many
+useful functions commonly used for -omics data pre-processing.
+
+Offered functionality includes data filtering based on fraction of missing
+values across samples of features. Blank sample filter for LC-MS of DI-MS 
+data sets and feature filter based on quality control (QC)
+sample RSD \% values.
+
+In this package we have implemented simplified unified interface for several
+missing value imputation algorithms. Supported methods are k-nearest neighbors 
+(knn), random forests (rf), Bayesian PCA missing value estimator (bpca), 
+mean or median value of the given feature and constant small value.
+
+Variance stabilising generalised logarithm transformation (glog) algorithm is 
+implimented to help to minimise contributions from unwanted technical variaton
+of sample collection.
+
+PQN and normalisation the the total signal intensity methods are implemented for
+normalisation of biological variability across measured samples.
+
+# Installation
+
+```{r eval=FALSE, include=TRUE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("pmp")
+```
+
+
+# Standard peak matrix processing workflow for LC/MS or DI/MS data sets
 
 ```{r setup}
 library(pmp)
 ```
+

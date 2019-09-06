@@ -1,13 +1,13 @@
 Package: pmp
 Type: Package
 Title: Peak matrix processing
-Version: 0.2.4
+Version: 0.2.5
 Author: Ralf Weber and Andris Jankevics
 Maintainer: Andris Jankevics <a.jankevics@bham.ac.uk>
 Description: Tools and filters for peak matrix scaling, normalisation and filtering.
 License: GPL-3
 biocViews: MassSpectrometry, Metabolomics, Software
-Depends: R (>= 2.10)
+Depends: R (>= 3.6)
 Imports: stats, impute, pcaMethods, missForest
 Encoding: UTF-8
 LazyData: true
@@ -16,5 +16,6 @@ Suggests:
     testthat,
     covr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    BiocStyle
 VignetteBuilder: knitr
