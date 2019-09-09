@@ -88,10 +88,8 @@ glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
 
     VF <- apply(df_qc, 1, var, na.rm=TRUE) # variance of all features
     
-    # Use the samllest non-0 variance value as optimisation minimum
-    newminVar <- sort(VF)[sort(VF) > 0][1]
-
-    upper_lim <- max(pmax(VF, max(VF) / newminVar))
+    # Upper limit max var or largest ratio max(var)/min(var)
+    upper_lim <- max(pmax(VF, max(VF) / sort(VF)[sort(VF) > 0][1]))
 
     # search for optimal value of lambda.
     # NB y0 set to default of 0 as not being implemented here
