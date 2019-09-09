@@ -87,13 +87,9 @@ glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
     step_threshold <- 1e-16 #stop optimisation when improvement less than this
 
     VF <- apply(df_qc, 1, var, na.rm=TRUE) # variance of all features
-
-    # if variance of any feature is 0
-    if (min(VF) == 0) {
-        newminVar <- sort(unique(VF))[2] # set min value to smalless non-0
-    } else {
-        newminVar <- min(VF)
-    }
+    
+    # Use the samllest non-0 variance value as optimisation minimum
+    newminVar <- sort(VF)[sort(VF) > 0][1]
 
     low_lim <- 0 ## set lower  and upper limit of optimisation
     upper_lim <- max(pmax(VF, max(VF) / newminVar))
