@@ -17,7 +17,7 @@ glog <- function(y, y0=0, lambda){
 }
 
 #' Internal function for max. likelihood optimisation of glog params
-#' Calculates the alternative Jacobian fcn described in
+#' Calculates the alternative Jacobian function described in
 #' https://doi.org/10.1186/1471-2105-8-234
 #'
 #' @param y values.
@@ -75,7 +75,7 @@ SSE <- function(lambda, y0=0, y) {
 
 glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
     # check if qc_label is present in the classes vector
-    if (length(which(classes %in% qc_label))==0) {
+    if (length(which(classes %in% qc_label)) == 0) {
         stop("QC sample label is not present. Check your qc_label parameter.")
     }
     df <- check_peak_matrix(peak_data=df, classes=classes)
@@ -104,12 +104,11 @@ glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
         y=df_qc, tol=step_threshold)
 
     lambda <- as.numeric(lambda[[1]]) # make sure value of objective is numeric
-    lambda_opt = lambda
+    lambda_opt <- lambda
 
     # If SSE optimisation fails use fixed lambda value
     lambda_std <- 5.0278 * 10^(-9)
-    error_flag <- FALSE
-
+    
     # if optimisation reached upper limit then trigger use of fixed value
     if (abs(upper_lim - lambda) <= 1e-05) {
         cat("Error!Lambda tending to infinity!Using standard\n")
@@ -118,6 +117,8 @@ glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
     } else if (abs(low_lim - lambda) <= 1e-05) {
         cat("Error!Lambda tending to -infinity!Using standard\n")
         error_flag <- TRUE
+    } else {
+        error_flag <- FALSE
     }
 
     # if flag triggered then apply scale factor
