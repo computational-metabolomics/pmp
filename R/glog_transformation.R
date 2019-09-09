@@ -1,4 +1,4 @@
-#' @importFrom stats optimize
+#' @importFrom stats optimise
 #'
 
 NULL
@@ -14,6 +14,7 @@ NULL
 
 glog <- function(y, y0=0, lambda){
     z <- log((y - y0) + sqrt((y - y0)^2 + lambda))
+    return(z)
 }
 
 #' Internal function for max. likelihood optimisation of glog params
@@ -54,6 +55,21 @@ SSE <- function(lambda, y0=0, y) {
     return(s)
 }
 
+#' If glog optimisation fails, this function will will scale values in the 
+#' peak matrix to the 1 / mean (total signal) over all samples.
+#' 
+#' @param df Peak intensity matrix
+#' @return Scaled peak matrix
+
+glog_rescale_data <- function(df){
+    # 
+    scal_fact <- apply(df, 2, sum, na.rm=TRUE)
+    scal_fact <- mean(scal_fact)
+    scal_fact <- 1 / scal_fact
+    df <- df * scal_fact # apply scaling factor
+    return(df)
+}
+
 #' Performs glog transformation on the data set,
 #' using QC samples to estimate lambda.
 #'
@@ -84,7 +100,6 @@ glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
 
     offset <- min(df_qc, na.rm=TRUE) # set offset to the minimum QC samples
     df_qc <- df_qc - offset # set minimum of qc data to 0
-    step_threshold <- 1e-16 #stop optimisation when improvement less than this
 
     VF <- apply(df_qc, 1, var, na.rm=TRUE) # variance of all features
     
@@ -92,40 +107,27 @@ glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
     upper_lim <- max(pmax(VF, max(VF) / sort(VF)[sort(VF) > 0][1]))
 
     # search for optimal value of lambda.
-    # NB y0 set to default of 0 as not being implemented here
-    lambda <- optimize(f=SSE, interval=c(0, upper_lim), y0=0,
-        y=df_qc, tol=step_threshold)
+    lambda <- optimise(f=SSE, interval=c(0, upper_lim), y0=0,
+        y=df_qc, tol=1e-16)
 
-    lambda <- as.numeric(lambda[[1]]) # make sure value of objective is numeric
+    lambda <- lambda$minimum
     lambda_opt <- lambda
 
-    # If SSE optimisation fails use fixed lambda value
-    lambda_std <- 5.0278 * 10^(-9)
-    
-    # if optimisation reached upper limit then trigger use of fixed value
-    if (abs(upper_lim - lambda) <= 1e-05) {
-        cat("Error!Lambda tending to infinity!Using standard\n")
+    error_flag <- FALSE
+    # if optimisation reached upper/lower limit then trigger use of fixed value
+    if (abs(upper_lim - lambda) <= 1e-05 | abs(0 - lambda) <= 1e-05) {
+        cat("Error!Lambda tending to infinity! Using standard\n")
         error_flag <- TRUE
-        # if optimisation reached lower limit then trigger use of fixed value
-    } else if (abs(0 - lambda) <= 1e-05) {
-        cat("Error!Lambda tending to -infinity!Using standard\n")
-        error_flag <- TRUE
-    } else {
-        error_flag <- FALSE
-    }
+    } 
 
     # if flag triggered then apply scale factor
     if (error_flag) {
-        lambda <- lambda_std # set lambda to default
-        # set scaling factor to 1 / mean (total signal) over all samples
-        scal_fact <- apply(df, 2, sum, na.rm=TRUE)
-        scal_fact <- mean(scal_fact)
-        scal_fact <- 1 / scal_fact
-        df <- df * scal_fact # apply scaling factor
+        lambda <- 5.0278 * 10^(-9)
+        df <- glog_rescale_data(df)
     }
 
     df <- df - min(df, na.rm=TRUE) # set minimum over all values to 0
-    df_glog <- as.data.frame(glog(df, 0, lambda)) # apply glog using optimised
+    df_glog <- as.data.frame(glog(df, 0, lambda)) # apply glog
 
     if (store_lambda){
         return(list(df_glog, lambda, lambda_opt, error_flag))
