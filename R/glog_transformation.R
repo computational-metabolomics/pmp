@@ -91,12 +91,11 @@ glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
     # Use the samllest non-0 variance value as optimisation minimum
     newminVar <- sort(VF)[sort(VF) > 0][1]
 
-    low_lim <- 0 ## set lower  and upper limit of optimisation
     upper_lim <- max(pmax(VF, max(VF) / newminVar))
 
     # search for optimal value of lambda.
     # NB y0 set to default of 0 as not being implemented here
-    lambda <- optimize(f=SSE, interval=c(low_lim, upper_lim), y0=0,
+    lambda <- optimize(f=SSE, interval=c(0, upper_lim), y0=0,
         y=df_qc, tol=step_threshold)
 
     lambda <- as.numeric(lambda[[1]]) # make sure value of objective is numeric
@@ -110,7 +109,7 @@ glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
         cat("Error!Lambda tending to infinity!Using standard\n")
         error_flag <- TRUE
         # if optimisation reached lower limit then trigger use of fixed value
-    } else if (abs(low_lim - lambda) <= 1e-05) {
+    } else if (abs(0 - lambda) <= 1e-05) {
         cat("Error!Lambda tending to -infinity!Using standard\n")
         error_flag <- TRUE
     } else {
