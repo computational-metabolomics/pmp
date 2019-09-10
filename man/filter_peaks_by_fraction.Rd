@@ -5,22 +5,22 @@
 \title{Filter features by fraction of missing values}
 \usage{
 filter_peaks_by_fraction(df, min_frac, classes = NULL, method = "QC",
-    qc_label = "QC")
+  qc_label = "QC")
 }
 \arguments{
-\item{df}{Peak intensity matrix}
+\item{df}{peak intensity matrix}
 
-\item{min_frac}{Threshold of fraction of detection}
+\item{min_frac}{threshold of fraction of detection}
 
-\item{classes}{Vector of class labels}
+\item{classes}{vector of class labels}
 
-\item{method}{Method to use. 'QC' - withing QC samples, within' - within 
+\item{method}{method to use. 'QC' - withing QC samples, within' - within 
 each sample class or across' - across all samples}
 
-\item{qc_label}{Class label for QC sample}
+\item{qc_label}{class label for QC sample}
 }
 \value{
-List of filtered peak intensity matrix and matrix with flags
+list of filtered peak intensity matrix and matrix with flags
 }
 \description{
 Metabolomics datasets often contain 'features' with irreproducible peak 
@@ -33,12 +33,12 @@ values.
 attach (testData)
 
 out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
-classes=testData$class, method='QC', qc_label='QC')
+    classes=testData$class, method='QC', qc_label='QC')
     
 out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
-classes=testData$class, method='across', qc_label='QC')
+    classes=testData$class, method='across', qc_label='QC')
 
 out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
-classes=testData$class, method='within', qc_label='QC')
+    classes=testData$class, method='within', qc_label='QC')
 
 }

@@ -10,27 +10,27 @@ NULL
 #' This tool facilitates the removal of such features from the data matrix, 
 #' as defined using an appropriate blank' sample.
 #'
-#' @param df Peak intensity matrix
-#' @param fold_change Minimum fold change between analytical and blank samples.
-#' @param classes Vector of class labels
-#' @param blank_label Class label used to identify blank samples
-#' @param qc_label Class label for QC sample. If not NULL will use QC samples 
+#' @param df peak intensity matrix
+#' @param fold_change minimum fold change between analytical and blank samples.
+#' @param classes vector of class labels
+#' @param blank_label class label used to identify blank samples
+#' @param qc_label class label for QC sample. If not NULL will use QC samples 
 #'to calculate the mean intensity
-#' @param remove Remove blank samples from peak matrix or not
-#' @param fraction_in_blank Number between 0 to 1 to specify fraction in how 
+#' @param remove remove blank samples from peak matrix or not
+#' @param fraction_in_blank number between 0 to 1 to specify fraction in how 
 #'many blanks peaks should be present
-#' @return List of filtered peak intensity matrix and matrix with flags
+#' @return list of filtered peak intensity matrix and matrix with flags
 #' 
 #' @examples
 #' attach (testData)
 #' out <- filter_peaks_by_blank(df=testData$data, fold_change=1.2, 
-#' classes=testData$class, blank_label='Blank', qc_label=NULL, 
-#' remove=FALSE, fraction_in_blank=0)
+#'    classes=testData$class, blank_label='Blank', qc_label=NULL, 
+#'    remove=FALSE, fraction_in_blank=0)
 #' 
 #' @export
 
 filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, 
-qc_label=NULL, remove=TRUE, fraction_in_blank=0) {
+        qc_label=NULL, remove=TRUE, fraction_in_blank=0) {
     
     df <- check_peak_matrix(peak_data=df, classes=classes)
     
@@ -86,26 +86,26 @@ qc_label=NULL, remove=TRUE, fraction_in_blank=0) {
 #' relative proportion (minimum fraction) of samples containing non-missing 
 #' values.
 #'
-#' @param df Peak intensity matrix
-#' @param min_frac Threshold of fraction of detection
-#' @param classes Vector of class labels
-#' @param method Method to use. 'QC' - withing QC samples, within' - within 
+#' @param df peak intensity matrix
+#' @param min_frac threshold of fraction of detection
+#' @param classes vector of class labels
+#' @param method method to use. 'QC' - withing QC samples, within' - within 
 #'each sample class or across' - across all samples
-#' @param qc_label Class label for QC sample
+#' @param qc_label class label for QC sample
 #' 
-#' @return List of filtered peak intensity matrix and matrix with flags
+#' @return list of filtered peak intensity matrix and matrix with flags
 #' 
 #' @examples 
 #' attach (testData)
 #' 
 #' out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
-#' classes=testData$class, method='QC', qc_label='QC')
+#'     classes=testData$class, method='QC', qc_label='QC')
 #'     
 #' out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
-#' classes=testData$class, method='across', qc_label='QC')
+#'     classes=testData$class, method='across', qc_label='QC')
 #' 
 #' out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
-#' classes=testData$class, method='within', qc_label='QC')
+#'     classes=testData$class, method='within', qc_label='QC')
 #' 
 #' @export
 
@@ -153,10 +153,10 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
 
 #' Remove features from peak intensity matrix
 #'
-#' Filter to remove features
+#' Filter to remove features.
 #'
-#' @param df Peak intensity matrix
-#' @param rem_index Logical vector containing TRUE vales for features to remove
+#' @param df peak intensity matrix
+#' @param rem_index logical vector containing TRUE vales for features to remove
 #' 
 #' @return data frame, filtered peak intensity matrix
 #' 
@@ -187,16 +187,16 @@ remove_peaks <- function(df, rem_index) {
 #' relative standard deviation of intensity values for a given feature within 
 #' specified QC samples.
 #'
-#' @param df Peak intensity matrix
-#' @param max_rsd Threshold of QC RSD\% value
-#' @param classes Vector of class labels
-#' @param qc_label Class label for QC sample
-#' @return List of filtered peak intensity matrix and matrix with flags
+#' @param df peak intensity matrix
+#' @param max_rsd threshold of QC RSD\% value
+#' @param classes vector of class labels
+#' @param qc_label class label for QC sample
+#' @return list of filtered peak intensity matrix and matrix with flags
 #' @examples 
 #' 
 #' attach (testData)
 #' out <- filter_peaks_by_rsd(df=testData$data, max_rsd=20,
-#'    classes=testData$class, qc_label='QC')
+#'     classes=testData$class, qc_label='QC')
 #' 
 #' @export
 
@@ -228,10 +228,10 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label) {
 #' must first be addressed. This tool facilitates the removal of samples 
 #' containing a user-defined maximum percentage of missing values.
 #'
-#' @param df Peak intensity matrix
-#' @param max_perc_mv Threshold of missing value percentage.
-#' @param classes Vector of class labels
-#' @return List of filtered peak intensity matrix and matrix with flags
+#' @param df peak intensity matrix
+#' @param max_perc_mv threshold of missing value percentage.
+#' @param classes vector of class labels
+#' @return list of filtered peak intensity matrix and matrix with flags
 #' 
 #' @examples 
 #' 

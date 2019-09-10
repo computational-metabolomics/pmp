@@ -7,11 +7,11 @@
 replace_na(x, df, vals)
 }
 \arguments{
-\item{x}{Index of matrix feature}
+\item{x}{index of matrix feature}
 
-\item{df}{A peak matrix with features in the rows, samples in the columns}
+\item{df}{a peak matrix with features in the rows, samples in the columns}
 
-\item{vals}{Vector object with the same length as number of features in 
+\item{vals}{vector object with the same length as number of features in 
 peak matrix to replca NA values with}
 }
 \value{

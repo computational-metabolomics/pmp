@@ -1,5 +1,5 @@
 #' Check if peak matrix is in format features in rows, samples in columns 
-#' and that all cell contain numeric values. 
+#' and that all cells contain numeric values. 
 #' 
 #' All functions in pmp pacakge expect input peak matrix to have samples 
 #' as columns and measured features in rows. This function will check input 
@@ -8,7 +8,7 @@
 #' of samples in peak matrix.
 #'
 #' @param peak_data peak matrix
-#' @param classes Vector of class labels
+#' @param classes vector of class labels
 #' @return matrix where samples are represented in columns and features in rows
 #' @examples 
 #' 

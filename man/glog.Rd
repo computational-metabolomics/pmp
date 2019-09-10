@@ -2,7 +2,7 @@
 % Please edit documentation in R/glog_transformation.R
 \name{glog}
 \alias{glog}
-\title{variance stabilising (extended) generalised logarithm transformation}
+\title{Variance stabilising (extended) generalised logarithm transformation}
 \usage{
 glog(y, y0 = 0, lambda)
 }

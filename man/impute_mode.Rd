@@ -7,9 +7,9 @@
 impute_mode(df, method)
 }
 \arguments{
-\item{df}{A peak matrix with features in the rows, samples in the columns}
+\item{df}{a peak matrix with features in the rows, samples in the columns}
 
-\item{method}{Mode to use for missing value imputation. 'mn' for mean and 
+\item{method}{mode to use for missing value imputation. 'mn' for mean and 
 'md'for median.}
 }
 \value{

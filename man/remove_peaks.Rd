@@ -7,15 +7,15 @@
 remove_peaks(df, rem_index)
 }
 \arguments{
-\item{df}{Peak intensity matrix}
+\item{df}{peak intensity matrix}
 
-\item{rem_index}{Logical vector containing TRUE vales for features to remove}
+\item{rem_index}{logical vector containing TRUE vales for features to remove}
 }
 \value{
 data frame, filtered peak intensity matrix
 }
 \description{
-Filter to remove features
+Filter to remove features.
 }
 \examples{
 attach (testData)

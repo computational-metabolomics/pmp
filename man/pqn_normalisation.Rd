@@ -7,15 +7,15 @@
 pqn_normalisation(df, classes, qc_label)
 }
 \arguments{
-\item{df}{Data frame.}
+\item{df}{data frame}
 
-\item{classes}{Vector of class labels.}
+\item{classes}{vector of class labels}
 
-\item{qc_label}{Label used for QC samples. If set to 'all', all samples will
+\item{qc_label}{label used for QC samples. If set to 'all', all samples will
 be used to calculate correction factor}
 }
 \value{
-List of normalised data set and correction coefficients
+list of normalised data set and correction coefficients
 }
 \description{
 Normalise peak table using PQN method

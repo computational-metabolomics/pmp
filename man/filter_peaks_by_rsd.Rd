@@ -7,16 +7,16 @@
 filter_peaks_by_rsd(df, max_rsd, classes, qc_label)
 }
 \arguments{
-\item{df}{Peak intensity matrix}
+\item{df}{peak intensity matrix}
 
-\item{max_rsd}{Threshold of QC RSD\% value}
+\item{max_rsd}{threshold of QC RSD\% value}
 
-\item{classes}{Vector of class labels}
+\item{classes}{vector of class labels}
 
-\item{qc_label}{Class label for QC sample}
+\item{qc_label}{class label for QC sample}
 }
 \value{
-List of filtered peak intensity matrix and matrix with flags
+list of filtered peak intensity matrix and matrix with flags
 }
 \description{
 Metabolomics datasets often contain 'features' with irreproducible peak 

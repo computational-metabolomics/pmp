@@ -1,8 +1,8 @@
 #' Normalise peak table to the total sum of peak intensities
-#' @param df Data frame
-#' @param check_df If set to TRUE will check if input data needs to be
-#'transposed, so that features are in rows.
-#' @return Normalised peak matrix.
+#' @param df data frame
+#' @param check_df ff set to TRUE will check if input data needs to be
+#'transposed, so that features are in rows
+#' @return normalised peak matrix
 #' @examples 
 #' attach (testData)
 #' out <- normalise_to_sum (testData$data)
@@ -19,11 +19,11 @@ normalise_to_sum <- function(df, check_df=TRUE) {
 
 #' Normalise peak table using PQN method
 #'
-#' @param df Data frame.
-#' @param classes Vector of class labels. 
-#' @param qc_label Label used for QC samples. If set to 'all', all samples will
+#' @param df data frame
+#' @param classes vector of class labels
+#' @param qc_label label used for QC samples. If set to 'all', all samples will
 #'be used to calculate correction factor
-#' @return List of normalised data set and correction coefficients
+#' @return list of normalised data set and correction coefficients
 #' @examples 
 #' attach (testData)
 #' pqn_normalisation(df=testData$data, classes=testData$class, qc_label='QC')

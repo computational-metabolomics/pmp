@@ -3,14 +3,14 @@
 \name{check_peak_matrix}
 \alias{check_peak_matrix}
 \title{Check if peak matrix is in format features in rows, samples in columns 
-and that all cell contain numeric values.}
+and that all cells contain numeric values.}
 \usage{
 check_peak_matrix(peak_data, classes = NULL)
 }
 \arguments{
 \item{peak_data}{peak matrix}
 
-\item{classes}{Vector of class labels}
+\item{classes}{vector of class labels}
 }
 \value{
 matrix where samples are represented in columns and features in rows

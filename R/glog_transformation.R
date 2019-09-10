@@ -3,7 +3,7 @@
 
 NULL
 
-#' variance stabilising (extended) generalised logarithm transformation
+#' Variance stabilising (extended) generalised logarithm transformation
 #'
 #' https://doi.org/10.1186/1471-2105-8-234
 #'
@@ -17,12 +17,12 @@ glog <- function(y, y0=0, lambda){
     return(z)
 }
 
-#' Internal function for max. likelihood optimisation of glog params
+#' Internal function for max. likelihood optimisation of glog params.
 #' Calculates the alternative Jacobian function described in
 #' https://doi.org/10.1186/1471-2105-8-234
 #'
-#' @param y values.
-#' @param y0 offset applied to y (default=0).
+#' @param y values
+#' @param y0 offset applied to y (default=0)
 #' @param lambda lambda
 #' @return numeric, optimised glog parameter
 
@@ -55,11 +55,11 @@ SSE <- function(lambda, y0=0, y) {
     return(s)
 }
 
-#' If glog optimisation fails, this function will will scale values in the 
-#' peak matrix to the 1 / mean (total signal) over all samples.
+#' If glog optimisation fails, this function will scale values in the 
+#' peak matrix to the 1/mean(total signal) over all samples.
 #' 
-#' @param df Peak intensity matrix
-#' @return Scaled peak matrix
+#' @param df peak intensity matrix
+#' @return scaled peak matrix
 
 glog_rescale_data <- function(df){
     # 
@@ -76,9 +76,9 @@ glog_rescale_data <- function(df){
 #' https://doi.org/10.1186/1471-2105-8-234
 #'
 #' @param df Peak intensity matrix
-#' @param classes Vector of class labels
-#' @param qc_label Class label for QC sample
-#' @param store_lambda If value of optimised lambda parameter needs to be
+#' @param classes vector of class labels
+#' @param qc_label class label for QC sample
+#' @param store_lambda if value of optimised lambda parameter needs to be
 #'returned
 #' @examples
 #' attach (testData)

@@ -7,13 +7,13 @@
 normalise_to_sum(df, check_df = TRUE)
 }
 \arguments{
-\item{df}{Data frame}
+\item{df}{data frame}
 
-\item{check_df}{If set to TRUE will check if input data needs to be
-transposed, so that features are in rows.}
+\item{check_df}{ff set to TRUE will check if input data needs to be
+transposed, so that features are in rows}
 }
 \value{
-Normalised peak matrix.
+normalised peak matrix
 }
 \description{
 Normalise peak table to the total sum of peak intensities

@@ -5,25 +5,25 @@
 \title{Missing value imputation using different algorithms}
 \usage{
 mv_imputation(df, method, k = 10, rowmax = 0.5, colmax = 0.5,
-    maxp = NULL, check_df = TRUE)
+  maxp = NULL, check_df = TRUE)
 }
 \arguments{
-\item{df}{A peak matrix with features in the rows, samples in the columns}
+\item{df}{a peak matrix with features in the rows, samples in the columns}
 
-\item{method}{Missing value imputation method. Supported methods are 'knn',
-'rf', 'bpca', 'sv', 'mn' and 'md'.}
+\item{method}{missing value imputation method. Supported methods are 'knn',
+'rf', 'bpca', 'sv', 'mn' and 'md'}
 
-\item{k}{Number of neighbors to be used in the imputation}
+\item{k}{number of neighbors to be used in the imputation}
 
-\item{rowmax}{Fraction of missing values per row.}
+\item{rowmax}{fraction of missing values per row}
 
-\item{colmax}{Fraction of missing values per column.}
+\item{colmax}{fraction of missing values per column}
 
-\item{maxp}{Number of features to run on single core. If set to NULL will
-use total number of features.}
+\item{maxp}{number of features to run on single core. If set to NULL will
+use total number of features}
 
-\item{check_df}{If set to TRUE will check if input data needs to be
-transposed, so that features are in rows.}
+\item{check_df}{if set to TRUE will check if input data needs to be
+transposed, so that features are in rows}
 }
 \value{
 data frame of missing value imputed peak intensity matrix

@@ -10,11 +10,11 @@ glog_transformation(df, classes, qc_label, store_lambda = FALSE)
 \arguments{
 \item{df}{Peak intensity matrix}
 
-\item{classes}{Vector of class labels}
+\item{classes}{vector of class labels}
 
-\item{qc_label}{Class label for QC sample}
+\item{qc_label}{class label for QC sample}
 
-\item{store_lambda}{If value of optimised lambda parameter needs to be
+\item{store_lambda}{if value of optimised lambda parameter needs to be
 returned}
 }
 \value{

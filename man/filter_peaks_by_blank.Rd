@@ -5,27 +5,27 @@
 \title{Filter peaks by blank}
 \usage{
 filter_peaks_by_blank(df, fold_change, classes, blank_label,
-    qc_label = NULL, remove = TRUE, fraction_in_blank = 0)
+  qc_label = NULL, remove = TRUE, fraction_in_blank = 0)
 }
 \arguments{
-\item{df}{Peak intensity matrix}
+\item{df}{peak intensity matrix}
 
-\item{fold_change}{Minimum fold change between analytical and blank samples.}
+\item{fold_change}{minimum fold change between analytical and blank samples.}
 
-\item{classes}{Vector of class labels}
+\item{classes}{vector of class labels}
 
-\item{blank_label}{Class label used to identify blank samples}
+\item{blank_label}{class label used to identify blank samples}
 
-\item{qc_label}{Class label for QC sample. If not NULL will use QC samples 
+\item{qc_label}{class label for QC sample. If not NULL will use QC samples 
 to calculate the mean intensity}
 
-\item{remove}{Remove blank samples from peak matrix or not}
+\item{remove}{remove blank samples from peak matrix or not}
 
-\item{fraction_in_blank}{Number between 0 to 1 to specify fraction in how 
+\item{fraction_in_blank}{number between 0 to 1 to specify fraction in how 
 many blanks peaks should be present}
 }
 \value{
-List of filtered peak intensity matrix and matrix with flags
+list of filtered peak intensity matrix and matrix with flags
 }
 \description{
 Metabolomics datasets often contain many 'features' of non-biological 
@@ -36,7 +36,7 @@ as defined using an appropriate blank' sample.
 \examples{
 attach (testData)
 out <- filter_peaks_by_blank(df=testData$data, fold_change=1.2, 
-classes=testData$class, blank_label='Blank', qc_label=NULL, 
-remove=FALSE, fraction_in_blank=0)
+   classes=testData$class, blank_label='Blank', qc_label=NULL, 
+   remove=FALSE, fraction_in_blank=0)
 
 }
