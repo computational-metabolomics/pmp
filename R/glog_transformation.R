@@ -1,4 +1,5 @@
 #' @importFrom stats optimise
+#' @importFrom ggplot2 ggplot
 #'
 
 NULL
@@ -70,6 +71,20 @@ glog_rescale_data <- function(df){
     return(df)
 }
 
+#' Search for optimal value of lambda by minimasing SSE.
+#' 
+#'  @param upper_lim upper limit to use for optimisation
+#'  @param df_qc peak matrix of QC samples
+#'  
+#'  @return 
+ 
+glog_omptimise_lambda <- function(upper_lim, df_qc){
+    lambda <- optimise(f=SSE, interval=c(0, upper_lim), y0=0,
+        y=df_qc, tol=1e-16)
+    lambda
+}
+
+
 #' Performs glog transformation on the data set,
 #' using QC samples to estimate lambda.
 #'
@@ -107,9 +122,7 @@ glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
     upper_lim <- max(pmax(VF, max(VF) / sort(VF)[sort(VF) > 0][1]))
 
     # search for optimal value of lambda.
-    lambda <- optimise(f=SSE, interval=c(0, upper_lim), y0=0,
-        y=df_qc, tol=1e-16)
-
+    lambda <- glog_omptimise_lambda (upper_lim=upper_lim, df_qc=df_qc)
     lambda <- lambda$minimum
     lambda_opt <- lambda
 
@@ -130,7 +143,8 @@ glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
     df_glog <- as.data.frame(glog(df, 0, lambda)) # apply glog
 
     if (store_lambda){
-        return(list(df_glog, lambda, lambda_opt, error_flag))
+        return(list(data=df_glog, lambda=lambda, lambda_opt=lambda_opt, 
+            error_flag=error_flag))
     } else {
         return(df_glog)
     }
