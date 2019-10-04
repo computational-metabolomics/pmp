@@ -36,3 +36,15 @@ test_that("glog function returns optimised lambda value if requested", {
   testthat::expect_true(length(out) == 4)
   testthat::expect_true(lambda == as.integer(out[[2]]))
 })
+
+test_that("glog function returns plot of lambda optimisation if requested", {
+  data <- mv_imputation(df=testData$data, method='knn')
+  out <- glog_transformation (df=data, classes=testData$class, qc_label='QC',
+                              store_lambda=TRUE)
+  data_qc <- data[,testData$class=="QC"]
+  expect_silent(g <- glog_plot_optimised_labmda (optimised_lambda = out[[2]], data_qc = data_qc,
+      upper_lim=10^9))
+  expect_equal(g[[9]]$x, "lambda")
+  expect_equal(g[[9]]$y, "SSE")
+})
+

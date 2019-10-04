@@ -1,5 +1,6 @@
 #' @importFrom stats optimise
 #' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes
 #'
 
 NULL
@@ -84,6 +85,31 @@ glog_omptimise_lambda <- function(upper_lim, df_qc){
     lambda
 }
 
+#' Plot SSE error of lamba optimisation process
+#' 
+#' @param optimised_lambda optimised lamba value from 'glog_optimise_output'
+#' @param data_qc peak intenisty matrix of QC samples
+#' @param upper_lim limit of the upper lambda value
+#' @return ggplot object containing optimisation plot
+#' 
+
+glog_plot_optimised_labmda <- function(optimised_lambda=NA, data_qc, upper_lim){
+    sse_df <- data.frame(lambda=seq(0, upper_lim, length.out=100))
+    
+    k=1
+    for (lambda in sse_df[, 1]) {
+        sse_df[k, 2] <- pmp:::SSE(lambda=lambda, y0=0, y=t(data_qc))
+        k=k+1
+    }
+    
+    colnames(sse_df) <- c('lambda','SSE')
+    
+    g=ggplot(data=sse_df, aes(x=lambda,y=SSE))+
+        geom_vline(xintercept=optimised_lambda, color="red")+
+        geom_line() + theme_bw()
+    
+    return (g)
+}
 
 #' Performs glog transformation on the data set,
 #' using QC samples to estimate lambda.
