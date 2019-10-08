@@ -172,8 +172,10 @@ glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
     df_glog <- as.data.frame(glog(df, 0, lambda)) # apply glog
 
     if (store_lambda){
+        g <- glog_plot_optimised_labmda(optimised_lambda = lambda_opt, 
+            data_qc = df_qc, upper_lim = upper_lim)
         return(list(data=df_glog, lambda=lambda, lambda_opt=lambda_opt, 
-            error_flag=error_flag))
+            error_flag=error_flag, labmda_optimisation_plot=g))
     } else {
         return(df_glog)
     }

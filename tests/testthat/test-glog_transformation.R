@@ -33,7 +33,7 @@ test_that("glog function returns optimised lambda value if requested", {
   out <- glog_transformation (df=out, classes=testData$class,
     qc_label="QC", store_lambda=TRUE)
   lambda <- as.integer(7865716)
-  testthat::expect_true(length(out) == 4)
+  testthat::expect_true(length(out) == 5)
   testthat::expect_true(lambda == as.integer(out[[2]]))
 })
 
