@@ -6,9 +6,14 @@
 \usage{
 glog_omptimise_lambda(upper_lim, df_qc)
 }
+\arguments{
+\item{upper_lim}{upper limit to use for optimisation}
+
+\item{df_qc}{peak matrix of QC samples}
+}
+\value{
+optimised glog lambda value
+}
 \description{
-@param upper_lim upper limit to use for optimisation
- @param df_qc peak matrix of QC samples
- 
- @return
+Search for optimal value of lambda by minimasing SSE.
 }

@@ -1,6 +1,9 @@
 #' @importFrom stats optimise
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
+#' @importFrom ggplot2 geom_vline
+#' @importFrom ggplot2 geom_line
+#' @importFrom ggplot2 theme_bw
 #'
 
 NULL
@@ -74,10 +77,10 @@ glog_rescale_data <- function(df){
 
 #' Search for optimal value of lambda by minimasing SSE.
 #' 
-#'  @param upper_lim upper limit to use for optimisation
-#'  @param df_qc peak matrix of QC samples
+#' @param upper_lim upper limit to use for optimisation
+#' @param df_qc peak matrix of QC samples
 #'  
-#'  @return 
+#' @return optimised glog lambda value
  
 glog_omptimise_lambda <- function(upper_lim, df_qc){
     lambda <- optimise(f=SSE, interval=c(0, upper_lim), y0=0,
@@ -98,7 +101,7 @@ glog_plot_optimised_labmda <- function(optimised_lambda=NA, data_qc, upper_lim){
     
     k=1
     for (lambda in sse_df[, 1]) {
-        sse_df[k, 2] <- pmp:::SSE(lambda=lambda, y0=0, y=t(data_qc))
+        sse_df[k, 2] <- SSE(lambda=lambda, y0=0, y=t(data_qc))
         k=k+1
     }
     
