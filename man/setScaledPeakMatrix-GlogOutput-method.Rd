@@ -4,7 +4,7 @@
 \name{setScaledPeakMatrix,GlogOutput-method}
 \alias{setScaledPeakMatrix,GlogOutput-method}
 \alias{setScaledPeakMatrix}
-\title{Method to set peak matrix after glog scaling}
+\title{Method to set peak matrix slot after glog scaling}
 \usage{
 \S4method{setScaledPeakMatrix}{GlogOutput}(glog_object, scaled_peak_matrix)
 }
@@ -15,5 +15,5 @@
 transformation}
 }
 \description{
-Method to set peak matrix after glog scaling
+Method to set peak matrix slot after glog scaling
 }

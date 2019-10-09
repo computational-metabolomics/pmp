@@ -169,13 +169,13 @@ glog_transformation <- function(df, classes, qc_label) {
     df_glog <- as.data.frame(glog(df, 0, lambda)) # apply glog
 
     g <- glog_plot_optimised_labmda(optimised_lambda = lambda_opt, 
-    data_qc = df_qc, upper_lim = upper_lim)
+        data_qc = df_qc, upper_lim = upper_lim)
     
     glog_output <- GlogOutput()
     glog_output <- setScaledPeakMatrix(glog_output, df_glog)
     glog_output <- setGlogLambdaSummary(glog_output, lambda=lambda, 
         lambda_opt=lambda_opt, error_flag=error_flag)
-    #glog_output <- setGlogLambdaOptimisationPlot(glog_output, g)
+    glog_output <- setGlogLambdaOptimisationPlot(glog_output, g)
     
     return(glog_output)
 }

@@ -20,7 +20,7 @@ GlogOutput <- setClass(
         lambda_optimisation_plot="list")
 )
 
-#' Method to set peak matrix after glog scaling
+#' Method to set peak matrix slot after glog scaling
 #' 
 #' @aliases setScaledPeakMatrix
 #' @param glog_object R object of 'GlogOuput' class
@@ -59,7 +59,7 @@ setMethod(f="setGlogLambdaSummary", signature="GlogOutput",
 #' transformation
 #' 
 setMethod(f="setGlogLambdaOptimisationPlot", signature="GlogOutput",
-          definition=function(glog_object, lambda_optimisation_plot){
-              glog_object@lambda_optimisation_plot <- lambda_optimisation_plot
-              return (glog_object)
-          })
+    definition=function(glog_object, lambda_optimisation_plot){
+    glog_object@lambda_optimisation_plot <- list(lambda_optimisation_plot)
+    return (glog_object)
+})
