@@ -80,7 +80,7 @@ glog_rescale_data <- function(df){
 #' @param df_qc peak matrix of QC samples
 #'  
 #' @return optimised glog lambda value
- 
+
 glog_omptimise_lambda <- function(upper_lim, df_qc){
     lambda <- optimise(f=SSE, interval=c(0, upper_lim), y0=0,
         y=df_qc, tol=1e-16)

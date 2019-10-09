@@ -19,6 +19,9 @@
 \item{error_flag}{logical value from SSE optimisation call
 transformation}
 }
+\value{
+GlogObject class object with updated lambda summary slot
+}
 \description{
 Method to set glog lambda optimisation summary
 }

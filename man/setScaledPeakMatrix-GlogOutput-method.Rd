@@ -14,6 +14,9 @@
 \item{scaled_peak_matrix}{a data frame, peak inntensity matrix after glog
 transformation}
 }
+\value{
+GlogObject class object with updated peak matrix slot
+}
 \description{
 Method to set peak matrix slot after glog scaling
 }

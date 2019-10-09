@@ -15,6 +15,9 @@
 \item{lambda_optimisation_plot}{output from 'glog_plot_optimised_labmda'
 transformation}
 }
+\value{
+GlogObject class object with updated plot slot
+}
 \description{
 Method to set lamba optimisation plot slot
 }

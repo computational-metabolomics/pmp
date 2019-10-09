@@ -21,6 +21,7 @@ transformation}
 \item{\code{lambda_summary}}{a list containing optimised lambda value and if 
 optimisation has failed}
 
-\item{\code{lambda_optimisation_plot}}{ggplot2 object of glog lambda optimisation}
+\item{\code{lambda_optimisation_plot}}{ggplot2 object of glog lambda
+optimisation}
 }}
 

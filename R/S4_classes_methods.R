@@ -10,8 +10,8 @@ NULL
 #' transformation
 #' @slot lambda_summary a list containing optimised lambda value and if 
 #' optimisation has failed
-#' @slot lambda_optimisation_plot ggplot2 object of glog lambda optimisation
-#' @export
+#' @slot lambda_optimisation_plot ggplot2 object of glog lambda
+#' optimisation
 
 GlogOutput <- setClass(
     "GlogOutput",
@@ -26,8 +26,8 @@ GlogOutput <- setClass(
 #' @param glog_object R object of 'GlogOuput' class
 #' @param scaled_peak_matrix a data frame, peak inntensity matrix after glog
 #' transformation
-#' @export
-#' 
+#' @return GlogObject class object with updated peak matrix slot
+
 setMethod(f="setScaledPeakMatrix", signature="GlogOutput",
     definition=function(glog_object, scaled_peak_matrix){
     glog_object@scaled_peak_matrix <- scaled_peak_matrix
@@ -42,7 +42,8 @@ setMethod(f="setScaledPeakMatrix", signature="GlogOutput",
 #' @param lambda_opt glog optimised lambda value
 #' @param error_flag logical value from SSE optimisation call
 #' transformation
-#' 
+#' @return GlogObject class object with updated lambda summary slot
+
 setMethod(f="setGlogLambdaSummary", signature="GlogOutput",
     definition=function(glog_object, lambda, lambda_opt, error_flag){
     lambda_summary <- list (lambda=lambda, lambda_opt=lambda_opt,
@@ -57,7 +58,8 @@ setMethod(f="setGlogLambdaSummary", signature="GlogOutput",
 #' @param glog_object R object of 'GlogOuput' class
 #' @param lambda_optimisation_plot output from 'glog_plot_optimised_labmda'
 #' transformation
-#' 
+#' @return GlogObject class object with updated plot slot 
+
 setMethod(f="setGlogLambdaOptimisationPlot", signature="GlogOutput",
     definition=function(glog_object, lambda_optimisation_plot){
     glog_object@lambda_optimisation_plot <- list(lambda_optimisation_plot)
