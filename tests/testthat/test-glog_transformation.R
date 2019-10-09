@@ -4,7 +4,8 @@ test_that("Glog function returns expected output", {
   out <- mv_imputation(df=testData$data, method="knn")
   out <- glog_transformation (df=out, classes=testData$class,
     qc_label="QC")
-  expect_equal (out@scaled_peak_matrix, testData$glog_transformation)
+  out <- getScaledPeakMatrix(out)
+  expect_equal (out, testData$glog_transformation)
 })
 
 test_that("Glog function fails if qc_label is wrong or QC samples don't exist", {
@@ -41,7 +42,8 @@ test_that("glog function returns optimised lambda value if requested", {
 test_that("glog function returns plot of lambda optimisation if requested", {
   data <- mv_imputation(df=testData$data, method='knn')
   out <- glog_transformation (df=data, classes=testData$class, qc_label='QC')
-  expect_equal(out@lambda_optimisation_plot[[1]][[9]]$x, "lambda")
-  expect_equal(out@lambda_optimisation_plot[[1]][[9]]$y, "SSE")
+  out <- getGlogLambdaOptimisationPlot(out)
+  expect_equal(out[[9]]$x, "lambda")
+  expect_equal(out[[9]]$y, "SSE")
 })
 

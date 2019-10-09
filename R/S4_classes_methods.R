@@ -65,3 +65,25 @@ setMethod(f="setGlogLambdaOptimisationPlot", signature="GlogOutput",
     glog_object@lambda_optimisation_plot <- list(lambda_optimisation_plot)
     return (glog_object)
 })
+
+#' Method to get peak matrix from 'GlogOutput' class object
+#' 
+#' @aliases getScaledPeakMatrix
+#' @param glog_object R object of 'GlogOuput' class
+#' @return peak matrix after glog scaling
+
+setMethod(f="getScaledPeakMatrix", signature="GlogOutput",
+    definition=function(glog_object){
+        return (glog_object@scaled_peak_matrix)
+})
+
+#' Method to get lamba optimisation plot from 'GlogOutput' class obejct
+#' 
+#' @aliases getGlogLambdaOptimisationPlot
+#' @param glog_object R object of 'GlogOuput' class
+#' @return 'ggplot' class object 
+
+setMethod(f="getGlogLambdaOptimisationPlot", signature="GlogOutput",
+    definition=function(glog_object){
+        return (glog_object@lambda_optimisation_plot[[1]])
+})
