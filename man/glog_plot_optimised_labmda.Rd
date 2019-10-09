@@ -2,12 +2,12 @@
 % Please edit documentation in R/glog_transformation.R
 \name{glog_plot_optimised_labmda}
 \alias{glog_plot_optimised_labmda}
-\title{Plot SSE error of lamba optimisation process}
+\title{Plot SSE error of lambda optimisation process}
 \usage{
 glog_plot_optimised_labmda(optimised_lambda = NA, data_qc, upper_lim)
 }
 \arguments{
-\item{optimised_lambda}{optimised lamba value from 'glog_optimise_output'}
+\item{optimised_lambda}{optimised lambda value from 'glog_optimise_output'}
 
 \item{data_qc}{peak intenisty matrix of QC samples}
 
@@ -17,5 +17,5 @@ glog_plot_optimised_labmda(optimised_lambda = NA, data_qc, upper_lim)
 ggplot object containing optimisation plot
 }
 \description{
-Plot SSE error of lamba optimisation process
+Plot SSE error of lambda optimisation process
 }

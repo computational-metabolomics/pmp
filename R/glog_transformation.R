@@ -5,7 +5,6 @@
 #' @importFrom ggplot2 geom_line
 #' @importFrom ggplot2 theme_bw
 #'
-
 NULL
 
 #' Variance stabilising (extended) generalised logarithm transformation
@@ -88,9 +87,9 @@ glog_omptimise_lambda <- function(upper_lim, df_qc){
     lambda
 }
 
-#' Plot SSE error of lamba optimisation process
+#' Plot SSE error of lambda optimisation process
 #' 
-#' @param optimised_lambda optimised lamba value from 'glog_optimise_output'
+#' @param optimised_lambda optimised lambda value from 'glog_optimise_output'
 #' @param data_qc peak intenisty matrix of QC samples
 #' @param upper_lim limit of the upper lambda value
 #' @return ggplot object containing optimisation plot
@@ -122,18 +121,16 @@ glog_plot_optimised_labmda <- function(optimised_lambda=NA, data_qc, upper_lim){
 #' @param df Peak intensity matrix
 #' @param classes vector of class labels
 #' @param qc_label class label for QC sample
-#' @param store_lambda if value of optimised lambda parameter needs to be
-#'returned
 #' @examples
 #' attach (testData)
 #' out <- mv_imputation(df=testData$data, method='knn')
 #' out <- glog_transformation (df=out, classes=testData$class,
 #'     qc_label='QC')
 #'
-#' @return data frame, peak inntensity matrix after glog transformation
+#' @return S4 class object of glog transformation
 #' @export glog_transformation
 
-glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
+glog_transformation <- function(df, classes, qc_label) {
     # check if qc_label is present in the classes vector
     if (length(which(classes %in% qc_label)) == 0) {
         stop("QC sample label is not present. Check your qc_label parameter.")
@@ -171,12 +168,14 @@ glog_transformation <- function(df, classes, qc_label, store_lambda=FALSE) {
     df <- df - min(df, na.rm=TRUE) # set minimum over all values to 0
     df_glog <- as.data.frame(glog(df, 0, lambda)) # apply glog
 
-    if (store_lambda){
-        g <- glog_plot_optimised_labmda(optimised_lambda = lambda_opt, 
-            data_qc = df_qc, upper_lim = upper_lim)
-        return(list(data=df_glog, lambda=lambda, lambda_opt=lambda_opt, 
-            error_flag=error_flag, labmda_optimisation_plot=g))
-    } else {
-        return(df_glog)
-    }
+    g <- glog_plot_optimised_labmda(optimised_lambda = lambda_opt, 
+    data_qc = df_qc, upper_lim = upper_lim)
+    
+    glog_output <- GlogOutput()
+    glog_output <- setScaledPeakMatrix(glog_output, df_glog)
+    glog_output <- setGlogLambdaSummary(glog_output, lambda=lambda, 
+        lambda_opt=lambda_opt, error_flag=error_flag)
+    #glog_output <- setGlogLambdaOptimisationPlot(glog_output, g)
+    
+    return(glog_output)
 }

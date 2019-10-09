@@ -5,7 +5,7 @@
 \title{Performs glog transformation on the data set,
 using QC samples to estimate lambda.}
 \usage{
-glog_transformation(df, classes, qc_label, store_lambda = FALSE)
+glog_transformation(df, classes, qc_label)
 }
 \arguments{
 \item{df}{Peak intensity matrix}
@@ -13,12 +13,9 @@ glog_transformation(df, classes, qc_label, store_lambda = FALSE)
 \item{classes}{vector of class labels}
 
 \item{qc_label}{class label for QC sample}
-
-\item{store_lambda}{if value of optimised lambda parameter needs to be
-returned}
 }
 \value{
-data frame, peak inntensity matrix after glog transformation
+S4 class object of glog transformation
 }
 \description{
 https://doi.org/10.1186/1471-2105-8-234
