@@ -46,13 +46,12 @@ pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL) {
     
     df <- check_peak_matrix(peak_data=df, classes=classes)
     
-    if (qc_label == "all") {
-        ref <- df
-    } else {
-        ref <- df[, classes == qc_label]
-    }
-    
     if (is.null(ref_mean)){
+        if (qc_label == "all") {
+            ref <- df
+        } else {
+            ref <- df[, classes == qc_label]
+        }
         ref_mean <- calculate_ref_mean(df_qc=ref)
     }
     
