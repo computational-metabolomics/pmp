@@ -1,5 +1,10 @@
+pmp v0.2.5
+=========================
+  Pre-calculated  mean reference values can be used with PQN normalisation 
+  function.
+
 pmp v0.2.4 (Release date: 2019-08-07)
 =========================
-  Updated documetation and usage examples
-  Refactored glog scaling function
-  PQN normalisation supports using all samples to calculate correction factor
+  Updated documetation and usage examples.
+  Refactored glog scaling function.
+  PQN normalisation supports using all samples to calculate correction factor.
