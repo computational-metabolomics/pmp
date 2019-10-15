@@ -1,3 +1,9 @@
+pmp v0.2.6
+=========================
+  glog transformation can use fixed lambda value input.
+  Plot to visualise output of glog lambda value optimisation.
+  Created S4 class object for glog transformation functions.
+
 pmp v0.2.5
 =========================
   Pre-calculated  mean reference values can be used with PQN normalisation 

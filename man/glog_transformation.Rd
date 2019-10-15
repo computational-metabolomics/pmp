@@ -5,7 +5,7 @@
 \title{Performs glog transformation on the data set,
 using QC samples to estimate lambda.}
 \usage{
-glog_transformation(df, classes, qc_label)
+glog_transformation(df, classes, qc_label, lambda = NULL)
 }
 \arguments{
 \item{df}{Peak intensity matrix}
@@ -13,6 +13,8 @@ glog_transformation(df, classes, qc_label)
 \item{classes}{vector of class labels}
 
 \item{qc_label}{class label for QC sample}
+
+\item{lambda}{If not NULL will use provided value for glog lambda}
 }
 \value{
 S4 class object of glog transformation

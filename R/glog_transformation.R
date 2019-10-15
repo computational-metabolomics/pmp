@@ -121,6 +121,7 @@ glog_plot_optimised_labmda <- function(optimised_lambda=NA, data_qc, upper_lim){
 #' @param df Peak intensity matrix
 #' @param classes vector of class labels
 #' @param qc_label class label for QC sample
+#' @param lambda If not NULL will use provided value for glog lambda
 #' @examples
 #' attach (testData)
 #' out <- mv_imputation(df=testData$data, method='knn')
@@ -130,7 +131,7 @@ glog_plot_optimised_labmda <- function(optimised_lambda=NA, data_qc, upper_lim){
 #' @return S4 class object of glog transformation
 #' @export glog_transformation
 
-glog_transformation <- function(df, classes, qc_label) {
+glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
     # check if qc_label is present in the classes vector
     if (length(which(classes %in% qc_label)) == 0) {
         stop("QC sample label is not present. Check your qc_label parameter.")
@@ -141,15 +142,15 @@ glog_transformation <- function(df, classes, qc_label) {
 
     offset <- min(df_qc, na.rm=TRUE) # set offset to the minimum QC samples
     df_qc <- df_qc - offset # set minimum of qc data to 0
-
     VF <- apply(df_qc, 1, var, na.rm=TRUE) # variance of all features
     
     # Upper limit max var or largest ratio max(var)/min(var)
     upper_lim <- max(pmax(VF, max(VF) / sort(VF)[sort(VF) > 0][1]))
 
-    # search for optimal value of lambda.
-    lambda <- glog_omptimise_lambda (upper_lim=upper_lim, df_qc=df_qc)
-    lambda <- lambda$minimum
+    if (is.null(lambda)){
+        lambda <- glog_omptimise_lambda (upper_lim=upper_lim, df_qc=df_qc)
+        lambda <- lambda$minimum
+    }
     lambda_opt <- lambda
 
     error_flag <- FALSE
