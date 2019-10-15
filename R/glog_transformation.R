@@ -1,9 +1,10 @@
 #' @importFrom stats optimise
 #' @importFrom ggplot2 ggplot
-#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 aes_string
 #' @importFrom ggplot2 geom_vline
 #' @importFrom ggplot2 geom_line
 #' @importFrom ggplot2 theme_bw
+#' @importFrom ggplot2 labs
 #'
 NULL
 
@@ -91,25 +92,26 @@ glog_omptimise_lambda <- function(upper_lim, df_qc){
 #' 
 #' @param optimised_lambda optimised lambda value from 'glog_optimise_output'
 #' @param data_qc peak intenisty matrix of QC samples
-#' @param upper_lim limit of the upper lambda value
 #' @return ggplot object containing optimisation plot
 #' 
 
-glog_plot_optimised_labmda <- function(optimised_lambda=NA, data_qc, upper_lim){
-    sse_df <- data.frame(lambda=seq(0, upper_lim, length.out=100))
+glog_plot_optimised_lambda <- function(optimised_lambda=NA, data_qc){
     
-    k <- 1
-    for (lambda in sse_df[, 1]) {
-        sse_df[k, 2] <- SSE(lambda=lambda, y0=0, y=data_qc)
-        k <- k+1
-    }
+    lambda_lim <- c(optimised_lambda, optimised_lambda) +
+        c(-optimised_lambda*0.5, optimised_lambda*0.5) 
     
-    colnames(sse_df) <- c('lambda','SSE')
+    sse_df <- data.frame(lambda=seq(lambda_lim[1], lambda_lim[2], 
+        length.out=100))
     
-    g <- ggplot(data=sse_df, aes(x=lambda,y=SSE)) +
+    sse_df$SSE <- vapply(X=sse_df$lambda, FUN=SSE, y0=0, y=data_qc, 
+        FUN.VALUE=numeric(1))
+    
+    g <- ggplot(data=sse_df, aes_string(x='lambda',y='SSE')) +
         geom_vline(xintercept=optimised_lambda, color="red") +
-        geom_line() + theme_bw()
-    
+        geom_line(size=1.1) + theme_bw() +
+        labs (title="Optimisation outup of glog lambda parameter",
+              caption=paste("lambda=",optimised_lambda, sep=""))
+
     return (g)
 }
 
@@ -169,8 +171,8 @@ glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
     df <- df - min(df, na.rm=TRUE) # set minimum over all values to 0
     df_glog <- as.data.frame(glog(df, 0, lambda)) # apply glog
 
-    g <- glog_plot_optimised_labmda(optimised_lambda = lambda_opt, 
-        data_qc = df_qc, upper_lim = upper_lim)
+    g <- glog_plot_optimised_lambda(optimised_lambda = lambda_opt, 
+        data_qc = df_qc)
     
     glog_output <- GlogOutput()
     glog_output <- setScaledPeakMatrix(glog_output, df_glog)
