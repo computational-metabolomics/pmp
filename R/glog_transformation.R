@@ -175,7 +175,7 @@ glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
         data_qc = df_qc)
     
     glog_output <- GlogOutput()
-    glog_output <- setScaledPeakMatrix(glog_output, df_glog)
+    glog_output <- setGlogScaledPeakMatrix(glog_output, df_glog)
     glog_output <- setGlogLambdaSummary(glog_output, lambda=lambda, 
         lambda_opt=lambda_opt, error_flag=error_flag)
     glog_output <- setGlogLambdaOptimisationPlot(glog_output, g)

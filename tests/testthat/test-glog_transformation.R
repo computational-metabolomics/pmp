@@ -4,7 +4,7 @@ test_that("Glog function returns expected output", {
   out <- mv_imputation(df=testData$data, method="knn")
   out <- glog_transformation (df=out, classes=testData$class,
     qc_label="QC")
-  expect_equal (getScaledPeakMatrix(out), testData$glog_transformation)
+  expect_equal (getGlogScaledPeakMatrix(out), testData$glog_transformation)
   
   lambda <- as.integer(7865716)
   testthat::expect_true(lambda == as.integer(out@lambda_summary$lambda))

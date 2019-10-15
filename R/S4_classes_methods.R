@@ -22,13 +22,13 @@ GlogOutput <- setClass(
 
 #' Method to set peak matrix slot after glog scaling
 #' 
-#' @aliases setScaledPeakMatrix
+#' @aliases setGlogScaledPeakMatrix
 #' @param glog_object R object of 'GlogOuput' class
 #' @param scaled_peak_matrix a data frame, peak inntensity matrix after glog
 #' transformation
 #' @return GlogObject class object with updated peak matrix slot
 
-setMethod(f="setScaledPeakMatrix", signature="GlogOutput",
+setMethod(f="setGlogScaledPeakMatrix", signature="GlogOutput",
     definition=function(glog_object, scaled_peak_matrix){
     glog_object@scaled_peak_matrix <- scaled_peak_matrix
     return (glog_object)
@@ -68,11 +68,11 @@ setMethod(f="setGlogLambdaOptimisationPlot", signature="GlogOutput",
 
 #' Method to get peak matrix from 'GlogOutput' class object
 #' 
-#' @aliases getScaledPeakMatrix
+#' @aliases getGlogScaledPeakMatrix
 #' @param glog_object R object of 'GlogOuput' class
 #' @return peak matrix after glog scaling
 
-setMethod(f="getScaledPeakMatrix", signature="GlogOutput",
+setMethod(f="getGlogScaledPeakMatrix", signature="GlogOutput",
     definition=function(glog_object){
         return (glog_object@scaled_peak_matrix)
 })

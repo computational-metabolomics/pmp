@@ -1,6 +1,6 @@
-setGeneric(name="setScaledPeakMatrix", 
+setGeneric(name="setGlogScaledPeakMatrix", 
     def=function(glog_object, scaled_peak_matrix){
-        standardGeneric("setScaledPeakMatrix") 
+        standardGeneric("setGlogScaledPeakMatrix") 
 })
 
 setGeneric(name="setGlogLambdaSummary", 
@@ -13,9 +13,9 @@ setGeneric(name="setGlogLambdaOptimisationPlot",
         standardGeneric("setGlogLambdaOptimisationPlot") 
 })
 
-setGeneric(name="getScaledPeakMatrix", 
+setGeneric(name="getGlogScaledPeakMatrix", 
     def=function(glog_object){
-        standardGeneric("getScaledPeakMatrix") 
+        standardGeneric("getGlogScaledPeakMatrix") 
 })
 
 setGeneric(name="getGlogLambdaOptimisationPlot", 
