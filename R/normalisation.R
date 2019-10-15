@@ -17,12 +17,24 @@ normalise_to_sum <- function(df, check_df=TRUE) {
 }
 
 
+#' Calculate reference mean of  samples
+#' 
+#' @param df_qc peak matrix of QC samples
+#' 
+#' @return vector of reference mean values
+calculate_ref_mean <- function(df_qc){
+    ref_mean <-apply(df_qc, 1, mean, na.rm=TRUE)
+    return(ref_mean)
+}
+
 #' Normalise peak table using PQN method
 #'
 #' @param df data frame
 #' @param classes vector of class labels
 #' @param qc_label label used for QC samples. If set to 'all', all samples will
 #'be used to calculate correction factor
+#' @param ref_mean Vector of reference mean values to use instead of calculating
+#' from QC sample group. If set to NULL, QC sample data will be used.
 #' @return list of normalised data set and correction coefficients
 #' @examples 
 #' attach (testData)
@@ -30,7 +42,7 @@ normalise_to_sum <- function(df, check_df=TRUE) {
 #' 
 #' @export
 
-pqn_normalisation <- function(df, classes, qc_label) {
+pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL) {
     
     df <- check_peak_matrix(peak_data=df, classes=classes)
     
@@ -40,7 +52,10 @@ pqn_normalisation <- function(df, classes, qc_label) {
         ref <- df[, classes == qc_label]
     }
     
-    ref_mean <- apply(ref, 1, mean, na.rm=TRUE)
+    if (is.null(ref_mean)){
+        ref_mean <- calculate_ref_mean(df_qc=ref)
+    }
+    
     coef <- vector()
     
     for (i in seq_len(dim(df)[2])) {
