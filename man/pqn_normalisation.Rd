@@ -4,7 +4,7 @@
 \alias{pqn_normalisation}
 \title{Normalise peak table using PQN method}
 \usage{
-pqn_normalisation(df, classes, qc_label)
+pqn_normalisation(df, classes, qc_label, ref_mean = NULL)
 }
 \arguments{
 \item{df}{data frame}
@@ -13,6 +13,9 @@ pqn_normalisation(df, classes, qc_label)
 
 \item{qc_label}{label used for QC samples. If set to 'all', all samples will
 be used to calculate correction factor}
+
+\item{ref_mean}{Vector of reference mean values to use instead of calculating
+from QC sample group. If set to NULL, QC sample data will be used.}
 }
 \value{
 list of normalised data set and correction coefficients
