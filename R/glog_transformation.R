@@ -1,10 +1,5 @@
 #' @importFrom stats optimise
-#' @importFrom ggplot2 ggplot
-#' @importFrom ggplot2 aes_string
-#' @importFrom ggplot2 geom_vline
-#' @importFrom ggplot2 geom_line
-#' @importFrom ggplot2 theme_bw
-#' @importFrom ggplot2 labs
+#' @import ggplot2
 #'
 NULL
 
