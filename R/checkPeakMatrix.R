@@ -1,6 +1,7 @@
 #' @import SummarizedExperiment
 #' @importFrom methods as
-#'
+#' @importFrom S4Vectors DataFrame
+#' @importFrom S4Vectors metadata
 NULL
 
 #' Check if peak matrix is in format features in rows, samples in columns 
