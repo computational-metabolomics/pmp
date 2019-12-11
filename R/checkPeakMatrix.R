@@ -70,16 +70,16 @@ check_peak_matrix <- function(peak_data, classes=NULL) {
 check_input_data <- function (peak_data, classes=NULL){
     if(is.null(attr(class(peak_data), "package"))){
         meta_data <- list(original_data_structure=class(peak_data))
-        col_names <- colnames(peak_data)
         if (meta_data != "matrix"){
             peak_data <- as.matrix(peak_data)
         }
         peak_data <- check_peak_matrix(peak_data=peak_data,
             classes=classes)
+        col_names <- colnames(peak_data)
         peak_data <- SummarizedExperiment(assays=list(peak_data))
         metadata(peak_data) <- meta_data
         if (!is.null(classes)){
-            colData(peak_data) <- DataFrame(Sample=col_names, classes=classes)
+            colData(peak_data) <- DataFrame(classes=classes)
         }
         colnames(peak_data) <- col_names
     }

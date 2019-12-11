@@ -21,13 +21,13 @@ test_that("Glog function fails if qc_label is wrong or QC samples don't exist", 
     qc_label="A"))
 })
 
-#test_that("Scale factor is applied if optimisation fails", {
-#    df <- iris
-#    classes <- iris$Species
-#    df <- df[,-5]
-#    expect_output(glog_transformation(df,classes,qc_label='versicolor'),
-#      regexp='Error!Lambda')
-#})
+test_that("Scale factor is applied if optimisation fails", {
+    df <- iris
+    classes <- iris$Species
+    df <- df[,-5]
+    expect_output(glog_transformation(df,classes,qc_label='versicolor'),
+     regexp='Error!Lambda')
+})
 
 test_that("If feature variance is 0 replace it with small value", {
     out <- mv_imputation(df=testData$data, method="knn")
