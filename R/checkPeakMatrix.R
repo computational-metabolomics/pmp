@@ -1,3 +1,8 @@
+#' @import SummarizedExperiment
+#' @importFrom methods as
+#'
+NULL
+
 #' Check if peak matrix is in format features in rows, samples in columns 
 #' and that all cells contain numeric values. 
 #' 
@@ -10,12 +15,7 @@
 #' @param peak_data peak matrix
 #' @param classes vector of class labels
 #' @return matrix where samples are represented in columns and features in rows
-#' @examples 
 #' 
-#' attach(testData)
-#' out <- check_peak_matrix(peak_data=t(testData$data))
-#' 
-#' @export
 
 check_peak_matrix <- function(peak_data, classes=NULL) {
     dims <- dim(peak_data)
@@ -56,4 +56,39 @@ check_peak_matrix <- function(peak_data, classes=NULL) {
     }
     
     peak_data
+}
+
+#' Check if input data is object of 'SummarizedExperiment',
+#' if not convert inputs into 'SummarizedExperiment' container.
+#' 
+#'
+#' @param peak_data peak matrix
+#' @param classes vector of class labels
+#' @return object of class of 'SummarizedExperiment' 
+#' 
+check_input_data <- function (peak_data, classes=NULL){
+    if(attr(class(peak_data), "package") != "SummarizedExperiment"){
+        meta_data <- list(original_data_structure=class(peak_data))
+        peak_data <- check_peak_matrix(peak_data=peak_data,
+            classes=classes)
+        peak_data <- SummarizedExperiment(assays=peak_data)
+        metadata(peak_data) <- meta_data
+        if (!is.null(classes)){
+            colData(peak_data) <- DataFrame(classes=classes)
+        }
+    }
+    return(peak_data)
+}
+
+#' If input data were not of class of 'SummarizedExperiment',
+#' convert output to the original R data structure type. 
+#'
+#' @param peak_data peak matrix
+#' @return peak matrix object of the same data structure as original input data 
+#' 
+return_original_data_structure <- function(peak_data){
+    meta_data <- metadata(peak_data)
+    peak_data <- assay(peak_data)
+    peak_data <- as(peak_data, meta_data$original_data_structure)
+    return (peak_data)
 }

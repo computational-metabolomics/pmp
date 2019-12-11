@@ -22,9 +22,3 @@ matrix orientation and will transpose it if needed. If class labels are
 provided this function will check if the length of labels matches number 
 of samples in peak matrix.
 }
-\examples{
-
-attach(testData)
-out <- check_peak_matrix(peak_data=t(testData$data))
-
-}
