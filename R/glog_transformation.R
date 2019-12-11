@@ -133,19 +133,20 @@ glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
     if (length(which(classes %in% qc_label)) == 0) {
         stop("QC sample label is not present. Check your qc_label parameter.")
     }
-    df <- check_peak_matrix(peak_data=df, classes=classes)
+    df <- check_input_data(peak_data=df, classes=classes)
 
     df_qc <- df[, classes == qc_label]
-
-    offset <- min(df_qc, na.rm=TRUE) # set offset to the minimum QC samples
-    df_qc <- df_qc - offset # set minimum of qc data to 0
-    VF <- apply(df_qc, 1, var, na.rm=TRUE) # variance of all features
+    
+    offset <- min(assay(df_qc), na.rm=TRUE) # set offset to the minimum QC samples
+    assay(df_qc) <- assay(df_qc) - offset # set minimum of qc data to 0
+    VF <- apply(assay(df_qc), 1, var, na.rm=TRUE) # variance of all features
     
     # Upper limit max var or largest ratio max(var)/min(var)
     upper_lim <- max(pmax(VF, max(VF) / sort(VF)[sort(VF) > 0][1]))
 
     if (is.null(lambda)){
-        lambda <- glog_omptimise_lambda (upper_lim=upper_lim, df_qc=df_qc)
+        lambda <- glog_omptimise_lambda (upper_lim=upper_lim, 
+            df_qc=assay(df_qc))
         lambda <- lambda$minimum
     }
     lambda_opt <- lambda
@@ -160,20 +161,20 @@ glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
     # if flag triggered then apply scale factor
     if (error_flag) {
         lambda <- 5.0278 * 10^(-9)
-        df <- glog_rescale_data(df)
+        assay(df) <- glog_rescale_data(assay(df))
     }
 
-    df <- df - min(df, na.rm=TRUE) # set minimum over all values to 0
-    df_glog <- as.data.frame(glog(df, 0, lambda)) # apply glog
+    assay(df) <- assay(df) - min(assay(df), na.rm=TRUE)
+    # set minimum over all values to 0
+    assay(df) <- glog(assay(df), 0, lambda) # apply glog
 
-    g <- glog_plot_optimised_lambda(optimised_lambda = lambda_opt, 
-        data_qc = df_qc)
+    assay(df)
     
-    glog_output <- GlogOutput()
-    glog_output <- setGlogScaledPeakMatrix(glog_output, df_glog)
-    glog_output <- setGlogLambdaSummary(glog_output, lambda=lambda, 
-        lambda_opt=lambda_opt, error_flag=error_flag)
-    glog_output <- setGlogLambdaOptimisationPlot(glog_output, g)
+    meta_data <- metadata(df)
+    meta_data$glog_scaling <- list (lambda=lambda, lambda_opt=lambda_opt,
+        error_flag=error_flag)
     
-    return(glog_output)
+    metadata(df) <- meta_data
+    
+    return(df)
 }
