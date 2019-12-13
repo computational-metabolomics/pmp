@@ -68,8 +68,8 @@ check_peak_matrix <- function(peak_data, classes=NULL) {
 #' @return object of class of 'SummarizedExperiment' 
 #' 
 check_input_data <- function (peak_data, classes=NULL){
-    if(is.null(attr(class(peak_data), "package"))){
-        meta_data <- list(original_data_structure=class(peak_data))
+    meta_data <- list(original_data_structure=class(peak_data))
+    if(meta_data$original_data_structure != "SummarizedExperiment"){
         if (meta_data != "matrix"){
             peak_data <- as.matrix(peak_data)
         }

@@ -45,3 +45,12 @@ test_that("Function returns warning if input peak matrix has the same number of 
   expect_warning (out <- check_peak_matrix(peak_data=testData$data[1:9, ], 
     classes=testData$class))
 })
+
+test_that("return_original_data_structure work with bioconductor DataFrame object", {
+  df <- S4Vectors::DataFrame(A=c(1:5), B=c(1:5))
+  df <- pmp:::check_input_data (df)
+  meta_data <- metadata(df)
+  meta_data$processing_history <- "testthat"
+  metadata(df) <- meta_data
+  expect_silent(df <- pmp:::return_original_data_structure(df))
+})
