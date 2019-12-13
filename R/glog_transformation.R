@@ -85,21 +85,42 @@ glog_omptimise_lambda <- function(upper_lim, df_qc){
 }
 
 #' Plot SSE error of lambda optimisation process
-#' 
-#' @param optimised_lambda optimised lambda value from 'glog_optimise_output'
-#' @param data_qc peak intenisty matrix of QC samples
+#' @param df Peak intensity matrix
+#' @param optimised_lambda Numeric value of optimised lambda from 
+#'     glog_transformation output
+#' @param classes vector of class labels
+#' @param qc_label class label for QC sample
+#' @param plot_grid number of data points to use for SSE optimisation
 #' @return ggplot object containing optimisation plot
+#' @examples 
 #' 
+#' attach (testData)
+#' classes <- testData$class
+#' 
+#' data <- mv_imputation(df=testData$data, method='knn')
+#' out <- glog_transformation (df=data, classes=classes,
+#'     qc_label='QC')
+#' 
+#' optimised_lambda <- attributes(out)
+#' optimised_lambda <- 
+#'     optimised_lambda$processing_history$glog_transformation$lambda_opt
+#' 
+#' glog_plot_optimised_lambda(df=data, classes=classes,
+#'     qc_label="QC", optimised_lambda=optimised_lambda)
+#' @export
 
-glog_plot_optimised_lambda <- function(optimised_lambda=NA, data_qc){
+glog_plot_optimised_lambda <- function(df, optimised_lambda, classes, qc_label,
+    plot_grid=100){
+
+    df_qc <- df[, classes == qc_label]
     
     lambda_lim <- c(optimised_lambda, optimised_lambda) +
-        c(-optimised_lambda*0.5, optimised_lambda*0.5) 
+        c(-optimised_lambda*0.8, optimised_lambda*0.8) 
     
     sse_df <- data.frame(lambda=seq(lambda_lim[1], lambda_lim[2], 
-        length.out=100))
+        length.out=plot_grid))
     
-    sse_df$SSE <- vapply(X=sse_df$lambda, FUN=SSE, y0=0, y=data_qc, 
+    sse_df$SSE <- vapply(X=sse_df$lambda, FUN=SSE, y0=0, y=df_qc, 
         FUN.VALUE=numeric(1))
     
     g <- ggplot(data=sse_df, aes_string(x='lambda',y='SSE')) +

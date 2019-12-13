@@ -1,8 +1,8 @@
 context("test-glog_transformation")
 
 test_that("Glog function returns expected output", {
-  out <- mv_imputation(df=testData$data, method="knn")
-  out <- glog_transformation (df=out, classes=testData$class,
+  data <- mv_imputation(df=testData$data, method="knn")
+  out <- glog_transformation (df=data, classes=testData$class,
     qc_label="QC")
   
   lambda <- as.integer(7865716)
@@ -10,6 +10,15 @@ test_that("Glog function returns expected output", {
     processing_history$glog_transformation$lambda_opt))
   
   expect_equal (as.data.frame(out), testData$glog_transformation)
+  
+  optimised_lambda <- attributes(out)
+  optimised_lambda <- 
+  optimised_lambda$processing_history$glog_transformation$lambda_opt
+  
+  graph <- glog_plot_optimised_lambda(df=data, optimised_lambda=optimised_lambda,
+    classes=testData$class, qc_label="QC",)
+  expect_equal(graph[[9]]$x, "lambda")
+  expect_equal(graph[[9]]$y, "SSE")
 })
 
 test_that("Glog function fails if qc_label is wrong or QC samples don't exist", {

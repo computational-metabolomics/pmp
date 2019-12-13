@@ -4,16 +4,45 @@
 \alias{glog_plot_optimised_lambda}
 \title{Plot SSE error of lambda optimisation process}
 \usage{
-glog_plot_optimised_lambda(optimised_lambda = NA, data_qc)
+glog_plot_optimised_lambda(
+  df,
+  optimised_lambda,
+  classes,
+  qc_label,
+  plot_grid = 100
+)
 }
 \arguments{
-\item{optimised_lambda}{optimised lambda value from 'glog_optimise_output'}
+\item{df}{Peak intensity matrix}
 
-\item{data_qc}{peak intenisty matrix of QC samples}
+\item{optimised_lambda}{Numeric value of optimised lambda from 
+glog_transformation output}
+
+\item{classes}{vector of class labels}
+
+\item{qc_label}{class label for QC sample}
+
+\item{plot_grid}{number of data points to use for SSE optimisation}
 }
 \value{
 ggplot object containing optimisation plot
 }
 \description{
 Plot SSE error of lambda optimisation process
+}
+\examples{
+
+attach (testData)
+classes <- testData$class
+
+data <- mv_imputation(df=testData$data, method='knn')
+out <- glog_transformation (df=data, classes=classes,
+    qc_label='QC')
+
+optimised_lambda <- attributes(out)
+optimised_lambda <- 
+    optimised_lambda$processing_history$glog_transformation$lambda_opt
+
+glog_plot_optimised_lambda(df=data, classes=classes,
+    qc_label="QC", optimised_lambda=optimised_lambda)
 }
