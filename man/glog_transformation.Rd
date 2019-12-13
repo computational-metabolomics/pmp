@@ -17,7 +17,8 @@ glog_transformation(df, classes, qc_label, lambda = NULL)
 \item{lambda}{If not NULL will use provided value for glog lambda}
 }
 \value{
-S4 class object of glog transformation
+An \link[SummarizedExperiment]{SummarizedExperiment} object
+or numeric object of original input data structure.
 }
 \description{
 https://doi.org/10.1186/1471-2105-8-234

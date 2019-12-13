@@ -4,15 +4,12 @@ test_that("Glog function returns expected output", {
   out <- mv_imputation(df=testData$data, method="knn")
   out <- glog_transformation (df=out, classes=testData$class,
     qc_label="QC")
-  expect_equal (assay(out), as.matrix(testData$glog_transformation))
   
   lambda <- as.integer(7865716)
-  testthat::expect_true(lambda == as.integer(metadata(out)$glog_scaling$lambda))
+  testthat::expect_true(lambda == as.integer(attributes(out)$
+    processing_history$glog_transformation$lambda_opt))
   
-  #out <- getGlogLambdaOptimisationPlot(out)
-  
-  #expect_equal(out[[9]]$x, "lambda")
-  #expect_equal(out[[9]]$y, "SSE")
+  expect_equal (as.data.frame(out), testData$glog_transformation)
 })
 
 test_that("Glog function fails if qc_label is wrong or QC samples don't exist", {
@@ -34,6 +31,6 @@ test_that("If feature variance is 0 replace it with small value", {
     out[3,] <- 3
     expect_output(out <- glog_transformation (df=out, classes=testData$class,
       qc_label="QC"), regexp='Error!Lambda')
-    out <- assay(out)[3,]
+    out <- out[3,]
     testthat::expect_true(all(out[1:3] == out[4:6]))
 })

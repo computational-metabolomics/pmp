@@ -87,14 +87,27 @@ check_input_data <- function (peak_data, classes=NULL){
 }
 
 #' If input data were not of class of 'SummarizedExperiment',
-#' convert output to the original R data structure type. 
+#' convert output to the original R data structure type. All values stored in 
+#' 'metadata' slot of \link[SummarizedExperiment]{SummarizedExperiment} object 
+#' will be exported as 'attributes' of the output object.
 #'
-#' @param peak_data peak matrix
+#' @param summarized_experiment_object peak matrix
 #' @return peak matrix object of the same data structure as original input data 
 #' 
-return_original_data_structure <- function(peak_data){
-    meta_data <- metadata(peak_data)
-    peak_data <- assay(peak_data)
-    peak_data <- as(peak_data, meta_data$original_data_structure)
+return_original_data_structure <- function(summarized_experiment_object){
+    meta_data <- metadata(summarized_experiment_object)
+    peak_data <- assay(summarized_experiment_object)
+    # as() can't convert matrix to data.frame, but works with all other objects
+    if (meta_data$original_data_structure == "data.frame"){
+        peak_data <- as.data.frame(peak_data)
+    } else if (meta_data$original_data_structure != "matrix"){
+        peak_data <- as(peak_data, meta_data$original_data_structure)
+    }
+    
+    ## Add all metadata as output object attributes, not sure if this works for
+    ## DataFrame class as well.
+    meta_data$original_data_structure <- NULL
+    attributes(peak_data) <- c(attributes(peak_data), meta_data)
+    
     return (peak_data)
 }

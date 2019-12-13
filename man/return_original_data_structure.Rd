@@ -3,17 +3,21 @@
 \name{return_original_data_structure}
 \alias{return_original_data_structure}
 \title{If input data were not of class of 'SummarizedExperiment',
-convert output to the original R data structure type.}
+convert output to the original R data structure type. All values stored in 
+'metadata' slot of \link[SummarizedExperiment]{SummarizedExperiment} object 
+will be exported as 'attributes' of the output object.}
 \usage{
-return_original_data_structure(peak_data)
+return_original_data_structure(summarized_experiment_object)
 }
 \arguments{
-\item{peak_data}{peak matrix}
+\item{summarized_experiment_object}{peak matrix}
 }
 \value{
 peak matrix object of the same data structure as original input data
 }
 \description{
 If input data were not of class of 'SummarizedExperiment',
-convert output to the original R data structure type.
+convert output to the original R data structure type. All values stored in 
+'metadata' slot of \link[SummarizedExperiment]{SummarizedExperiment} object 
+will be exported as 'attributes' of the output object.
 }

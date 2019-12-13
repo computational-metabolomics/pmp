@@ -1,5 +1,6 @@
 #' @importFrom stats optimise
 #' @import ggplot2
+#' @importFrom methods as
 #'
 NULL
 
@@ -105,7 +106,7 @@ glog_plot_optimised_lambda <- function(optimised_lambda=NA, data_qc){
         geom_vline(xintercept=optimised_lambda, color="red") +
         geom_line(size=1.1) + theme_bw() +
         labs (title="Optimisation outup of glog lambda parameter",
-              caption=paste("lambda=",optimised_lambda, sep=""))
+            caption=paste("lambda=",optimised_lambda, sep=""))
 
     return (g)
 }
@@ -125,7 +126,8 @@ glog_plot_optimised_lambda <- function(optimised_lambda=NA, data_qc){
 #' out <- glog_transformation (df=out, classes=testData$class,
 #'     qc_label='QC')
 #'
-#' @return S4 class object of glog transformation
+#' @return An \link[SummarizedExperiment]{SummarizedExperiment} object
+#' or numeric object of original input data structure.
 #' @export glog_transformation
 
 glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
@@ -133,11 +135,12 @@ glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
     if (length(which(classes %in% qc_label)) == 0) {
         stop("QC sample label is not present. Check your qc_label parameter.")
     }
+    
+    input_df_class <- class(df)
     df <- check_input_data(peak_data=df, classes=classes)
-
     df_qc <- df[, classes == qc_label]
     
-    offset <- min(assay(df_qc), na.rm=TRUE) # set offset to the minimum QC samples
+    offset <- min(assay(df_qc), na.rm=TRUE)#set offset to the minimum QC samples
     assay(df_qc) <- assay(df_qc) - offset # set minimum of qc data to 0
     VF <- apply(assay(df_qc), 1, var, na.rm=TRUE) # variance of all features
     
@@ -157,7 +160,6 @@ glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
         cat("Error!Lambda tending to infinity! Using standard\n")
         error_flag <- TRUE
     } 
-
     # if flag triggered then apply scale factor
     if (error_flag) {
         lambda <- 5.0278 * 10^(-9)
@@ -167,14 +169,12 @@ glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
     assay(df) <- assay(df) - min(assay(df), na.rm=TRUE)
     # set minimum over all values to 0
     assay(df) <- glog(assay(df), 0, lambda) # apply glog
-
-    assay(df)
-    
     meta_data <- metadata(df)
-    meta_data$glog_scaling <- list (lambda=lambda, lambda_opt=lambda_opt,
-        error_flag=error_flag)
-    
+    meta_data$processing_history$glog_transformation <- list (lambda=lambda,
+        lambda_opt=lambda_opt, error_flag=error_flag)
     metadata(df) <- meta_data
-    
+    if(input_df_class != "SummarizedExperiment"){
+        df <- return_original_data_structure(df)
+    }
     return(df)
 }
