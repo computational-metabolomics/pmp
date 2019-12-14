@@ -27,8 +27,7 @@ specified QC samples.
 }
 \examples{
 
-attach (testData)
-out <- filter_peaks_by_rsd(df=testData$data, max_rsd=20,
-    classes=testData$class, qc_label='QC')
+out <- filter_peaks_by_rsd(df=pmp:::testData$data, max_rsd=20,
+    classes=pmp:::testData$class, qc_label='QC')
 
 }

@@ -32,10 +32,9 @@ Plot SSE error of lambda optimisation process
 }
 \examples{
 
-attach (testData)
-classes <- testData$class
+classes <- pmp:::testData$class
 
-data <- mv_imputation(df=testData$data, method='knn')
+data <- mv_imputation(df=pmp:::testData$data, method='knn')
 out <- glog_transformation (df=data, classes=classes,
     qc_label='QC')
 

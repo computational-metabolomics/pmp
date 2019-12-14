@@ -55,8 +55,7 @@ impute_mode <- function (df, method){
 #' @return data frame of missing value imputed peak intensity matrix
 #' 
 #' @examples 
-#' attach (testData)
-#' out <- mv_imputation(df=t(testData$data), method='knn')
+#' out <- mv_imputation(df=t(pmp:::testData$data), method='knn')
 #' 
 #' @export
 

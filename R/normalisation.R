@@ -4,8 +4,7 @@
 #'transposed, so that features are in rows
 #' @return normalised peak matrix
 #' @examples 
-#' attach (testData)
-#' out <- normalise_to_sum (testData$data)
+#' out <- normalise_to_sum (pmp:::testData$data)
 #'
 #' @export
 
@@ -37,8 +36,9 @@ calculate_ref_mean <- function(df_qc){
 #' from QC sample group. If set to NULL, QC sample data will be used.
 #' @return list of normalised data set and correction coefficients
 #' @examples 
-#' attach (testData)
-#' pqn_normalisation(df=testData$data, classes=testData$class, qc_label='QC')
+#' attach (pmp:::testData)
+#' pqn_normalisation(df=pmp:::testData$data,
+#'     classes=pmp:::testData$class, qc_label='QC')
 #' 
 #' @export
 

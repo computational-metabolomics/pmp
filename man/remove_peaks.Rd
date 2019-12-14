@@ -18,8 +18,7 @@ data frame, filtered peak intensity matrix
 Filter to remove features.
 }
 \examples{
-attach (testData)
-rem_index <- testData$remove_peaks$rem_index
-out <- remove_peaks(df=testData$data, rem_index=rem_index)
+rem_index <- pmp:::testData$remove_peaks$rem_index
+out <- remove_peaks(df=pmp:::testData$data, rem_index=rem_index)
 
 }

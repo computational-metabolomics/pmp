@@ -19,7 +19,6 @@ normalised peak matrix
 Normalise peak table to the total sum of peak intensities
 }
 \examples{
-attach (testData)
-out <- normalise_to_sum (testData$data)
+out <- normalise_to_sum (pmp:::testData$data)
 
 }

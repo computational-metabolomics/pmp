@@ -22,9 +22,8 @@ NULL
 #' @return list of filtered peak intensity matrix and matrix with flags
 #' 
 #' @examples
-#' attach (testData)
-#' out <- filter_peaks_by_blank(df=testData$data, fold_change=1.2, 
-#'    classes=testData$class, blank_label='Blank', qc_label=NULL, 
+#' out <- filter_peaks_by_blank(df=pmp:::testData$data, fold_change=1.2, 
+#'    classes=pmp:::testData$class, blank_label='Blank', qc_label=NULL, 
 #'    remove=FALSE, fraction_in_blank=0)
 #' 
 #' @export
@@ -96,16 +95,14 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
 #' @return list of filtered peak intensity matrix and matrix with flags
 #' 
 #' @examples 
-#' attach (testData)
-#' 
-#' out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
-#'     classes=testData$class, method='QC', qc_label='QC')
+#' out <- filter_peaks_by_fraction(df=pmp:::testData$data, min_frac=1, 
+#'     classes=pmp:::testData$class, method='QC', qc_label='QC')
 #'     
-#' out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
-#'     classes=testData$class, method='across', qc_label='QC')
+#' out <- filter_peaks_by_fraction(df=pmp:::testData$data, min_frac=1, 
+#'     classes=pmp:::testData$class, method='across', qc_label='QC')
 #' 
-#' out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
-#'     classes=testData$class, method='within', qc_label='QC')
+#' out <- filter_peaks_by_fraction(df=pmp:::testData$data, min_frac=1, 
+#'     classes=pmp:::testData$class, method='within', qc_label='QC')
 #' 
 #' @export
 
@@ -161,9 +158,8 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
 #' @return data frame, filtered peak intensity matrix
 #' 
 #' @examples 
-#' attach (testData)
-#' rem_index <- testData$remove_peaks$rem_index
-#' out <- remove_peaks(df=testData$data, rem_index=rem_index)
+#' rem_index <- pmp:::testData$remove_peaks$rem_index
+#' out <- remove_peaks(df=pmp:::testData$data, rem_index=rem_index)
 #' 
 #' @export
 
@@ -194,9 +190,8 @@ remove_peaks <- function(df, rem_index) {
 #' @return list of filtered peak intensity matrix and matrix with flags
 #' @examples 
 #' 
-#' attach (testData)
-#' out <- filter_peaks_by_rsd(df=testData$data, max_rsd=20,
-#'     classes=testData$class, qc_label='QC')
+#' out <- filter_peaks_by_rsd(df=pmp:::testData$data, max_rsd=20,
+#'     classes=pmp:::testData$class, qc_label='QC')
 #' 
 #' @export
 
@@ -235,8 +230,7 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label) {
 #' 
 #' @examples 
 #' 
-#' attach (testData)
-#' out <- filter_samples_by_mv (df=testData$data, max_perc_mv=0.8)
+#' out <- filter_samples_by_mv (df=pmp:::testData$data, max_perc_mv=0.8)
 #' 
 #' @export
 

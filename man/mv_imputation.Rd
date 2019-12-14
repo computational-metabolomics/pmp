@@ -39,7 +39,6 @@ data frame of missing value imputed peak intensity matrix
 Missing value imputation using different algorithms
 }
 \examples{
-attach (testData)
-out <- mv_imputation(df=t(testData$data), method='knn')
+out <- mv_imputation(df=t(pmp:::testData$data), method='knn')
 
 }

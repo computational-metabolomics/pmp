@@ -94,10 +94,9 @@ glog_omptimise_lambda <- function(upper_lim, df_qc){
 #' @return ggplot object containing optimisation plot
 #' @examples 
 #' 
-#' attach (testData)
-#' classes <- testData$class
+#' classes <- pmp:::testData$class
 #' 
-#' data <- mv_imputation(df=testData$data, method='knn')
+#' data <- mv_imputation(df=pmp:::testData$data, method='knn')
 #' out <- glog_transformation (df=data, classes=classes,
 #'     qc_label='QC')
 #' 
@@ -142,9 +141,8 @@ glog_plot_optimised_lambda <- function(df, optimised_lambda, classes, qc_label,
 #' @param qc_label class label for QC sample
 #' @param lambda If not NULL will use provided value for glog lambda
 #' @examples
-#' attach (testData)
-#' out <- mv_imputation(df=testData$data, method='knn')
-#' out <- glog_transformation (df=out, classes=testData$class,
+#' out <- mv_imputation(df=pmp:::testData$data, method='knn')
+#' out <- glog_transformation (df=out, classes=pmp:::testData$class,
 #'     qc_label='QC')
 #'
 #' @return An \link[SummarizedExperiment]{SummarizedExperiment} object
