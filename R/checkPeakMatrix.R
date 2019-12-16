@@ -69,7 +69,7 @@ check_peak_matrix <- function(peak_data, classes=NULL) {
 check_input_data <- function (peak_data, classes=NULL){
     meta_data <- list(original_data_structure=class(peak_data))
     if(meta_data$original_data_structure != "SummarizedExperiment"){
-        if (meta_data != "matrix"){
+        if (meta_data$original_data_structure != "matrix"){
             peak_data <- as.matrix(peak_data)
         }
         peak_data <- check_peak_matrix(peak_data=peak_data,
