@@ -20,7 +20,6 @@ NULL
 
 check_peak_matrix <- function(peak_data, classes=NULL) {
     dims <- dim(peak_data)
-    is_data_frame <- is.data.frame(peak_data)
     
     if (dims[1] < dims[2] & is.null(classes)) {
         peak_data <- t(peak_data)
@@ -49,10 +48,6 @@ check_peak_matrix <- function(peak_data, classes=NULL) {
             # If samples are in rows, transpose data matrix
             peak_data <- t(peak_data)
         }
-    }
-    
-    if (is_data_frame) {
-        peak_data <- as.data.frame(peak_data)
     }
     
     peak_data

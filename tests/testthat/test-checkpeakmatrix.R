@@ -5,12 +5,6 @@ test_that("Output data matrix is in correct orientation", {
   expect_equal(out, testData$data)
 })
 
-test_that("Output data matrix is in correct orientation and data frame type is returned", {
-  peak_data <- as.data.frame(t(testData$data))
-  out <- check_peak_matrix(peak_data=peak_data, classes=testData$class)
-  expect_true(is.data.frame(out))
-})
-
 test_that("Output data matrix is in correct orientation if no transpose is needed", {
   out <- check_peak_matrix(peak_data=testData$data, classes=testData$class)
   expect_equal(out, testData$data)
@@ -44,7 +38,6 @@ test_that("Function works if class labels are not provided and matrix needs to b
           and data type is retained", {
   peak_data <- data.frame(t(testData$data))
   expect_warning (out <- check_peak_matrix(peak_data=peak_data))
-  expect_true(is.data.frame(out))
 })
 
 test_that("Function returns warning if input peak matrix has the same number of samples and features", {
