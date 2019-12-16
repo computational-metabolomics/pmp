@@ -2,22 +2,25 @@ context ("test-filter_peaks_by_blank")
 
 test_that ("Test that filter_peaks_by_blank returns expected output", {
   out <- filter_peaks_by_blank(df=testData$data, fold_change=1.2, 
-    classes=testData$class, blank_label="Blank", qc_label=NULL, remove=FALSE, 
-    fraction_in_blank=0)
-  expect_equal(out, testData$filter_peaks_by_blank)
+    classes=testData$class, blank_label="Blank", qc_label=NULL, 
+    remove_samples=FALSE, remove_peaks=TRUE, fraction_in_blank=0)
+  attributes(out$df)$processing_history <- NULL
+  expect_equal(as.matrix(out$df), testData$filter_peaks_by_blank$df)
+  expect_equal(out$flags, testData$filter_peaks_by_blank$flags)
 })
 
 test_that ("Test that filter_peaks_by_blank returns expected output with QC samples specified", {
   out <- filter_peaks_by_blank(df=testData$data, fold_change=1.2, 
-    classes=testData$class, blank_label="Blank", qc_label="QC", remove=FALSE, 
-    fraction_in_blank=0)
-  expect_equal(out, testData$filter_peaks_by_blank_qc)
+    classes=testData$class, blank_label="Blank", qc_label="QC",
+    remove_samples=FALSE, remove_peaks=TRUE, fraction_in_blank=0)
+    attributes(out$df)$processing_history <- NULL
+  expect_equal(out$df, testData$filter_peaks_by_blank_qc$df)
 })
 
-test_that ("Test that filter_peaks_by_blank returns expected output and remove blank samples", {
+test_that ("Test that filter_peaks_by_blank removes blank samples, but keeps features", {
   out <- filter_peaks_by_blank(df=testData$data, fold_change=1.2, 
-    classes=testData$class, blank_label="Blank", qc_label=NULL, remove=TRUE, 
-    fraction_in_blank=0)
+    classes=testData$class, blank_label="Blank", qc_label=NULL, 
+    remove_samples=TRUE, remove_peaks=FALSE,fraction_in_blank=0)
   expect_equal(out, testData$filter_peaks_by_blank_remove_blanks)
 })
 

@@ -1,5 +1,6 @@
 #' @importFrom stats median sd var 
-#' 
+#' @importFrom S4Vectors DataFrame
+#' @import SummarizedExperiment
 
 NULL
 
@@ -12,69 +13,90 @@ NULL
 #'
 #' @param df peak intensity matrix
 #' @param fold_change minimum fold change between analytical and blank samples.
-#' @param classes vector of class labels
+#' @param classes character vector of class labels. If input is 
+#' `SummarizedExperiment` object, a column of `colData` slot.
 #' @param blank_label class label used to identify blank samples
 #' @param qc_label class label for QC sample. If not NULL will use QC samples 
 #'to calculate the mean intensity
-#' @param remove remove blank samples from peak matrix or not
+#' @param remove_samples remove blank samples from peak matrix or not
+#' @param remove_peaks remove filtered features from peak matrix or not
 #' @param fraction_in_blank number between 0 to 1 to specify fraction in how 
-#'many blanks peaks should be present
-#' @return list of filtered peak intensity matrix and matrix with flags
+#' many blanks peaks should be present
+#' @return 'SummarizedExperiment' class object or list of filtered peak 
+#' intensity matrix and matrix with flags.
 #' 
 #' @examples
-#' out <- filter_peaks_by_blank(df=pmp:::testData$data, fold_change=1.2, 
-#'    classes=pmp:::testData$class, blank_label='Blank', qc_label=NULL, 
-#'    remove=FALSE, fraction_in_blank=0)
+#' df <- MTBLS79[ , MTBLS79$Batch==1]
+#' df$Class[1:2] <- "Blank"
+#' out <- filter_peaks_by_blank(df=df, fold_change=1.2, 
+#'    classes=df$Class, blank_label="Blank", qc_label=NULL, 
+#'    remove_samples=FALSE, remove_peaks=TRUE, fraction_in_blank=0)
 #' 
 #' @export
 
 filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, 
-        qc_label=NULL, remove=TRUE, fraction_in_blank=0) {
+        qc_label=NULL, remove_samples=TRUE, remove_peaks=TRUE, 
+        fraction_in_blank=0) {
     
-    df <- check_peak_matrix(peak_data=df, classes=classes)
-    
-    M_blanks <- rbind(df[, classes == blank_label], NULL)
+    input_df_class <- class(df)
+    df <- check_input_data(peak_data=df, classes=classes)
+    M_blanks <- df[, classes == blank_label]
     
     if (!is.null(qc_label)) {
-        M_non_blanks <- df[seq_len(dim(df)[1]), classes == qc_label,
+        M_non_blanks <- df[, classes == qc_label,
             drop=FALSE]
     } else {
-        M_non_blanks <- df[seq_len(dim(df)[1]), classes != blank_label,
+        M_non_blanks <- df[, classes != blank_label,
             drop=FALSE]
     }
     
     FUN <- function(x) median(x, na.rm=TRUE)
     
-    median_intensity_blanks <- apply(M_blanks, 1, FUN)
-    median_intensity_non_blanks <- apply(M_non_blanks, 1, FUN)
-    
-    fold_change_exp <- median_intensity_non_blanks/median_intensity_blanks
-    
-    blank_fraction <- 1 - (apply(is.na(M_blanks), 1, sum)/ncol(M_blanks))
+    median_intensity_blanks <- apply(assay(M_blanks), 1, FUN)
+    median_intensity_non_blanks <- apply(assay(M_non_blanks), 1, FUN)
+    fold_change_exp <- median_intensity_non_blanks / median_intensity_blanks
+    blank_fraction <- 1 - (apply(is.na(assay(M_blanks)), 1, sum) / 
+        ncol(assay(M_blanks)))
     
     idxs <- fold_change_exp >= fold_change & blank_fraction >= fraction_in_blank
-    
     idxs[which(is.na(median_intensity_non_blanks))] <- FALSE
     idxs[which(is.na(median_intensity_blanks))] <- TRUE
     
     if (is.null(qc_label)) {
-        flags <- cbind(median_non_blanks=median_intensity_non_blanks, 
+        rowData(df) <- cbind(rowData(df), 
+            DataFrame(median_non_blanks=median_intensity_non_blanks, 
             median_blanks=median_intensity_blanks, 
             fold_change=fold_change_exp, blank_flags=as.numeric(idxs),
-            blank_fraction_flags=as.numeric(blank_fraction))
+            blank_fraction_flags=as.numeric(blank_fraction)))
     } else {
-        flags <- cbind(median_QCs=median_intensity_non_blanks,
+        rowData(df) <- cbind(rowData(df), 
+            DataFrame(median_QCs=median_intensity_non_blanks,
             median_blanks=median_intensity_blanks,
             fold_change=fold_change_exp, blank_flags=as.numeric(idxs), 
-            blank_fraction_flags=as.numeric(blank_fraction))
+            blank_fraction_flags=as.numeric(blank_fraction)))
     }
     
-    df <- df[idxs, ]
-    
-    if (remove) {
+    if (remove_peaks){
+        df <- df[idxs, ]
+    }
+        
+    if (remove_samples) {
         df <- df[, classes != blank_label]
     }
-    return(list(df=df, flags=flags))
+    
+    meta_data <- metadata(df)
+    meta_data$processing_history$filter_peaks_by_blank <- 
+        list (fold_change=fold_change, blank_label=blank_label, 
+        qc_label=qc_label, remove_samples=remove_samples,
+        remove_peaks=remove_peaks, fraction_in_blank=fraction_in_blank)
+    metadata(df) <- meta_data
+    
+    if(input_df_class != "SummarizedExperiment"){
+        flags <- rowData(df)
+        df <- return_original_data_structure(df)
+        df <- list(df=df, flags=flags)
+    }
+    return(df)
 }
 
 #' Filter features by fraction of missing values

@@ -10,7 +10,8 @@ filter_peaks_by_blank(
   classes,
   blank_label,
   qc_label = NULL,
-  remove = TRUE,
+  remove_samples = TRUE,
+  remove_peaks = TRUE,
   fraction_in_blank = 0
 )
 }
@@ -19,20 +20,24 @@ filter_peaks_by_blank(
 
 \item{fold_change}{minimum fold change between analytical and blank samples.}
 
-\item{classes}{vector of class labels}
+\item{classes}{character vector of class labels. If input is 
+`SummarizedExperiment` object, a column of `colData` slot.}
 
 \item{blank_label}{class label used to identify blank samples}
 
 \item{qc_label}{class label for QC sample. If not NULL will use QC samples 
 to calculate the mean intensity}
 
-\item{remove}{remove blank samples from peak matrix or not}
+\item{remove_samples}{remove blank samples from peak matrix or not}
+
+\item{remove_peaks}{remove filtered features from peak matrix or not}
 
 \item{fraction_in_blank}{number between 0 to 1 to specify fraction in how 
 many blanks peaks should be present}
 }
 \value{
-list of filtered peak intensity matrix and matrix with flags
+'SummarizedExperiment' class object or list of filtered peak 
+intensity matrix and matrix with flags.
 }
 \description{
 Metabolomics datasets often contain many 'features' of non-biological 
@@ -41,8 +46,10 @@ This tool facilitates the removal of such features from the data matrix,
 as defined using an appropriate blank' sample.
 }
 \examples{
-out <- filter_peaks_by_blank(df=pmp:::testData$data, fold_change=1.2, 
-   classes=pmp:::testData$class, blank_label='Blank', qc_label=NULL, 
-   remove=FALSE, fraction_in_blank=0)
+df <- MTBLS79[ , MTBLS79$Batch==1]
+df$Class[1:2] <- "Blank"
+out <- filter_peaks_by_blank(df=df, fold_change=1.2, 
+   classes=df$Class, blank_label="Blank", qc_label=NULL, 
+   remove_samples=FALSE, remove_peaks=TRUE, fraction_in_blank=0)
 
 }
