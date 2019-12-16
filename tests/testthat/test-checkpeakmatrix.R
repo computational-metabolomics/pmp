@@ -17,11 +17,17 @@ test_that("Output data matrix is in correct orientation if no transpose is neede
 })
 
 test_that("Function fails", {
-  expect_error(check_peak_matrix(peak_data=testData$data, classes=testData$class[1:3]))
+  expect_error(pmp:::check_peak_matrix(peak_data=testData$data, classes=testData$class[1:3]))
 })
 
 test_that("Function fails", {
   expect_error(check_peak_matrix(peak_data=testData$data[,1:6], classes=testData$class))
+})
+
+test_that("Function fails, input is character", {
+  out <- testData$data
+  out[ ,1] <- as.character(out[ ,1])
+  expect_error(pmp:::check_peak_matrix(peak_data=out, classes=testData$class))
 })
 
 test_that("Function works if class labels are not provided", {
