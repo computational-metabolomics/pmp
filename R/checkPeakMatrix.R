@@ -31,8 +31,7 @@ check_peak_matrix <- function(peak_data, classes=NULL) {
     Use 'check_df=FALSE' to keep original peak matrix orientation.")
     }
     
-    if (!all(apply (peak_data, 2, typeof)!="factor" & 
-        apply(peak_data, 2, typeof)!="character")){
+    if (!is.numeric(as.matrix(peak_data))){
         stop ("Peak matrix contains non-numeric values. Check your inputs!")
     }
     
