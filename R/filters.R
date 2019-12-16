@@ -63,23 +63,21 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
     idxs[which(is.na(median_intensity_blanks))] <- TRUE
     
     if (is.null(qc_label)) {
-        rowData(df) <- cbind(rowData(df), 
-            DataFrame(median_non_blanks=median_intensity_non_blanks, 
-            median_blanks=median_intensity_blanks, 
-            fold_change=fold_change_exp, blank_flags=as.numeric(idxs),
-            blank_fraction_flags=as.numeric(blank_fraction)))
+        row_data <- DataFrame(median_non_blanks=median_intensity_non_blanks)
     } else {
-        rowData(df) <- cbind(rowData(df), 
-            DataFrame(median_QCs=median_intensity_non_blanks,
-            median_blanks=median_intensity_blanks,
-            fold_change=fold_change_exp, blank_flags=as.numeric(idxs), 
-            blank_fraction_flags=as.numeric(blank_fraction)))
+        row_data <- DataFrame(median_QCs=median_intensity_non_blanks)
     }
+    
+    row_data$median_blanks <- median_intensity_blanks
+    row_data$fold_change <- fold_change_exp
+    row_data$blank_flags <- as.numeric(idxs)
+    row_data$blank_fraction_flags <- as.numeric(blank_fraction)
+    
+    rowData(df) <- cbind(rowData(df), row_data)
     
     if (remove_peaks){
         df <- df[idxs, ]
     }
-        
     if (remove_samples) {
         df <- df[, classes != blank_label]
     }
