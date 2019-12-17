@@ -19,6 +19,7 @@ normalised peak matrix
 Normalise peak table to the total sum of peak intensities
 }
 \examples{
-out <- normalise_to_sum (pmp:::testData$data)
+df <- MTBLS79[, MTBLS79$Batch == 1]
+out <- normalise_to_sum (df=df)
 
 }

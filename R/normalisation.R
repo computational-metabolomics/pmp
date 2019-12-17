@@ -4,17 +4,31 @@
 #'transposed, so that features are in rows
 #' @return normalised peak matrix
 #' @examples 
-#' out <- normalise_to_sum (pmp:::testData$data)
+#' df <- MTBLS79[, MTBLS79$Batch == 1]
+#' out <- normalise_to_sum (df=df)
 #'
 #' @export
 
 normalise_to_sum <- function(df, check_df=TRUE) {
+    input_df_class <- class(df)[1]
     if (check_df == TRUE) {
-        df <- check_peak_matrix(peak_data=df)
+        df <- check_input_data(df)
+    } else {
+        # normalise_to_sum doesn't need class labels
+        # Create generic class label vector to avoid DF to be transposed
+        df <- check_input_data(peak_data=df, classes=rep("S", ncol(df)))
     }
-    return(sweep(df, 2, colSums(df, na.rm=TRUE)/100, FUN="/"))
+    assay(df) <- (sweep(assay(df), 2, colSums(assay(df), na.rm=TRUE)/100, 
+        FUN="/"))
+    meta_data <- metadata(df)
+    meta_data$processing_history$normalise_to_sum <- 
+        list (check_df=check_df)
+    metadata(df) <- meta_data
+    if (input_df_class != "SummarizedExperiment"){
+        df <- return_original_data_structure(df)
+    }
+    df
 }
-
 
 #' Calculate reference mean of  samples
 #' 

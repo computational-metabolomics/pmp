@@ -1,12 +1,20 @@
 context("test-normalise_to_total_sum")
 
 test_that("normalise to sum returns correct output", {
-  expect_equal(normalise_to_sum (testData$data), testData$normalise_to_sum)
+  out <- normalise_to_sum (testData$data)
+  attributes(out)$processing_history <- NULL
+  expect_equal(out, testData$normalise_to_sum)
 })
 
 test_that("normalise to sum returns correct output when matrix needs to be transposed", {
   expect_warning (out <- normalise_to_sum(t(testData$data)))
+  attributes(out)$processing_history <- NULL
   expect_equal(out, testData$normalise_to_sum)
+})
+
+test_that("normalise to sum returns correct output when there are less features than samples", {
+  out <- normalise_to_sum(testData$data[1:8,], check_df=FALSE)
+  expect_true(all(round(apply (out, 2, sum, na.rm=T), 0) == 100L))
 })
 
 context("test-pqn_normalisation")
