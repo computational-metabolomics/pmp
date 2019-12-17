@@ -1,5 +1,6 @@
 #' @import SummarizedExperiment
 #' @importFrom methods as
+#' @importFrom methods is
 #' @importFrom S4Vectors DataFrame
 #' @importFrom S4Vectors metadata
 NULL
@@ -62,8 +63,8 @@ check_peak_matrix <- function(peak_data, classes=NULL) {
 #' @return object of class of 'SummarizedExperiment' 
 #' 
 check_input_data <- function (peak_data, classes=NULL){
-    meta_data <- list(original_data_structure=class(peak_data))
-    if(meta_data$original_data_structure != "SummarizedExperiment"){
+    meta_data <- list(original_data_structure=class(peak_data)[1])
+    if(!is(peak_data, "SummarizedExperiment")){
         if (meta_data$original_data_structure != "matrix"){
             peak_data <- as.matrix(peak_data)
         }

@@ -38,7 +38,7 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
         qc_label=NULL, remove_samples=TRUE, remove_peaks=TRUE, 
         fraction_in_blank=0) {
     
-    input_df_class <- class(df)
+    input_df_class <- class(df)[1]
     df <- check_input_data(peak_data=df, classes=classes)
     M_blanks <- df[, classes == blank_label]
     
