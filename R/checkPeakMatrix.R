@@ -64,7 +64,12 @@ check_peak_matrix <- function(peak_data, classes=NULL) {
 #' 
 check_input_data <- function (peak_data, classes=NULL){
     meta_data <- list(original_data_structure=class(peak_data)[1])
-    if(!is(peak_data, "SummarizedExperiment")){
+    
+    if(is(peak_data, "SummarizedExperiment")){
+        metadata(peak_data)$original_data_structure <- "SummarizedExperiment"
+    
+    } else {
+
         if (meta_data$original_data_structure != "matrix"){
             peak_data <- as.matrix(peak_data)
         }
@@ -91,18 +96,21 @@ check_input_data <- function (peak_data, classes=NULL){
 #' 
 return_original_data_structure <- function(summarized_experiment_object){
     meta_data <- metadata(summarized_experiment_object)
-    peak_data <- assay(summarized_experiment_object)
-    # as() can't convert matrix to data.frame, but works with all other objects
-    if (meta_data$original_data_structure == "data.frame"){
-        peak_data <- as.data.frame(peak_data)
-    } else if (meta_data$original_data_structure != "matrix"){
-        peak_data <- as(peak_data, meta_data$original_data_structure)
+    if (!meta_data$original_data_structure == "SummarizedExperiment"){
+        peak_data <- assay(summarized_experiment_object)
+        # as() can't convert matrix to data.frame, but works with all other objects
+        if (meta_data$original_data_structure == "data.frame"){
+            peak_data <- as.data.frame(peak_data)
+        } else if (meta_data$original_data_structure != "matrix"){
+            peak_data <- as(peak_data, meta_data$original_data_structure)
+        }
+    
+        ## Add all metadata as output object attributes, not sure if this works for
+        ## DataFrame class as well.
+        meta_data$original_data_structure <- NULL
+        attributes(peak_data) <- c(attributes(peak_data), meta_data)
+        return (peak_data)
+    } else {
+        return (summarized_experiment_object)
     }
-    
-    ## Add all metadata as output object attributes, not sure if this works for
-    ## DataFrame class as well.
-    meta_data$original_data_structure <- NULL
-    attributes(peak_data) <- c(attributes(peak_data), meta_data)
-    
-    return (peak_data)
 }

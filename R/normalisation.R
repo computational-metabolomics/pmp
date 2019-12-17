@@ -10,7 +10,6 @@
 #' @export
 
 normalise_to_sum <- function(df, check_df=TRUE) {
-    input_df_class <- class(df)[1]
     if (check_df == TRUE) {
         df <- check_input_data(df)
     } else {
@@ -24,9 +23,8 @@ normalise_to_sum <- function(df, check_df=TRUE) {
     meta_data$processing_history$normalise_to_sum <- 
         list (check_df=check_df)
     metadata(df) <- meta_data
-    if (input_df_class != "SummarizedExperiment"){
-        df <- return_original_data_structure(df)
-    }
+ 
+    df <- return_original_data_structure(df)
     df
 }
 

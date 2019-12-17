@@ -155,7 +155,6 @@ glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
         stop("QC sample label is not present. Check your qc_label parameter.")
     }
     
-    input_df_class <- class(df)
     df <- check_input_data(peak_data=df, classes=classes)
     df_qc <- df[, classes == qc_label]
     
@@ -192,8 +191,7 @@ glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
     meta_data$processing_history$glog_transformation <- list (lambda=lambda,
         lambda_opt=lambda_opt, error_flag=error_flag)
     metadata(df) <- meta_data
-    if(input_df_class != "SummarizedExperiment"){
-        df <- return_original_data_structure(df)
-    }
+    
+    df <- return_original_data_structure(df)
     return(df)
 }

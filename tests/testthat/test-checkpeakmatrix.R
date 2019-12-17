@@ -53,3 +53,11 @@ test_that("return_original_data_structure work with bioconductor DataFrame objec
   metadata(df) <- meta_data
   expect_silent(df <- pmp:::return_original_data_structure(df))
 })
+
+test_that("SummarizedExperiment has original data structure flag added", {
+  df <- MTBLS79[, MTBLS79$Batch == 1]
+  expect_silent(df <- check_input_data(df))
+  expect_true(metadata(df)$original_data_structure == "SummarizedExperiment")
+  expect_silent(df <- pmp:::return_original_data_structure(df))
+  expect_true (class(df)[1] == "SummarizedExperiment")
+})
