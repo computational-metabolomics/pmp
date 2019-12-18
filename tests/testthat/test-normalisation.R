@@ -14,7 +14,7 @@ test_that("normalise to sum returns correct output when matrix needs to be trans
 
 test_that("normalise to sum returns correct output when there are less features than samples", {
   out <- normalise_to_sum(testData$data[1:8,], check_df=FALSE)
-  expect_true(all(round(apply (out, 2, sum, na.rm=T), 0) == 100L))
+  expect_true(all(round(apply (out, 2, sum, na.rm=TRUE), 0) == 100L))
 })
 
 context("test-pqn_normalisation")
