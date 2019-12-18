@@ -98,17 +98,21 @@ return_original_data_structure <- function(summarized_experiment_object){
     meta_data <- metadata(summarized_experiment_object)
     if (!meta_data$original_data_structure == "SummarizedExperiment"){
         peak_data <- assay(summarized_experiment_object)
-        # as() can't convert matrix to data.frame, but works with all other objects
+        # as() can't convert matrix to data.frame, but works with all other 
+        # objects
         if (meta_data$original_data_structure == "data.frame"){
             peak_data <- as.data.frame(peak_data)
         } else if (meta_data$original_data_structure != "matrix"){
             peak_data <- as(peak_data, meta_data$original_data_structure)
         }
     
-        ## Add all metadata as output object attributes, not sure if this works for
-        ## DataFrame class as well.
+        # Add all metadata as output object attributes
         meta_data$original_data_structure <- NULL
         attributes(peak_data) <- c(attributes(peak_data), meta_data)
+        if (ncol(rowData(summarized_experiment_object)) != 0){
+            peak_data <- list(df=peak_data, 
+                flags=rowData(summarized_experiment_object))
+        }
         return (peak_data)
     } else {
         return (summarized_experiment_object)

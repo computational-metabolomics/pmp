@@ -89,11 +89,7 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
         remove_peaks=remove_peaks, fraction_in_blank=fraction_in_blank)
     metadata(df) <- meta_data
     
-    if(input_df_class != "SummarizedExperiment"){
-        flags <- rowData(df)
-        df <- return_original_data_structure(df)
-        df <- list(df=df, flags=flags)
-    }
+    df <- return_original_data_structure(df)
     return(df)
 }
 
