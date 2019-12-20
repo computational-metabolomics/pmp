@@ -83,10 +83,7 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
     }
     
     meta_data <- metadata(df)
-    meta_data$processing_history$filter_peaks_by_blank <- 
-        list (fold_change=fold_change, blank_label=blank_label, 
-        qc_label=qc_label, remove_samples=remove_samples,
-        remove_peaks=remove_peaks, fraction_in_blank=fraction_in_blank)
+    meta_data$processing_history$filter_peaks_by_blank <- return_function_args()
     metadata(df) <- meta_data
     
     df <- return_original_data_structure(df)

@@ -9,8 +9,6 @@ test_that("Glog function returns expected output", {
   testthat::expect_true(lambda == as.integer(attributes(out)$
     processing_history$glog_transformation$lambda_opt))
   
-  expect_equal (as.data.frame(out), testData$glog_transformation)
-  
   optimised_lambda <- attributes(out)
   optimised_lambda <- 
   optimised_lambda$processing_history$glog_transformation$lambda_opt
@@ -19,6 +17,9 @@ test_that("Glog function returns expected output", {
     classes=testData$class, qc_label="QC",)
   expect_equal(graph[[9]]$x, "lambda")
   expect_equal(graph[[9]]$y, "SSE")
+  
+  attributes(out)$processing_history <- NULL
+  expect_equal (as.data.frame(out), testData$glog_transformation)
 })
 
 test_that("Glog function fails if qc_label is wrong or QC samples don't exist", {

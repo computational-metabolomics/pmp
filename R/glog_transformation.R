@@ -188,8 +188,9 @@ glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
     # set minimum over all values to 0
     assay(df) <- glog(assay(df), 0, lambda) # apply glog
     meta_data <- metadata(df)
-    meta_data$processing_history$glog_transformation <- list (lambda=lambda,
-        lambda_opt=lambda_opt, error_flag=error_flag)
+    meta_data$processing_history$glog_transformation <- 
+        c(return_function_args(), list(lambda_opt=lambda_opt, 
+            error_flag=error_flag))
     metadata(df) <- meta_data
     
     df <- return_original_data_structure(df)

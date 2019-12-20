@@ -21,7 +21,8 @@ normalise_to_sum <- function(df, check_df=TRUE) {
         FUN="/"))
     meta_data <- metadata(df)
     meta_data$processing_history$normalise_to_sum <- 
-        list (check_df=check_df)
+        return_function_args()
+        #list (check_df=check_df)
     metadata(df) <- meta_data
  
     df <- return_original_data_structure(df)
