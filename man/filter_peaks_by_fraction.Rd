@@ -9,7 +9,8 @@ filter_peaks_by_fraction(
   min_frac,
   classes = NULL,
   method = "QC",
-  qc_label = "QC"
+  qc_label = "QC",
+  remove_peaks = TRUE
 )
 }
 \arguments{
@@ -17,15 +18,19 @@ filter_peaks_by_fraction(
 
 \item{min_frac}{threshold of fraction of detection}
 
-\item{classes}{vector of class labels}
+\item{classes}{character vector of class labels. If input is 
+`SummarizedExperiment` object, a column of `colData` slot.}
 
 \item{method}{method to use. 'QC' - withing QC samples, within' - within 
 each sample class or across' - across all samples}
 
 \item{qc_label}{class label for QC sample}
+
+\item{remove_peaks}{remove filtered features from peak matrix or not}
 }
 \value{
-list of filtered peak intensity matrix and matrix with flags
+'SummarizedExperiment' class object or list of filtered peak 
+intensity matrix and matrix with flags.
 }
 \description{
 Metabolomics datasets often contain 'features' with irreproducible peak 
@@ -35,13 +40,15 @@ relative proportion (minimum fraction) of samples containing non-missing
 values.
 }
 \examples{
-out <- filter_peaks_by_fraction(df=pmp:::testData$data, min_frac=1, 
-    classes=pmp:::testData$class, method='QC', qc_label='QC')
+df <- MTBLS79[ , MTBLS79$Batch==1]
+df$Class[1:2] <- "Blank"
+out <- filter_peaks_by_fraction(df=df, min_frac=1, 
+    classes=df$Class, method='QC', qc_label='QC')
     
-out <- filter_peaks_by_fraction(df=pmp:::testData$data, min_frac=1, 
-    classes=pmp:::testData$class, method='across', qc_label='QC')
+out <- filter_peaks_by_fraction(df=df, min_frac=1, 
+    classes=df$Class, method='across', qc_label='QC')
 
-out <- filter_peaks_by_fraction(df=pmp:::testData$data, min_frac=1, 
-    classes=pmp:::testData$class, method='within', qc_label='QC')
+out <- filter_peaks_by_fraction(df=df, min_frac=1, 
+    classes=df$Class, method='within', qc_label='QC')
 
 }

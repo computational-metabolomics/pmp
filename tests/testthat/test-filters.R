@@ -29,19 +29,25 @@ context ("test-filter_peaks_by_fraction")
 test_that ("Test that filter_peaks_by_fraction returns expected output, method=QC", {
   out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
   classes=testData$class, method="QC", qc_label="QC")
-  expect_equal(out, testData$filter_peaks_by_fraction)
+  attributes(out$df)$processing_history <- NULL
+  expect_equal(out$df, testData$filter_peaks_by_fraction$df)
+  expect_equal(out$flags, testData$filter_peaks_by_fraction$flags)
 })
 
 test_that ("Test that filter_peaks_by_fraction returns expected output, method=within", {
   out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
   classes=testData$class, method="within", qc_label="QC")
-  expect_equal(out, testData$filter_peaks_by_fraction_within)
+  attributes(out$df)$processing_history <- NULL
+  expect_equal(out$df, testData$filter_peaks_by_fraction_within$df)
+  expect_equal(out$flags, testData$filter_peaks_by_fraction_within$flags)
 })
 
 test_that ("Test that filter_peaks_by_fraction returns expected output, method=across", {
   out <- filter_peaks_by_fraction(df=t(testData$data), min_frac=0.6, 
     classes=testData$class, method="across", qc_label="QC")
-  expect_equal(out, testData$filter_peaks_by_fraction_across)
+  attributes(out$df)$processing_history <- NULL
+  expect_equal(out$df, testData$filter_peaks_by_fraction_across$df)
+  expect_equal(out$flags, testData$filter_peaks_by_fraction_across$flags)
 })
 
 context ("test-filter_peaks_by_rsd")

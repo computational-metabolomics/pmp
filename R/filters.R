@@ -100,29 +100,34 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
 #'
 #' @param df peak intensity matrix
 #' @param min_frac threshold of fraction of detection
-#' @param classes vector of class labels
+#' @param classes character vector of class labels. If input is 
+#' `SummarizedExperiment` object, a column of `colData` slot.
 #' @param method method to use. 'QC' - withing QC samples, within' - within 
 #'each sample class or across' - across all samples
 #' @param qc_label class label for QC sample
+#' @param remove_peaks remove filtered features from peak matrix or not
 #' 
-#' @return list of filtered peak intensity matrix and matrix with flags
+#' @return 'SummarizedExperiment' class object or list of filtered peak 
+#' intensity matrix and matrix with flags.
 #' 
 #' @examples 
-#' out <- filter_peaks_by_fraction(df=pmp:::testData$data, min_frac=1, 
-#'     classes=pmp:::testData$class, method='QC', qc_label='QC')
+#' df <- MTBLS79[ , MTBLS79$Batch==1]
+#' df$Class[1:2] <- "Blank"
+#' out <- filter_peaks_by_fraction(df=df, min_frac=1, 
+#'     classes=df$Class, method='QC', qc_label='QC')
 #'     
-#' out <- filter_peaks_by_fraction(df=pmp:::testData$data, min_frac=1, 
-#'     classes=pmp:::testData$class, method='across', qc_label='QC')
+#' out <- filter_peaks_by_fraction(df=df, min_frac=1, 
+#'     classes=df$Class, method='across', qc_label='QC')
 #' 
-#' out <- filter_peaks_by_fraction(df=pmp:::testData$data, min_frac=1, 
-#'     classes=pmp:::testData$class, method='within', qc_label='QC')
+#' out <- filter_peaks_by_fraction(df=df, min_frac=1, 
+#'     classes=df$Class, method='within', qc_label='QC')
 #' 
 #' @export
 
 filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
-    method="QC", qc_label="QC") {
+    method="QC", qc_label="QC", remove_peaks=TRUE) {
     
-    df <- check_peak_matrix(peak_data=df, classes=classes)
+    df <- check_input_data(peak_data=df, classes=classes)
     FUN <- function(irr) return(length(which(!is.na(irr)))/length(irr))
     
     if (method == "within" || method == "QC") {
@@ -138,7 +143,7 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
         for (cl in cls) {
             idxs <- cl == classes
             subset_cl <- df[, idxs, drop=FALSE]
-            frac <- apply(subset_cl, 1, FUN)
+            frac <- apply(assay(subset_cl), 1, FUN)
             fracs <- rbind(fracs, round(frac, 2))
             fracs_flags <- rbind(fracs_flags, as.numeric(frac >= min_frac))
             rn_fracs <- c(rn_fracs, paste("fraction_", cl, sep=""))
@@ -152,12 +157,25 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
         flags <- t(rbind(fracs, fracs_flags))
         idxs <- colSums(fracs_flags) > 0
     } else if (method == "across") {
-        frac <- apply(df, 1, FUN)
+        frac <- apply(assay(df), 1, FUN)
         idxs <- frac >= min_frac
         flags <- cbind(fraction=round(frac, 2),
             fraction_flags=as.numeric(idxs))
     }
-    return(list(df=df[idxs, , drop=FALSE], flags=flags))
+    
+    rowData(df) <- cbind(rowData(df), DataFrame(flags))
+    
+    if (remove_peaks){
+        df <- df[idxs, ]
+    }
+    
+    meta_data <- metadata(df)
+    meta_data$processing_history$filter_peaks_by_fraction <- 
+        return_function_args()
+    metadata(df) <- meta_data
+    
+    df <- return_original_data_structure(df)
+    return(df)
 }
 
 
