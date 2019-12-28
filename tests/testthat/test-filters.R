@@ -52,18 +52,13 @@ test_that ("Test that filter_peaks_by_fraction returns expected output, method=a
 
 context ("test-filter_peaks_by_rsd")
 
-test_that("Test that filter_peaks_by_rsd returns expected outpu", {
+test_that("Test that filter_peaks_by_rsd returns expected output", {
   out <- filter_peaks_by_rsd(df=t(testData$data), max_rsd=20, 
     classes=testData$class, qc_label="QC")
-  expect_equal (out, testData$filter_peaks_by_rsd)
-})
-
-context ("test-filter_peaks_by_rsd")
-
-test_that("Test that filter_peaks_by_rsd returns expected outpu", {
-  out <- filter_peaks_by_rsd(df=t(testData$data), max_rsd=20, 
-    classes=testData$class, qc_label="QC")
-  expect_equal (out, testData$filter_peaks_by_rsd)
+  attributes(out$df)$processing_history <- NULL
+  attributes(out$flags)$processing_history <- NULL
+  expect_equal (out$df, testData$filter_peaks_by_rsd$df)
+  expect_equal (out$flags, testData$filter_peaks_by_rsd$flags)
 })
 
 context ("test-filter_samples_by_mv")

@@ -4,7 +4,7 @@
 \alias{filter_peaks_by_rsd}
 \title{Filter features by RSD\% of QC samples}
 \usage{
-filter_peaks_by_rsd(df, max_rsd, classes, qc_label)
+filter_peaks_by_rsd(df, max_rsd, classes, qc_label, remove_peaks = TRUE)
 }
 \arguments{
 \item{df}{peak intensity matrix}
@@ -14,6 +14,8 @@ filter_peaks_by_rsd(df, max_rsd, classes, qc_label)
 \item{classes}{vector of class labels}
 
 \item{qc_label}{class label for QC sample}
+
+\item{remove_peaks}{remove filtered features from peak matrix or not}
 }
 \value{
 list of filtered peak intensity matrix and matrix with flags
@@ -27,7 +29,8 @@ specified QC samples.
 }
 \examples{
 
-out <- filter_peaks_by_rsd(df=pmp:::testData$data, max_rsd=20,
-    classes=pmp:::testData$class, qc_label='QC')
+df <- MTBLS79[ , MTBLS79$Batch==1]
+out <- filter_peaks_by_rsd(df=df, max_rsd=20,
+    classes=pmp:::df$Class, qc_label='QC')
 
 }

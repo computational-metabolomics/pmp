@@ -226,30 +226,45 @@ remove_peaks <- function(df, rem_index) {
 #' @param max_rsd threshold of QC RSD\% value
 #' @param classes vector of class labels
 #' @param qc_label class label for QC sample
+#' @param remove_peaks remove filtered features from peak matrix or not
 #' @return list of filtered peak intensity matrix and matrix with flags
 #' @examples 
 #' 
-#' out <- filter_peaks_by_rsd(df=pmp:::testData$data, max_rsd=20,
-#'     classes=pmp:::testData$class, qc_label='QC')
+#' df <- MTBLS79[ , MTBLS79$Batch==1]
+#' out <- filter_peaks_by_rsd(df=df, max_rsd=20,
+#'     classes=df$Class, qc_label='QC')
 #' 
 #' @export
 
-filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label) {
+filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label,
+    remove_peaks=TRUE) {
     
-    df <- check_peak_matrix(peak_data=df, classes=classes)
+    df <- check_input_data(peak_data=df, classes=classes)
     
     df_qcs <- df[, classes == qc_label, drop=FALSE]
     
     FUN <- function(x) sd(x, na.rm=TRUE)/mean(x, na.rm=TRUE) * 100
     
-    rsd_values <- apply(df_qcs, 1, FUN)
+    rsd_values <- apply(assay(df_qcs), 1, FUN)
     
     idxs <- rsd_values < max_rsd
     idxs[is.na(idxs)] <- FALSE
     
-    flags <- cbind(rsd_QC=round(rsd_values, 2), rsd_flags=as.numeric(idxs))
+    row_data <- DataFrame(rsd_QC=round(rsd_values, 2),
+        rsd_flags=as.numeric(idxs))
     
-    return(list(df=df[idxs, , drop=FALSE], flags=flags))
+    rowData(df) <- cbind(rowData(df), row_data)
+    
+    if (remove_peaks){
+        df <- df[idxs, ]
+    }
+ 
+    meta_data <- metadata(df)
+    meta_data$processing_history$filter_peaks_by_rsd <- return_function_args()
+    metadata(df) <- meta_data
+    
+    df <- return_original_data_structure(df)
+    return(df)
 }
 
 
