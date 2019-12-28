@@ -188,17 +188,25 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
 #' 
 #' @return data frame, filtered peak intensity matrix
 #' 
-#' @examples 
-#' rem_index <- pmp:::testData$remove_peaks$rem_index
-#' out <- remove_peaks(df=pmp:::testData$data, rem_index=rem_index)
+#' @examples
+#' df <- MTBLS79[ , MTBLS79$Batch==1]
+#' rem_index <- vector(mode="logical", 
+#'     length=nrow(SummarizedExperiment::assay(df)))
+#' rem_index[c(1, 20, 456, 789)] <- TRUE
+#' out <- remove_peaks(df=df, rem_index=rem_index)
 #' 
 #' @export
 
 remove_peaks <- function(df, rem_index) {
-    df <- check_peak_matrix(peak_data=df)
+    df <- check_input_data(peak_data=df)
     if (is.logical(rem_index)) {
         df <- df[!rem_index, ]
-        df
+        meta_data <- metadata(df)
+        meta_data$processing_history$remove_peaks <- 
+            return_function_args()
+        metadata(df) <- meta_data
+        df <- return_original_data_structure(df)
+        return(df)
     } else {
         stop("Vector of indexes to remove from peak matrix should be logical
     vector of TRUE/FALSE vaues.")

@@ -78,8 +78,9 @@ test_that("Test that filter_peaks_by_rsd returns expected output", {
 
 test_that("Remove peaks filter returns expecteed output", {
   
-  rem_index <- testData$remove_peaks$rem_index
+  rem_index <-testData$remove_peaks$rem_index
   out <- remove_peaks(df=testData$data, rem_index=rem_index)
+  attributes(out)$processing_history <- NULL
   expect_equal (out, testData$remove_peaks$rem_output)
   
 })
