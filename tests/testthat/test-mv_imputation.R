@@ -2,31 +2,43 @@ context("test-mv_imputation")
 
 test_that("Missing value imputation using knn method returns expected output", {
   expect_warning (out <- mv_imputation(df=t(testData$data), method="knn"))
+  attributes(out)$processing_history <- NULL
+  out <- as.data.frame(out)
   expect_equal(out, testData$mv_imputation_knn)
 })
 
 test_that("Missing value imputation using rf method returns expected output", {
   expect_warning (out <- mv_imputation(df=t(testData$data), method="rf"))
+  attributes(out)$processing_history <- NULL
+  out <- as.data.frame(out)
   expect_equal(out, testData$mv_imputation_rf)
 })
 
 test_that("Missing value imputation using bpca method returns expected output", {
   expect_warning (out <- mv_imputation(df=t(testData$data), method="bpca"))
+  attributes(out)$processing_history <- NULL
+  out <- as.data.frame(out)
   expect_equal(out, testData$mv_imputation_bpca)
 })
 
 test_that("Missing value imputation using sv method returns expected output", {
   expect_warning (out <- mv_imputation(df=t(testData$data), method="sv"))
+  attributes(out)$processing_history <- NULL
+  out <- as.data.frame(out)
   expect_equal(out, testData$mv_imputation_sv)
 })
 
 test_that("Missing value imputation using mn method returns expected output", {
   expect_warning (out <- mv_imputation(df=t(testData$data), method="mn"))
+  attributes(out)$processing_history <- NULL
+  out <- as.data.frame(out)
   expect_equal(out, testData$mv_imputation_mn)
 })
 
 test_that("Missing value imputation using md method returns expected output", {
   expect_warning (out <- mv_imputation(df=t(testData$data), method="md"))
+  attributes(out)$processing_history <- NULL
+  out <- as.data.frame(out)
   expect_equal(out, testData$mv_imputation_md)
 })
 

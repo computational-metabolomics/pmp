@@ -55,7 +55,8 @@ impute_mode <- function (df, method){
 #' @return data frame of missing value imputed peak intensity matrix
 #' 
 #' @examples 
-#' out <- mv_imputation(df=t(pmp:::testData$data), method='knn')
+#' df <- MTBLS79[ , MTBLS79$Batch==1]
+#' out <- mv_imputation(df=df, method='knn')
 #' 
 #' @export
 
@@ -63,44 +64,51 @@ mv_imputation <- function(df, method, k=10, rowmax=0.5, colmax=0.5,
     maxp=NULL, check_df=TRUE) {
     
     if (check_df == TRUE) {
-        df <- check_peak_matrix(peak_data=df)
+        df <- check_input_data(peak_data=df)
     }
     
     if (is.null(maxp)) {
         maxp <- max(dim(df))
     }
     
-    if (any(apply(df, 1, function(vec) all(is.na(vec))) == TRUE)) {
+    if (any(apply(assay(df), 1, function(vec) all(is.na(vec))) == TRUE)) {
         stop("Error occurred. Rows with 100% missing values detected - please
     remove these rows using the peak filter tool")
     }
     
-    if (any(apply(df, 2, function(vec) all(is.na(vec))) == TRUE)) {
+    if (any(apply(assay(df), 2, function(vec) all(is.na(vec))) == TRUE)) {
         stop("Error occurred. Columns with 100% missing values detected - please
     remove these columns using the sample filter tool")
     }
     
     if (tolower(method) == "knn") {
-        obj <- suppressWarnings(impute.knn(as.matrix(df), k=k, 
+        obj <- suppressWarnings(impute.knn(assay(df), k=k, 
             rowmax=rowmax, colmax=colmax, maxp=maxp))
-        df <- obj$data
+        assay(df) <- obj$data
     } else if (tolower(method) == "rf") {
-        mf_out <- missForest(t(df))
+        mf_out <- missForest(t(assay(df)))
         print(mf_out$OOBerror)
-        df <- t(mf_out$ximp)
+        assay(df) <- t(mf_out$ximp)
     } else if (tolower(method) == "bpca") {
-        pcaOb <- pcaMethods::pca(t(df), method="bpca", scale="none")
-        df <- t(pcaOb@completeObs)
-        df[df < 0] <- min(df[df > 0])  ##GUARD AGAINST NEGATIVE VALUES
+        pcaOb <- pcaMethods::pca(t(assay(df)), method="bpca", scale="none")
+        bpca_out <- t(pcaOb@completeObs)
+        ##GUARD AGAINST NEGATIVE VALUES
+        bpca_out[bpca_out < 0] <- min(bpca_out[bpca_out > 0])  
+        assay(df) <- bpca_out
     } else if (tolower(method) == "sv") {
-        df[is.na(df)] <- min(df, na.rm=TRUE)/2  ##SMV
+        assay(df)[is.na(assay(df))] <- min(assay(df), na.rm=TRUE)/2  ##SMV
     } else if (tolower(method) == "mn") {
-        df <- impute_mode(df=df, method="mn")
+        assay(df) <- impute_mode(df=assay(df), method="mn")
     } else if (tolower(method)=="md") {
-        df <- impute_mode(df=df, method="md")
+        assay(df) <- impute_mode(df=assay(df), method="md")
     } else {
         stop("Error occurred. No method selected")
     }
     
-    return(as.data.frame(df))
+    meta_data <- metadata(df)
+    meta_data$processing_history$mv_imputation <- return_function_args()
+    metadata(df) <- meta_data
+    
+    df <- return_original_data_structure(df)
+    return(df)
 }
