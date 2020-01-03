@@ -63,12 +63,15 @@ test_that("Test that filter_peaks_by_rsd returns expected output", {
 
 context ("test-filter_samples_by_mv")
 
-test_that("Test that filter_peaks_by_rsd returns expected output", {
+test_that("Test that filter_peaks_by_mv returns expected output", {
   
   out <- testData$data
   out[c(1:25),c(2,9)] <- NA
   expect_warning(out <- filter_samples_by_mv (df=t(out), max_perc_mv=0.8))
-  expect_equal (out, testData$filter_samples_by_mv)
+  attributes(out$df)$processing_history <- NULL
+  expect_equal (out$df, testData$filter_samples_by_mv$df)
+  colnames(out$flags) <- c("perc_mv", "flags")
+  expect_equal (out$flags, testData$filter_samples_by_mv$flags)
 })
 
 test_that("Remove peaks filter returns expecteed output", {

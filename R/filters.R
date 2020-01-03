@@ -280,23 +280,41 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label,
 #' @param df peak intensity matrix
 #' @param max_perc_mv threshold of missing value percentage.
 #' @param classes vector of class labels
+#' @param remove_samples remove filtered samples from peak matrix or not
 #' @return list of filtered peak intensity matrix and matrix with flags
 #' 
 #' @examples 
 #' 
-#' out <- filter_samples_by_mv (df=pmp:::testData$data, max_perc_mv=0.8)
+#' df <- MTBLS79
+#' out <- filter_samples_by_mv (df=df, max_perc_mv=0.8)
 #' 
 #' @export
 
-filter_samples_by_mv <- function(df, max_perc_mv, classes=NULL) {
+filter_samples_by_mv <- function(df, max_perc_mv, classes=NULL, 
+    remove_samples=TRUE) {
     
-    df <- check_peak_matrix(peak_data=df, classes=classes)
+    df <- check_input_data(peak_data=df, classes=classes)
     
     FUN <- function(irr) return(length(which(is.na(irr)))/length(irr))
-    perc_mv <- apply(df, 2, FUN)
+    perc_mv <- apply(assay(df), 2, FUN)
     idxs <- perc_mv <= max_perc_mv
     
-    flags <- cbind(perc_mv=round(perc_mv, 2), flags=as.numeric(idxs))
+    col_data <- DataFrame(filter_samples_by_mv_perc=round(perc_mv, 2),
+        filter_samples_by_mv_flags=as.numeric(idxs))
     
-    return(list(df=df[, idxs, drop=FALSE], flags=flags))
+    colData(df) <- cbind(colData(df), col_data)
+    
+    if (remove_samples){
+        df <- df[ ,idxs]
+    }
+    
+    meta_data <- metadata(df)
+    meta_data$processing_history$filter_samples_by_mv <- return_function_args()
+    metadata(df) <- meta_data
+    
+    df <- return_original_data_structure(df)
+    if (!is(df, "SummarizedExperiment")){
+        df <- list(df=df, flags=as.matrix(col_data))
+    }
+    return(df)
 }

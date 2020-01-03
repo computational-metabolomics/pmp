@@ -4,7 +4,7 @@
 \alias{filter_samples_by_mv}
 \title{Filter samples by missing values}
 \usage{
-filter_samples_by_mv(df, max_perc_mv, classes = NULL)
+filter_samples_by_mv(df, max_perc_mv, classes = NULL, remove_samples = TRUE)
 }
 \arguments{
 \item{df}{peak intensity matrix}
@@ -12,6 +12,8 @@ filter_samples_by_mv(df, max_perc_mv, classes = NULL)
 \item{max_perc_mv}{threshold of missing value percentage.}
 
 \item{classes}{vector of class labels}
+
+\item{remove_samples}{remove filtered samples from peak matrix or not}
 }
 \value{
 list of filtered peak intensity matrix and matrix with flags
@@ -26,6 +28,7 @@ containing a user-defined maximum percentage of missing values.
 }
 \examples{
 
-out <- filter_samples_by_mv (df=pmp:::testData$data, max_perc_mv=0.8)
+df <- MTBLS79
+out <- filter_samples_by_mv (df=df, max_perc_mv=0.8)
 
 }
