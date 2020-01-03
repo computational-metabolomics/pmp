@@ -49,15 +49,16 @@ calculate_ref_mean <- function(df_qc){
 #' from QC sample group. If set to NULL, QC sample data will be used.
 #' @return list of normalised data set and correction coefficients
 #' @examples 
-#' attach (pmp:::testData)
-#' pqn_normalisation(df=pmp:::testData$data,
-#'     classes=pmp:::testData$class, qc_label='QC')
+#' 
+#' df <- MTBLS79[ , MTBLS79$Batch==1]
+#' pqn_normalisation(df=df,
+#'     classes=df$Class, qc_label='QC')
 #' 
 #' @export
 
 pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL) {
     
-    df <- check_peak_matrix(peak_data=df, classes=classes)
+    df <- check_input_data(peak_data=df, classes=classes)
     
     if (is.null(ref_mean)){
         if (qc_label == "all") {
@@ -65,13 +66,13 @@ pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL) {
         } else {
             ref <- df[, classes == qc_label]
         }
-        ref_mean <- calculate_ref_mean(df_qc=ref)
+        ref_mean <- calculate_ref_mean(df_qc=assay(ref))
     }
     
     coef <- vector()
     
     for (i in seq_len(dim(df)[2])) {
-        tempMat <- cbind(ref_mean, df[, i])
+        tempMat <- cbind(ref_mean, assay(df)[, i])
         vecelim <- which(apply(tempMat, 1, function(x) any(is.na(x))))
         
         if (length(vecelim) != 0) {
@@ -80,6 +81,20 @@ pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL) {
         
         coef[i] <- median(as.numeric(tempMat[, 2]/tempMat[, 1]), na.rm=TRUE)
     }
-    out <- list(df=df/coef[col(df)], coef=coef)
-    return(out)
+    
+    assay(df) <- assay(df)/coef[col(assay(df))]
+    
+    col_data <- DataFrame(pqn_coef=coef)
+
+    colData(df) <- cbind(colData(df), col_data)
+
+    meta_data <- metadata(df)
+    meta_data$processing_history$pqn_normalisation <- return_function_args()
+    metadata(df) <- meta_data
+
+    df <- return_original_data_structure(df)
+    if (!is(df, "SummarizedExperiment")){
+        df <- list(df=df, coef=as.matrix(col_data))
+    }
+    return(df)
 }

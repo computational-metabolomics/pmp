@@ -24,8 +24,9 @@ list of normalised data set and correction coefficients
 Normalise peak table using PQN method
 }
 \examples{
-attach (pmp:::testData)
-pqn_normalisation(df=pmp:::testData$data,
-    classes=pmp:::testData$class, qc_label='QC')
+
+df <- MTBLS79[ , MTBLS79$Batch==1]
+pqn_normalisation(df=df,
+    classes=df$Class, qc_label='QC')
 
 }
