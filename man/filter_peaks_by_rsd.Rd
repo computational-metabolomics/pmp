@@ -31,6 +31,6 @@ specified QC samples.
 
 df <- MTBLS79[ , MTBLS79$Batch==1]
 out <- filter_peaks_by_rsd(df=df, max_rsd=20,
-    classes=pmp:::df$Class, qc_label='QC')
+    classes=df$Class, qc_label='QC')
 
 }
