@@ -5,15 +5,16 @@
 \title{Check if input data is object of 'SummarizedExperiment',
 if not convert inputs into 'SummarizedExperiment' container.}
 \usage{
-check_input_data(peak_data, classes = NULL)
+check_input_data(df, classes = NULL)
 }
 \arguments{
-\item{peak_data}{peak matrix}
+\item{df}{A matrix-like object (e.g. and ordinary matrix, a data frame) of 
+peak intensities.}
 
-\item{classes}{vector of class labels}
+\item{classes}{vector of class labels.}
 }
 \value{
-object of class of 'SummarizedExperiment'
+object of class of 'SummarizedExperiment'.
 }
 \description{
 Check if input data is object of 'SummarizedExperiment',

@@ -155,7 +155,7 @@ glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
         stop("QC sample label is not present. Check your qc_label parameter.")
     }
     
-    df <- check_input_data(peak_data=df, classes=classes)
+    df <- check_input_data(df=df, classes=classes)
     df_qc <- df[, classes == qc_label]
     
     offset <- min(assay(df_qc), na.rm=TRUE)#set offset to the minimum QC samples

@@ -39,7 +39,7 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
         fraction_in_blank=0) {
     
     input_df_class <- class(df)[1]
-    df <- check_input_data(peak_data=df, classes=classes)
+    df <- check_input_data(df=df, classes=classes)
     M_blanks <- df[, classes == blank_label]
     
     if (!is.null(qc_label)) {
@@ -127,7 +127,7 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
 filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
     method="QC", qc_label="QC", remove_peaks=TRUE) {
     
-    df <- check_input_data(peak_data=df, classes=classes)
+    df <- check_input_data(df=df, classes=classes)
     FUN <- function(irr) return(length(which(!is.na(irr)))/length(irr))
     
     if (method == "within" || method == "QC") {
@@ -198,7 +198,7 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
 #' @export
 
 remove_peaks <- function(df, rem_index) {
-    df <- check_input_data(peak_data=df)
+    df <- check_input_data(df=df)
     if (is.logical(rem_index)) {
         df <- df[!rem_index, ]
         meta_data <- metadata(df)
@@ -239,7 +239,7 @@ remove_peaks <- function(df, rem_index) {
 filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label,
     remove_peaks=TRUE) {
     
-    df <- check_input_data(peak_data=df, classes=classes)
+    df <- check_input_data(df=df, classes=classes)
     
     df_qcs <- df[, classes == qc_label, drop=FALSE]
     
@@ -293,7 +293,7 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label,
 filter_samples_by_mv <- function(df, max_perc_mv, classes=NULL, 
     remove_samples=TRUE) {
     
-    df <- check_input_data(peak_data=df, classes=classes)
+    df <- check_input_data(df=df, classes=classes)
     
     FUN <- function(irr) return(length(which(is.na(irr)))/length(irr))
     perc_mv <- apply(assay(df), 2, FUN)

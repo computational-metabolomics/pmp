@@ -14,16 +14,18 @@ NULL
 #' provided this function will check if the length of labels matches number 
 #' of samples in peak matrix.
 #'
-#' @param peak_data peak matrix
-#' @param classes vector of class labels
-#' @return matrix where samples are represented in columns and features in rows
+#' @param df A matrix-like object (e.g. and ordinary matrix, a data frame) of 
+#' peak intensities.
+#' @param classes vector of class labels.
+#' @return matrix-like object where samples are represented in columns and
+#' features in rows.
 #' 
 
-check_peak_matrix <- function(peak_data, classes=NULL) {
-    dims <- dim(peak_data)
+check_peak_matrix <- function(df, classes=NULL) {
+    dims <- dim(df)
     
     if (dims[1] < dims[2] & is.null(classes)) {
-        peak_data <- t(peak_data)
+        df <- t(df)
         warning("Peak table was transposed to have features as rows and samples
     in columns. \n
     As there were no class labels availiable please check that peak table is \n
@@ -31,7 +33,7 @@ check_peak_matrix <- function(peak_data, classes=NULL) {
     Use 'check_df=FALSE' to keep original peak matrix orientation.")
     }
     
-    if (!is.numeric(as.matrix(peak_data))){
+    if (!is.numeric(as.matrix(df))){
         stop ("Peak matrix contains non-numeric values. Check your inputs!")
     }
     
@@ -47,43 +49,43 @@ check_peak_matrix <- function(peak_data, classes=NULL) {
             Sample labels should match number of samples. \n")
         } else if (hits == 1) {
             # If samples are in rows, transpose data matrix
-            peak_data <- t(peak_data)
+            df <- t(df)
         }
     }
-    
-    peak_data
+    df
 }
 
 #' Check if input data is object of 'SummarizedExperiment',
 #' if not convert inputs into 'SummarizedExperiment' container.
 #' 
 #'
-#' @param peak_data peak matrix
-#' @param classes vector of class labels
-#' @return object of class of 'SummarizedExperiment' 
+#' @param df A matrix-like object (e.g. and ordinary matrix, a data frame) of 
+#' peak intensities.
+#' @param classes vector of class labels.
+#' @return object of class of 'SummarizedExperiment'. 
 #' 
-check_input_data <- function (peak_data, classes=NULL){
-    meta_data <- list(original_data_structure=class(peak_data)[1])
+check_input_data <- function (df, classes=NULL){
+    meta_data <- list(original_data_structure=class(df)[1])
     
-    if(is(peak_data, "SummarizedExperiment")){
-        metadata(peak_data)$original_data_structure <- "SummarizedExperiment"
+    if(is(df, "SummarizedExperiment")){
+        metadata(df)$original_data_structure <- "SummarizedExperiment"
     
     } else {
 
         if (meta_data$original_data_structure != "matrix"){
-            peak_data <- as.matrix(peak_data)
+            df <- as.matrix(df)
         }
-        peak_data <- check_peak_matrix(peak_data=peak_data,
+        df <- check_peak_matrix(df=df,
             classes=classes)
-        col_names <- colnames(peak_data)
-        peak_data <- SummarizedExperiment(assays=list(peak_data))
-        metadata(peak_data) <- meta_data
+        col_names <- colnames(df)
+        df <- SummarizedExperiment(assays=list(df))
+        metadata(df) <- meta_data
         if (!is.null(classes)){
-            colData(peak_data) <- DataFrame(classes=classes)
+            colData(df) <- DataFrame(classes=classes)
         }
-        colnames(peak_data) <- col_names
+        colnames(df) <- col_names
     }
-    return(peak_data)
+    return(df)
 }
 
 #' If input data were not of class of 'SummarizedExperiment',

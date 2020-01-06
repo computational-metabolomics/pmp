@@ -64,7 +64,7 @@ mv_imputation <- function(df, method, k=10, rowmax=0.5, colmax=0.5,
     maxp=NULL, check_df=TRUE) {
     
     if (check_df == TRUE) {
-        df <- check_input_data(peak_data=df)
+        df <- check_input_data(df=df)
     }
     
     if (is.null(maxp)) {

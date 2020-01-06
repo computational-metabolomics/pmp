@@ -15,7 +15,7 @@ normalise_to_sum <- function(df, check_df=TRUE) {
     } else {
         # normalise_to_sum doesn't need class labels
         # Create generic class label vector to avoid DF to be transposed
-        df <- check_input_data(peak_data=df, classes=rep("S", ncol(df)))
+        df <- check_input_data(df=df, classes=rep("S", ncol(df)))
     }
     assay(df) <- (sweep(assay(df), 2, colSums(assay(df), na.rm=TRUE)/100, 
         FUN="/"))
@@ -58,7 +58,7 @@ calculate_ref_mean <- function(df_qc){
 
 pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL) {
     
-    df <- check_input_data(peak_data=df, classes=classes)
+    df <- check_input_data(df=df, classes=classes)
     
     if (is.null(ref_mean)){
         if (qc_label == "all") {
