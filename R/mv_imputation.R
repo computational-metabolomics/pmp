@@ -1,6 +1,7 @@
 #' @importFrom  impute impute.knn
 #' @importFrom missForest missForest
 #' @importFrom pcaMethods pca
+#' @importFrom matrixStats rowMedians
 NULL
 
 #' Replace missing values for specific peak matrix feature
@@ -27,10 +28,10 @@ replace_na <- function(x, df, vals){
 #' 
 impute_mode <- function (df, method){
     if (method=="mn"){
-        replacement_vals <- apply(df, 1, mean, na.rm=TRUE)
+        replacement_vals <- rowMeans(df, na.rm=TRUE)
     }
     if (method=="md"){
-        replacement_vals <- apply(df, 1, median, na.rm=TRUE)
+        replacement_vals <- rowMedians(df, na.rm=TRUE)
     }
     feature_names <- rownames(df)
     df <- do.call(rbind, lapply(seq_len(nrow(df)), replace_na, df=df, 
