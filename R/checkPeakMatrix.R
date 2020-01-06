@@ -23,7 +23,6 @@ NULL
 
 check_peak_matrix <- function(df, classes=NULL) {
     dims <- dim(df)
-    
     if (dims[1] < dims[2] & is.null(classes)) {
         df <- t(df)
         warning("Peak table was transposed to have features as rows and samples
@@ -32,11 +31,9 @@ check_peak_matrix <- function(df, classes=NULL) {
     still properly rotated, samples as columns and features in rows. \n
     Use 'check_df=FALSE' to keep original peak matrix orientation.")
     }
-    
     if (!is.numeric(as.matrix(df))){
         stop ("Peak matrix contains non-numeric values. Check your inputs!")
     }
-    
     if (!is.null(classes)) {
         hits <- which(dims == length(classes))
         if (length(hits) == 2) {
@@ -66,12 +63,9 @@ check_peak_matrix <- function(df, classes=NULL) {
 #' 
 check_input_data <- function (df, classes=NULL){
     meta_data <- list(original_data_structure=class(df)[1])
-    
     if(is(df, "SummarizedExperiment")){
         metadata(df)$original_data_structure <- "SummarizedExperiment"
-    
     } else {
-
         if (meta_data$original_data_structure != "matrix"){
             df <- as.matrix(df)
         }
@@ -107,7 +101,6 @@ return_original_data_structure <- function(summarized_experiment_object){
         } else if (meta_data$original_data_structure != "matrix"){
             peak_data <- as(peak_data, meta_data$original_data_structure)
         }
-    
         # Add all metadata as output object attributes
         meta_data$original_data_structure <- NULL
         attributes(peak_data) <- c(attributes(peak_data), meta_data)

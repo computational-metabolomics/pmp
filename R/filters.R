@@ -37,11 +37,9 @@ NULL
 filter_peaks_by_blank <- function(df, fold_change, classes, blank_label, 
         qc_label=NULL, remove_samples=TRUE, remove_peaks=TRUE, 
         fraction_in_blank=0) {
-    
     input_df_class <- class(df)[1]
     df <- check_input_data(df=df, classes=classes)
     M_blanks <- df[, classes == blank_label]
-    
     if (!is.null(qc_label)) {
         M_non_blanks <- df[, classes == qc_label,
             drop=FALSE]
@@ -49,43 +47,34 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
         M_non_blanks <- df[, classes != blank_label,
             drop=FALSE]
     }
-    
     FUN <- function(x) median(x, na.rm=TRUE)
-    
     median_intensity_blanks <- apply(assay(M_blanks), 1, FUN)
     median_intensity_non_blanks <- apply(assay(M_non_blanks), 1, FUN)
     fold_change_exp <- median_intensity_non_blanks / median_intensity_blanks
     blank_fraction <- 1 - (apply(is.na(assay(M_blanks)), 1, sum) / 
         ncol(assay(M_blanks)))
-    
     idxs <- fold_change_exp >= fold_change & blank_fraction >= fraction_in_blank
     idxs[which(is.na(median_intensity_non_blanks))] <- FALSE
     idxs[which(is.na(median_intensity_blanks))] <- TRUE
-    
     if (is.null(qc_label)) {
         row_data <- DataFrame(median_non_blanks=median_intensity_non_blanks)
     } else {
         row_data <- DataFrame(median_QCs=median_intensity_non_blanks)
     }
-    
     row_data$median_blanks <- median_intensity_blanks
     row_data$fold_change <- fold_change_exp
     row_data$blank_flags <- as.numeric(idxs)
     row_data$blank_fraction_flags <- as.numeric(blank_fraction)
-    
     rowData(df) <- cbind(rowData(df), row_data)
-    
     if (remove_peaks){
         df <- df[idxs, ]
     }
     if (remove_samples) {
         df <- df[, classes != blank_label]
     }
-    
     meta_data <- metadata(df)
     meta_data$processing_history$filter_peaks_by_blank <- return_function_args()
     metadata(df) <- meta_data
-    
     df <- return_original_data_structure(df)
     return(df)
 }
@@ -126,10 +115,8 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
 
 filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
     method="QC", qc_label="QC", remove_peaks=TRUE) {
-    
     df <- check_input_data(df=df, classes=classes)
     FUN <- function(irr) return(length(which(!is.na(irr)))/length(irr))
-    
     if (method == "within" || method == "QC") {
         fracs <- data.frame(matrix(ncol=dim(df)[1], nrow=0))
         fracs_flags <- data.frame(matrix(ncol=dim(df)[1], nrow=0))
@@ -162,22 +149,17 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
         flags <- cbind(fraction=round(frac, 2),
             fraction_flags=as.numeric(idxs))
     }
-    
     rowData(df) <- cbind(rowData(df), DataFrame(flags))
-    
     if (remove_peaks){
         df <- df[idxs, ]
     }
-    
     meta_data <- metadata(df)
     meta_data$processing_history$filter_peaks_by_fraction <- 
         return_function_args()
     metadata(df) <- meta_data
-    
     df <- return_original_data_structure(df)
     return(df)
 }
-
 
 #' Remove features from peak intensity matrix
 #'
@@ -213,7 +195,6 @@ remove_peaks <- function(df, rem_index) {
     }
 }
 
-
 #' Filter features by RSD\% of QC samples
 #'
 #' Metabolomics datasets often contain 'features' with irreproducible peak 
@@ -238,31 +219,21 @@ remove_peaks <- function(df, rem_index) {
 
 filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label,
     remove_peaks=TRUE) {
-    
     df <- check_input_data(df=df, classes=classes)
-    
     df_qcs <- df[, classes == qc_label, drop=FALSE]
-    
     FUN <- function(x) sd(x, na.rm=TRUE)/mean(x, na.rm=TRUE) * 100
-    
     rsd_values <- apply(assay(df_qcs), 1, FUN)
-    
     idxs <- rsd_values < max_rsd
     idxs[is.na(idxs)] <- FALSE
-    
     row_data <- DataFrame(rsd_QC=round(rsd_values, 2),
         rsd_flags=as.numeric(idxs))
-    
     rowData(df) <- cbind(rowData(df), row_data)
-    
     if (remove_peaks){
         df <- df[idxs, ]
     }
- 
     meta_data <- metadata(df)
     meta_data$processing_history$filter_peaks_by_rsd <- return_function_args()
     metadata(df) <- meta_data
-    
     df <- return_original_data_structure(df)
     return(df)
 }
@@ -292,26 +263,19 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label,
 
 filter_samples_by_mv <- function(df, max_perc_mv, classes=NULL, 
     remove_samples=TRUE) {
-    
     df <- check_input_data(df=df, classes=classes)
-    
     FUN <- function(irr) return(length(which(is.na(irr)))/length(irr))
     perc_mv <- apply(assay(df), 2, FUN)
     idxs <- perc_mv <= max_perc_mv
-    
     col_data <- DataFrame(filter_samples_by_mv_perc=round(perc_mv, 2),
         filter_samples_by_mv_flags=as.numeric(idxs))
-    
     colData(df) <- cbind(colData(df), col_data)
-    
     if (remove_samples){
         df <- df[ ,idxs]
     }
-    
     meta_data <- metadata(df)
     meta_data$processing_history$filter_samples_by_mv <- return_function_args()
     metadata(df) <- meta_data
-    
     df <- return_original_data_structure(df)
     if (!is(df, "SummarizedExperiment")){
         df <- list(df=df, flags=as.matrix(col_data))

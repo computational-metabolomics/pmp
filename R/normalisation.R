@@ -24,7 +24,6 @@ normalise_to_sum <- function(df, check_df=TRUE) {
         return_function_args()
         #list (check_df=check_df)
     metadata(df) <- meta_data
- 
     df <- return_original_data_structure(df)
     df
 }
@@ -57,9 +56,7 @@ calculate_ref_mean <- function(df_qc){
 #' @export
 
 pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL) {
-    
     df <- check_input_data(df=df, classes=classes)
-    
     if (is.null(ref_mean)){
         if (qc_label == "all") {
             ref <- df
@@ -68,30 +65,21 @@ pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL) {
         }
         ref_mean <- calculate_ref_mean(df_qc=assay(ref))
     }
-    
     coef <- vector()
-    
     for (i in seq_len(dim(df)[2])) {
         tempMat <- cbind(ref_mean, assay(df)[, i])
         vecelim <- which(apply(tempMat, 1, function(x) any(is.na(x))))
-        
         if (length(vecelim) != 0) {
             tempMat <- tempMat[-c(vecelim), , drop=FALSE]
         }
-        
         coef[i] <- median(as.numeric(tempMat[, 2]/tempMat[, 1]), na.rm=TRUE)
     }
-    
     assay(df) <- assay(df)/coef[col(assay(df))]
-    
     col_data <- DataFrame(pqn_coef=coef)
-
     colData(df) <- cbind(colData(df), col_data)
-
     meta_data <- metadata(df)
     meta_data$processing_history$pqn_normalisation <- return_function_args()
     metadata(df) <- meta_data
-
     df <- return_original_data_structure(df)
     if (!is(df, "SummarizedExperiment")){
         df <- list(df=df, coef=as.matrix(col_data))

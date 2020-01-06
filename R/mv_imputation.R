@@ -29,7 +29,6 @@ impute_mode <- function (df, method){
     if (method=="mn"){
         replacement_vals <- apply(df, 1, mean, na.rm=TRUE)
     }
-    
     if (method=="md"){
         replacement_vals <- apply(df, 1, median, na.rm=TRUE)
     }
@@ -62,25 +61,20 @@ impute_mode <- function (df, method){
 
 mv_imputation <- function(df, method, k=10, rowmax=0.5, colmax=0.5, 
     maxp=NULL, check_df=TRUE) {
-    
     if (check_df == TRUE) {
         df <- check_input_data(df=df)
     }
-    
     if (is.null(maxp)) {
         maxp <- max(dim(df))
     }
-    
     if (any(apply(assay(df), 1, function(vec) all(is.na(vec))) == TRUE)) {
         stop("Error occurred. Rows with 100% missing values detected - please
     remove these rows using the peak filter tool")
     }
-    
     if (any(apply(assay(df), 2, function(vec) all(is.na(vec))) == TRUE)) {
         stop("Error occurred. Columns with 100% missing values detected - please
     remove these columns using the sample filter tool")
     }
-    
     if (tolower(method) == "knn") {
         obj <- suppressWarnings(impute.knn(assay(df), k=k, 
             rowmax=rowmax, colmax=colmax, maxp=maxp))
@@ -104,11 +98,9 @@ mv_imputation <- function(df, method, k=10, rowmax=0.5, colmax=0.5,
     } else {
         stop("Error occurred. No method selected")
     }
-    
     meta_data <- metadata(df)
     meta_data$processing_history$mv_imputation <- return_function_args()
     metadata(df) <- meta_data
-    
     df <- return_original_data_structure(df)
     return(df)
 }
