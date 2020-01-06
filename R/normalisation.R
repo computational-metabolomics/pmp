@@ -1,3 +1,7 @@
+#' @importFrom matrixStats rowAnyMissings
+
+NULL
+
 #' Normalise peak table to the total sum of peak intensities
 #' @param df data frame
 #' @param check_df ff set to TRUE will check if input data needs to be
@@ -34,7 +38,7 @@ normalise_to_sum <- function(df, check_df=TRUE) {
 #' 
 #' @return vector of reference mean values
 calculate_ref_mean <- function(df_qc){
-    ref_mean <-apply(df_qc, 1, mean, na.rm=TRUE)
+    ref_mean <-rowMeans(df_qc, na.rm=TRUE)
     return(ref_mean)
 }
 
@@ -68,7 +72,7 @@ pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL) {
     coef <- vector()
     for (i in seq_len(dim(df)[2])) {
         tempMat <- cbind(ref_mean, assay(df)[, i])
-        vecelim <- which(apply(tempMat, 1, function(x) any(is.na(x))))
+        vecelim <- which(rowAnyMissings(tempMat))
         if (length(vecelim) != 0) {
             tempMat <- tempMat[-c(vecelim), , drop=FALSE]
         }
