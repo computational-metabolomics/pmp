@@ -67,11 +67,11 @@ mv_imputation <- function(df, method, k=10, rowmax=0.5, colmax=0.5,
     if (is.null(maxp)) {
         maxp <- max(dim(df))
     }
-    if (any(apply(assay(df), 1, function(vec) all(is.na(vec))) == TRUE)) {
+    if (any(rowSums(is.na(assay(df))) == ncol(df))) {
         stop("Error occurred. Rows with 100% missing values detected - please
     remove these rows using the peak filter tool")
     }
-    if (any(apply(assay(df), 2, function(vec) all(is.na(vec))) == TRUE)) {
+    if (any(colSums(is.na(assay(df))) == nrow(df))) {
         stop("Error occurred. Columns with 100% missing values detected - please
     remove these columns using the sample filter tool")
     }
