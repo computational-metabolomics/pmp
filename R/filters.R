@@ -1,6 +1,9 @@
 #' @importFrom stats median sd var 
 #' @importFrom S4Vectors DataFrame
 #' @import SummarizedExperiment
+#' @importFrom matrixStats rowMedians
+#' @importFrom matrixStats rowCounts
+#' @importFrom matrixStats rowSds
 
 NULL
 
@@ -47,11 +50,13 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
         M_non_blanks <- df[, classes != blank_label,
             drop=FALSE]
     }
-    FUN <- function(x) median(x, na.rm=TRUE)
-    median_intensity_blanks <- apply(assay(M_blanks), 1, FUN)
-    median_intensity_non_blanks <- apply(assay(M_non_blanks), 1, FUN)
+    #FUN <- function(x) median(x, na.rm=TRUE)
+    median_intensity_blanks <- 
+        matrixStats::rowMedians(assay(M_blanks), na.rm=TRUE)
+    median_intensity_non_blanks <- 
+        matrixStats::rowMedians(assay(M_non_blanks), na.rm=TRUE)
     fold_change_exp <- median_intensity_non_blanks / median_intensity_blanks
-    blank_fraction <- 1 - (apply(is.na(assay(M_blanks)), 1, sum) / 
+    blank_fraction <- 1 - (rowCounts(assay(M_blanks), value=NA) / 
         ncol(assay(M_blanks)))
     idxs <- fold_change_exp >= fold_change & blank_fraction >= fraction_in_blank
     idxs[which(is.na(median_intensity_non_blanks))] <- FALSE
@@ -116,7 +121,6 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
 filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
     method="QC", qc_label="QC", remove_peaks=TRUE) {
     df <- check_input_data(df=df, classes=classes)
-    FUN <- function(irr) return(length(which(!is.na(irr)))/length(irr))
     if (method == "within" || method == "QC") {
         fracs <- data.frame(matrix(ncol=dim(df)[1], nrow=0))
         fracs_flags <- data.frame(matrix(ncol=dim(df)[1], nrow=0))
@@ -130,7 +134,7 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
         for (cl in cls) {
             idxs <- cl == classes
             subset_cl <- df[, idxs, drop=FALSE]
-            frac <- apply(assay(subset_cl), 1, FUN)
+            frac <- rowSums(!is.na(assay(subset_cl)))/ncol(subset_cl)
             fracs <- rbind(fracs, round(frac, 2))
             fracs_flags <- rbind(fracs_flags, as.numeric(frac >= min_frac))
             rn_fracs <- c(rn_fracs, paste("fraction_", cl, sep=""))
@@ -144,7 +148,7 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
         flags <- t(rbind(fracs, fracs_flags))
         idxs <- colSums(fracs_flags) > 0
     } else if (method == "across") {
-        frac <- apply(assay(df), 1, FUN)
+        frac <- rowSums(!is.na(assay(df)))/ncol(df)
         idxs <- frac >= min_frac
         flags <- cbind(fraction=round(frac, 2),
             fraction_flags=as.numeric(idxs))
@@ -221,8 +225,8 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label,
     remove_peaks=TRUE) {
     df <- check_input_data(df=df, classes=classes)
     df_qcs <- df[, classes == qc_label, drop=FALSE]
-    FUN <- function(x) sd(x, na.rm=TRUE)/mean(x, na.rm=TRUE) * 100
-    rsd_values <- apply(assay(df_qcs), 1, FUN)
+    rsd_values <- rowSds(assay(df_qcs), na.rm=TRUE) / 
+        rowMeans(assay(df_qcs), na.rm=TRUE) * 100
     idxs <- rsd_values < max_rsd
     idxs[is.na(idxs)] <- FALSE
     row_data <- DataFrame(rsd_QC=round(rsd_values, 2),
@@ -264,8 +268,7 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label,
 filter_samples_by_mv <- function(df, max_perc_mv, classes=NULL, 
     remove_samples=TRUE) {
     df <- check_input_data(df=df, classes=classes)
-    FUN <- function(irr) return(length(which(is.na(irr)))/length(irr))
-    perc_mv <- apply(assay(df), 2, FUN)
+    perc_mv <- colSums(is.na(assay(df)))/nrow(df)
     idxs <- perc_mv <= max_perc_mv
     col_data <- DataFrame(filter_samples_by_mv_perc=round(perc_mv, 2),
         filter_samples_by_mv_flags=as.numeric(idxs))

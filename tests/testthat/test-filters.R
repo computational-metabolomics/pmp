@@ -6,7 +6,7 @@ test_that ("Test that filter_peaks_by_blank returns expected output", {
     remove_samples=FALSE, remove_peaks=TRUE, fraction_in_blank=0)
   attributes(out$df)$processing_history <- NULL
   expect_equal(as.matrix(out$df), testData$filter_peaks_by_blank$df)
-  expect_equal(out$flags, testData$filter_peaks_by_blank$flags)
+  expect_equal(as.matrix(out$flags), as.matrix(testData$filter_peaks_by_blank$flags))
 })
 
 test_that ("Test that filter_peaks_by_blank returns expected output with QC samples specified", {
@@ -21,7 +21,8 @@ test_that ("Test that filter_peaks_by_blank removes blank samples, but keeps fea
   out <- filter_peaks_by_blank(df=testData$data, fold_change=1.2, 
     classes=testData$class, blank_label="Blank", qc_label=NULL, 
     remove_samples=TRUE, remove_peaks=FALSE,fraction_in_blank=0)
-  expect_equal(out, testData$filter_peaks_by_blank_remove_blanks)
+  expect_equal(out$df, testData$filter_peaks_by_blank_remove_blanks$df)
+  expect_equal(as.matrix(out$flags), as.matrix(testData$filter_peaks_by_blank_remove_blanks$flags))
 })
 
 context ("test-filter_peaks_by_fraction")
@@ -63,7 +64,7 @@ test_that("Test that filter_peaks_by_rsd returns expected output", {
 
 context ("test-filter_samples_by_mv")
 
-test_that("Test that filter_peaks_by_mv returns expected output", {
+test_that("Test that filter_samples_by_mv returns expected output", {
   
   out <- testData$data
   out[c(1:25),c(2,9)] <- NA
