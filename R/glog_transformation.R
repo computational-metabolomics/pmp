@@ -1,6 +1,7 @@
 #' @importFrom stats optimise
 #' @import ggplot2
 #' @importFrom methods as
+#' @importFrom matrixStats rowVars
 #'
 NULL
 
@@ -31,7 +32,7 @@ jglog <- function(y, y0=0, lambda){
     z <- glog(y, y0, lambda)
     D <- log(sqrt((y - y0)^2 + lambda))
     # average over all features (bins)
-    gmn <- exp(apply(D, 2, mean, na.rm=TRUE))
+    gmn <- exp(colMeans(D, na.rm=TRUE))
     zj <- z * gmn  # ML estimate
     return(zj)
 }
@@ -47,7 +48,7 @@ SSE <- function(lambda, y0=0, y) {
     # calculate ML estimate
     z <- jglog(y, y0, lambda)
     # average over all features
-    mean_spec <- apply(z, 1, mean, na.rm=TRUE)
+    mean_spec <- rowMeans(z, 1, na.rm=TRUE)
     # calculate sum of squared difference between true and estimate
     s <- sum((z - mean_spec)^2, na.rm=TRUE)
     return(s)
@@ -60,7 +61,7 @@ SSE <- function(lambda, y0=0, y) {
 #' @return scaled peak matrix
 
 glog_rescale_data <- function(df){
-    scal_fact <- apply(df, 2, sum, na.rm=TRUE)
+    scal_fact <- colSums(df, na.rm=TRUE)
     scal_fact <- mean(scal_fact)
     scal_fact <- 1 / scal_fact
     df <- df * scal_fact # apply scaling factor
@@ -148,7 +149,7 @@ glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
     df_qc <- df[, classes == qc_label]
     offset <- min(assay(df_qc), na.rm=TRUE)#set offset to the minimum QC samples
     assay(df_qc) <- assay(df_qc) - offset # set minimum of qc data to 0
-    VF <- apply(assay(df_qc), 1, var, na.rm=TRUE) # variance of all features
+    VF <- rowVars(assay(df_qc), na.rm=TRUE) # variance of all features
     # Upper limit max var or largest ratio max(var)/min(var)
     upper_lim <- max(pmax(VF, max(VF) / sort(VF)[sort(VF) > 0][1]))
     if (is.null(lambda)){
