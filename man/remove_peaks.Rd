@@ -7,18 +7,26 @@
 remove_peaks(df, rem_index)
 }
 \arguments{
-\item{df}{peak intensity matrix}
+\item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) or 
+\link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
+class \code{numeric()} or \code{integer()} of peak intensities, areas or 
+other quantitative characteristic.}
 
-\item{rem_index}{logical vector containing TRUE vales for features to remove}
+\item{rem_index}{\code{logical()}, vector containing \code{TRUE} vales for 
+features to remove. Should be the same length as number of features in input 
+data.}
 }
 \value{
-data frame, filtered peak intensity matrix
+Object of class \code{SummarizedExperiment}. If input data are a 
+matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+the same R data structure as input with all value of data type 
+\code{numeric()} or \code{integer()}.
 }
 \description{
 Filter to remove features.
 }
 \examples{
-df <- MTBLS79[ , MTBLS79$Batch==1]
+df <- MTBLS79[ ,MTBLS79$Batch == 1]
 rem_index <- vector(mode="logical", 
     length=nrow(SummarizedExperiment::assay(df)))
 rem_index[c(1, 20, 456, 789)] <- TRUE

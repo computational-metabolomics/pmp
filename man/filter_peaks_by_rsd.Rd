@@ -7,18 +7,36 @@
 filter_peaks_by_rsd(df, max_rsd, classes, qc_label, remove_peaks = TRUE)
 }
 \arguments{
-\item{df}{peak intensity matrix}
+\item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) or 
+\link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
+class \code{numeric()} or \code{integer()} of peak intensities, areas or 
+other quantitative characteristic.}
 
-\item{max_rsd}{threshold of QC RSD\% value}
+\item{max_rsd}{\code{numeric()}, threshold of QC RSD\% value}
 
-\item{classes}{vector of class labels}
+\item{classes}{\code{character()}, vector of class labels. Must be the same 
+length as the number of sample in the input peak table. If input is 
+\code{SummarizedExperiment} object, use 
+\code{SummarizedExperiment_object$meta_data_column_name}.}
 
-\item{qc_label}{class label for QC sample}
+\item{qc_label}{\code{character(1)} or \code{NULL}, class label used to
+identify QC samples.}
 
-\item{remove_peaks}{remove filtered features from peak matrix or not}
+\item{remove_peaks}{\code{logical(1)}, remove filtered features from peak 
+matrix or not.}
 }
 \value{
-list of filtered peak intensity matrix and matrix with flags
+Object of class \code{SummarizedExperiment}. If input data are a 
+matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+\code{list()} of two elements. Element \code{df} is \code{numeric()} 
+matrix-like object of filtered data set and \code{flags} is a 
+\link[S4Vectors]{DataFrame} with two columns. The same 
+\code{DataFrame} object containing flags is added to \code{rowData()} 
+element of \code{SummarizedExperiment} object as well.\cr
+\cr
+Columns in \code{rowData()} or \code{flags} element contain: \cr
+\code{rsd_QC} \code{numeric()}, RSD\% value of QC samples per feature; \cr
+\code{rsd_flags} \code{integer()},if 0 feature is flagged to be removed. \cr
 }
 \description{
 Metabolomics datasets often contain 'features' with irreproducible peak 
@@ -29,7 +47,7 @@ specified QC samples.
 }
 \examples{
 
-df <- MTBLS79[ , MTBLS79$Batch==1]
+df <- MTBLS79[ ,MTBLS79$Batch == 1]
 out <- filter_peaks_by_rsd(df=df, max_rsd=20,
     classes=df$Class, qc_label='QC')
 

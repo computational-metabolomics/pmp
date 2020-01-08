@@ -1,4 +1,4 @@
-#' Testing data set
+#' Internal data set for testhat unit tests
 #'
 #' Subset of DIMS data set to test package functions
 #'
@@ -32,7 +32,7 @@
 #' # Transpose peak matrix, so that features are in rows and samples in columns.
 #' MTBLS79$assay <- as.matrix(t(MTBLS79$assay))
 #'
-#' # Missing values in the inpur data are stored as 0, replace with NA
+#' # Missing values in the input data are stored as 0, replace with NA
 #' MTBLS79$assay[MTBLS79$assay == 0] <- NA
 #' 
 #' rownames(MTBLS79$assay) <- round(as.numeric(rownames(MTBLS79$assay)), 5)
@@ -48,14 +48,14 @@
 #'Article number: 140012 (2014) https://www.nature.com/articles/sdata201412
 #'
 #' @format A \link[SummarizedExperiment]{SummarizedExperiment} object. \cr
-#' `Assay` Peak intensities of the DIMS data set. Contains 172 samples 
-#' and 2488 features. \cr
-#' `colData` Sample meta containing 4 columns. \cr
-#'     `Batch` - sample batch name. \cr
-#'     `Sample_Rep` - sample replicate code. \cr
-#'     `Class` - sample calss labels. \cr
-#'     `Class2`` - alternative sample class labels grouping together replicate
-#' samples. \cr
+#' \code{assay(MTBLS79)} Peak intensities of the DIMS data set. 
+#' Contains 172 samples and 2488 features. \cr
+#' \code{colData(MTBLS79)} Sample meta data containing 4 columns. \cr
+#'     \code{Batch} - sample batch name. \cr
+#'     \code{Sample_Rep} - sample replicate code. \cr
+#'     \code{Class} - sample class labels. \cr
+#'     \code{Class2} - alternative sample class labels grouping together 
+#'     replicate samples. \cr
 # 
 #' @source https://www.ebi.ac.uk/metabolights/MTBLS79
 #' 

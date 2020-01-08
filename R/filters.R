@@ -7,29 +7,57 @@
 
 NULL
 
-#' Filter peaks by blank
+#' Filter features by blank samples
 #'
-#' Metabolomics datasets often contain many 'features' of non-biological 
+#' Metabolomics datasets often contain many features of non-biological 
 #' origin e.g. those associated with extraction and analysis solvents. 
 #' This tool facilitates the removal of such features from the data matrix, 
-#' as defined using an appropriate blank' sample.
+#' as defined using an appropriate blank sample.
+#' 
+#' If parameter \code{qc_label} is not \code{NULL}, QC samples which will be 
+#' used to calculate the median signal intensity.
 #'
-#' @param df peak intensity matrix
-#' @param fold_change minimum fold change between analytical and blank samples.
-#' @param classes character vector of class labels. If input is 
-#' `SummarizedExperiment` object, a column of `colData` slot.
-#' @param blank_label class label used to identify blank samples
-#' @param qc_label class label for QC sample. If not NULL will use QC samples 
-#'to calculate the mean intensity
-#' @param remove_samples remove blank samples from peak matrix or not
-#' @param remove_peaks remove filtered features from peak matrix or not
-#' @param fraction_in_blank number between 0 to 1 to specify fraction in how 
-#' many blanks peaks should be present
-#' @return 'SummarizedExperiment' class object or list of filtered peak 
-#' intensity matrix and matrix with flags.
+#' @param df A matrix-like (e.g. an ordinary matrix, a data frame) or 
+#' \link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
+#' class \code{numeric()} or \code{integer()} of peak intensities, areas or 
+#' other quantitative characteristic.
+#' @param fold_change \code{numeric(1)}, fold_change minimum fold change 
+#' between analytical and blank samples.
+#' @param classes \code{character()}, vector of class labels. Must be the same 
+#' length as the number of sample in the input peak table. If input is 
+#' \code{SummarizedExperiment} object, use 
+#' \code{SummarizedExperiment_object$meta_data_column_name}.
+#' @param blank_label \code{character(1)}, class label used to identify blank
+#' samples.
+#' @param qc_label \code{character(1)} or \code{NULL}, class label used to
+#' identify QC samples.
+#' @param remove_samples \code{logical(1)}, remove blank samples from peak 
+#' matrix or not.
+#' @param remove_peaks \code{logical(1)}, remove filtered features from peak 
+#' matrix or not.
+#' @param fraction_in_blank \code{numeric(1)}, value between 0 to 1 to specify 
+#' fraction in how many blanks peaks should be present.
+#' 
+#' @return Object of class \code{SummarizedExperiment}. If input data are a 
+#' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+#' \code{list()} of two elements. Element \code{df} is \code{numeric()} 
+#' matrix-like object of filtered data set and \code{flags} is a 
+#' \link[S4Vectors]{DataFrame} with five columns. The same 
+#' \code{DataFrame} object containing flags is added to \code{rowData()} 
+#' element of \code{SummarizedExperiment} object as well.\cr
+#' \cr
+#' Columns in \code{rowData()} or \code{flags} element contain: \cr
+#' \code{median_non_blanks} median intensities of features of non-blank
+#' samples; \cr
+#' \code{median_blanks} median intensities of features of blank samples; \cr
+#' \code{fold_change} fold change between analytical and blank samples; \cr
+#' \code{blank_flags} \code{integer()}, if 0 feature is flagged to be 
+#' removed; \cr
+#' \code{blank_fraction_flags} \code{numeric()}, fraction in how many blank
+#' samples peaks is present. \cr
 #' 
 #' @examples
-#' df <- MTBLS79[ , MTBLS79$Batch==1]
+#' df <- MTBLS79[ ,MTBLS79$Batch == 1]
 #' df$Class[1:2] <- "Blank"
 #' out <- filter_peaks_by_blank(df=df, fold_change=1.2, 
 #'    classes=df$Class, blank_label="Blank", qc_label=NULL, 
@@ -50,7 +78,6 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
         M_non_blanks <- df[, classes != blank_label,
             drop=FALSE]
     }
-    #FUN <- function(x) median(x, na.rm=TRUE)
     median_intensity_blanks <- 
         matrixStats::rowMedians(assay(M_blanks), na.rm=TRUE)
     median_intensity_non_blanks <- 
@@ -85,28 +112,35 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
 }
 
 #' Filter features by fraction of missing values
-#'
+#' 
 #' Metabolomics datasets often contain 'features' with irreproducible peak 
 #' intensity values, or with large numbers of missing values. This tool 
 #' facilitates the remove of such features from a data matrix, based upon the 
 #' relative proportion (minimum fraction) of samples containing non-missing 
 #' values.
 #'
-#' @param df peak intensity matrix
-#' @param min_frac threshold of fraction of detection
-#' @param classes character vector of class labels. If input is 
-#' `SummarizedExperiment` object, a column of `colData` slot.
-#' @param method method to use. 'QC' - withing QC samples, within' - within 
-#'each sample class or across' - across all samples
-#' @param qc_label class label for QC sample
-#' @param remove_peaks remove filtered features from peak matrix or not
-#' 
-#' @return 'SummarizedExperiment' class object or list of filtered peak 
-#' intensity matrix and matrix with flags.
+#' @inheritParams filter_peaks_by_blank
+#' @param min_frac \code{numeric(1)}, value between 0 and 1, a threshold of 
+#' fraction of detection.
+#' @param method \code{character(1)}, method to use. \code{QC} - within 
+#' QC samples, \code{within} - within each sample class or \code{across} - 
+#' across all samples.
+#'
+#' @return Object of class \code{SummarizedExperiment}. If input data are a 
+#' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+#' \code{list()} of two elements. Element \code{df} is \code{numeric()} 
+#' matrix-like object of filtered data set and \code{flags} is a 
+#' \link[S4Vectors]{DataFrame} with at least two columns depending which
+#' \code{method} was used. The same \code{DataFrame} object containing flags is 
+#' added to \code{rowData()} element of \code{SummarizedExperiment} object as 
+#' well.\cr
+#' Columns in \code{rowData()} or \code{flags} element contain \code{fractions} 
+#' of missing values per feature within QC samples (mehtod \code{QC}), 
+#' across (method \code{across}) or within (mehtod \code{within}) each sample 
+#' group.
 #' 
 #' @examples 
-#' df <- MTBLS79[ , MTBLS79$Batch==1]
-#' df$Class[1:2] <- "Blank"
+#' df <- MTBLS79[ ,MTBLS79$Batch == 1]
 #' out <- filter_peaks_by_fraction(df=df, min_frac=1, 
 #'     classes=df$Class, method='QC', qc_label='QC')
 #'     
@@ -169,13 +203,18 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
 #'
 #' Filter to remove features.
 #'
-#' @param df peak intensity matrix
-#' @param rem_index logical vector containing TRUE vales for features to remove
+#' @inheritParams filter_peaks_by_blank
+#' @param rem_index \code{logical()}, vector containing \code{TRUE} vales for 
+#' features to remove. Should be the same length as number of features in input 
+#' data.
 #' 
-#' @return data frame, filtered peak intensity matrix
+#' @return Object of class \code{SummarizedExperiment}. If input data are a 
+#' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+#' the same R data structure as input with all value of data type 
+#' \code{numeric()} or \code{integer()}.
 #' 
 #' @examples
-#' df <- MTBLS79[ , MTBLS79$Batch==1]
+#' df <- MTBLS79[ ,MTBLS79$Batch == 1]
 #' rem_index <- vector(mode="logical", 
 #'     length=nrow(SummarizedExperiment::assay(df)))
 #' rem_index[c(1, 20, 456, 789)] <- TRUE
@@ -207,15 +246,24 @@ remove_peaks <- function(df, rem_index) {
 #' relative standard deviation of intensity values for a given feature within 
 #' specified QC samples.
 #'
-#' @param df peak intensity matrix
-#' @param max_rsd threshold of QC RSD\% value
-#' @param classes vector of class labels
-#' @param qc_label class label for QC sample
-#' @param remove_peaks remove filtered features from peak matrix or not
-#' @return list of filtered peak intensity matrix and matrix with flags
+#' @inheritParams filter_peaks_by_blank
+#' @param max_rsd \code{numeric()}, threshold of QC RSD\% value
+#' 
+#' @return Object of class \code{SummarizedExperiment}. If input data are a 
+#' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+#' \code{list()} of two elements. Element \code{df} is \code{numeric()} 
+#' matrix-like object of filtered data set and \code{flags} is a 
+#' \link[S4Vectors]{DataFrame} with two columns. The same 
+#' \code{DataFrame} object containing flags is added to \code{rowData()} 
+#' element of \code{SummarizedExperiment} object as well.\cr
+#' \cr
+#' Columns in \code{rowData()} or \code{flags} element contain: \cr
+#' \code{rsd_QC} \code{numeric()}, RSD\% value of QC samples per feature; \cr
+#' \code{rsd_flags} \code{integer()},if 0 feature is flagged to be removed. \cr
+#' 
 #' @examples 
 #' 
-#' df <- MTBLS79[ , MTBLS79$Batch==1]
+#' df <- MTBLS79[ ,MTBLS79$Batch == 1]
 #' out <- filter_peaks_by_rsd(df=df, max_rsd=20,
 #'     classes=df$Class, qc_label='QC')
 #' 
@@ -242,7 +290,6 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label,
     return(df)
 }
 
-
 #' Filter samples by missing values
 #'
 #' Missing values in mass spectrometry metabolomic datasets occur widely and 
@@ -252,11 +299,23 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label,
 #' must first be addressed. This tool facilitates the removal of samples 
 #' containing a user-defined maximum percentage of missing values.
 #'
-#' @param df peak intensity matrix
-#' @param max_perc_mv threshold of missing value percentage.
-#' @param classes vector of class labels
-#' @param remove_samples remove filtered samples from peak matrix or not
-#' @return list of filtered peak intensity matrix and matrix with flags
+#' @inheritParams filter_peaks_by_blank
+#' @param max_perc_mv \code{numeric(1)}, Value between 0 and 1 of threshold 
+#' of missing value percentage in sample.
+#' 
+#' @return Object of class \code{SummarizedExperiment}. If input data are a 
+#' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+#' \code{list()} of two elements. Element \code{df} is \code{numeric()} 
+#' matrix-like object of filtered data set and \code{flags} is a 
+#' \link[S4Vectors]{DataFrame} with two columns. The same 
+#' \code{DataFrame} object containing flags is added to \code{colData()} 
+#' element of \code{SummarizedExperiment} object as well. If element 
+#' \code{colData()} already exists flags are appended to existing 
+#' values.\cr
+#' \cr
+#' Columns in \code{colData()} or \code{flags} element contain: \cr
+#' \code{perc_mv} \code{numeric()}, fraction of missing values per sample; \cr
+#' \code{flags} \code{integer()},if 0 feature is flagged to be removed. \cr
 #' 
 #' @examples 
 #' 

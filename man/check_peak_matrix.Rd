@@ -8,14 +8,16 @@ and that all cells contain numeric values.}
 check_peak_matrix(df, classes = NULL)
 }
 \arguments{
-\item{df}{A matrix-like object (e.g. and ordinary matrix, a data frame) of 
-peak intensities.}
+\item{df}{A matrix-like (e.g. and ordinary matrix, a data frame) object with
+all values of class \code{numeric()} or \code{integer()} of peak
+intensities, areas or other quantitative characteristic.}
 
-\item{classes}{vector of class labels.}
+\item{classes}{\code{character()}, vector of class labels. Must be the same 
+length as the number of sample in the input peak table.}
 }
 \value{
-matrix-like object where samples are represented in columns and
-features in rows.
+\code{numeric()}, matrix-like object where samples are represented
+in columns and features in rows.
 }
 \description{
 All functions in pmp pacakge expect input peak matrix to have samples 

@@ -2,21 +2,24 @@
 % Please edit documentation in R/checkPeakMatrix.R
 \name{check_input_data}
 \alias{check_input_data}
-\title{Check if input data is object of 'SummarizedExperiment',
-if not convert inputs into 'SummarizedExperiment' container.}
+\title{If needed convert input data to object of class 
+\link[SummarizedExperiment]{SummarizedExperiment}}
 \usage{
 check_input_data(df, classes = NULL)
 }
 \arguments{
-\item{df}{A matrix-like object (e.g. and ordinary matrix, a data frame) of 
-peak intensities.}
+\item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) object with
+all values of class \code{numeric()} or \code{integer()} of peak
+intensities, areas or other quantitative characteristic.}
 
-\item{classes}{vector of class labels.}
+\item{classes}{\code{character()}, vector of class labels. Must be the same 
+length as the number of sample in the input peak table.}
 }
 \value{
-object of class of 'SummarizedExperiment'.
+object of class of 
+\link[SummarizedExperiment]{SummarizedExperiment}.
 }
 \description{
-Check if input data is object of 'SummarizedExperiment',
-if not convert inputs into 'SummarizedExperiment' container.
+If needed convert input data to object of class 
+\link[SummarizedExperiment]{SummarizedExperiment}
 }

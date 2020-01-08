@@ -2,22 +2,22 @@
 % Please edit documentation in R/checkPeakMatrix.R
 \name{return_original_data_structure}
 \alias{return_original_data_structure}
-\title{If input data were not of class of 'SummarizedExperiment',
-convert output to the original R data structure type. All values stored in 
-'metadata' slot of \link[SummarizedExperiment]{SummarizedExperiment} object 
-will be exported as 'attributes' of the output object.}
+\title{If input data object was not of class of 
+\link[SummarizedExperiment]{SummarizedExperiment},
+convert output to the original R data structure.}
 \usage{
 return_original_data_structure(summarized_experiment_object)
 }
 \arguments{
-\item{summarized_experiment_object}{peak matrix}
+\item{summarized_experiment_object}{object of class
+\code{SummarizedExperiment}}
 }
 \value{
-peak matrix object of the same data structure as original input data
+A matrix-like (e.g. an ordinary matrix, a data frame) object with
+all values of class \code{numeric()} or \code{integer()}. 
+Values from \code{colData} and \code{rowData} elements are not returned.
 }
 \description{
-If input data were not of class of 'SummarizedExperiment',
-convert output to the original R data structure type. All values stored in 
-'metadata' slot of \link[SummarizedExperiment]{SummarizedExperiment} object 
-will be exported as 'attributes' of the output object.
+All values stored in \code{metadata} element of \code{SummarizedExperiment}
+will be exported as \link[base]{attributes} of the output object.
 }

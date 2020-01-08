@@ -14,11 +14,13 @@ NULL
 #' provided this function will check if the length of labels matches number 
 #' of samples in peak matrix.
 #'
-#' @param df A matrix-like object (e.g. and ordinary matrix, a data frame) of 
-#' peak intensities.
-#' @param classes vector of class labels.
-#' @return matrix-like object where samples are represented in columns and
-#' features in rows.
+#' @param df A matrix-like (e.g. and ordinary matrix, a data frame) object with
+#' all values of class \code{numeric()} or \code{integer()} of peak
+#' intensities, areas or other quantitative characteristic.
+#' @param classes \code{character()}, vector of class labels. Must be the same 
+#' length as the number of sample in the input peak table.
+#' @return \code{numeric()}, matrix-like object where samples are represented
+#' in columns and features in rows.
 #' 
 
 check_peak_matrix <- function(df, classes=NULL) {
@@ -52,14 +54,16 @@ check_peak_matrix <- function(df, classes=NULL) {
     df
 }
 
-#' Check if input data is object of 'SummarizedExperiment',
-#' if not convert inputs into 'SummarizedExperiment' container.
+#' If needed convert input data to object of class 
+#' \link[SummarizedExperiment]{SummarizedExperiment}
 #' 
-#'
-#' @param df A matrix-like object (e.g. and ordinary matrix, a data frame) of 
-#' peak intensities.
-#' @param classes vector of class labels.
-#' @return object of class of 'SummarizedExperiment'. 
+#' @param df A matrix-like (e.g. an ordinary matrix, a data frame) object with
+#' all values of class \code{numeric()} or \code{integer()} of peak
+#' intensities, areas or other quantitative characteristic.
+#' @param classes \code{character()}, vector of class labels. Must be the same 
+#' length as the number of sample in the input peak table.
+#' @return object of class of 
+#' \link[SummarizedExperiment]{SummarizedExperiment}. 
 #' 
 check_input_data <- function (df, classes=NULL){
     meta_data <- list(original_data_structure=class(df)[1])
@@ -82,13 +86,18 @@ check_input_data <- function (df, classes=NULL){
     return(df)
 }
 
-#' If input data were not of class of 'SummarizedExperiment',
-#' convert output to the original R data structure type. All values stored in 
-#' 'metadata' slot of \link[SummarizedExperiment]{SummarizedExperiment} object 
-#' will be exported as 'attributes' of the output object.
+#' If input data object was not of class of 
+#' \link[SummarizedExperiment]{SummarizedExperiment},
+#' convert output to the original R data structure. 
+#' 
+#' All values stored in \code{metadata} element of \code{SummarizedExperiment}
+#' will be exported as \link[base]{attributes} of the output object.
 #'
-#' @param summarized_experiment_object peak matrix
-#' @return peak matrix object of the same data structure as original input data 
+#' @param summarized_experiment_object object of class
+#' \code{SummarizedExperiment}
+#' @return A matrix-like (e.g. an ordinary matrix, a data frame) object with
+#' all values of class \code{numeric()} or \code{integer()}. 
+#' Values from \code{colData} and \code{rowData} elements are not returned. 
 #' 
 return_original_data_structure <- function(summarized_experiment_object){
     meta_data <- metadata(summarized_experiment_object)

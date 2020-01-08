@@ -1,4 +1,4 @@
-context("test-check_peakmatrix_orientation")
+context("test data input/output functions")
 
 test_that("Output data matrix is in correct orientation", {
   out <- check_peak_matrix(df=t(testData$data), classes=testData$class)
