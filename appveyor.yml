@@ -20,7 +20,7 @@ environment:
   # USE_RTOOLS: true
   # R_REMOTES_STANDALONE: true
   R_VERSION: stable
-  BIOC_USE_DEVEL: TRUE
+  BIOC_USE_DEVEL: FALSE
   USE_RTOOLS: true
   PKGTYPE: both
 
