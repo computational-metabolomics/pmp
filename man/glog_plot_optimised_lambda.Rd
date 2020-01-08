@@ -13,25 +13,32 @@ glog_plot_optimised_lambda(
 )
 }
 \arguments{
-\item{df}{Peak intensity matrix}
+\item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) or 
+\link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
+class \code{numeric()} or \code{integer()} of peak intensities, areas or 
+other quantitative characteristic.}
 
-\item{optimised_lambda}{Numeric value of optimised lambda from 
-glog_transformation output}
+\item{optimised_lambda}{\code{numeric(1)}, value of optimised lambda from 
+glog_transformation output.}
 
-\item{classes}{vector of class labels}
+\item{classes}{\code{character()}, vector of class labels. Must be the same 
+length as the number of sample in the input peak table. If input is 
+\code{SummarizedExperiment} object, use 
+\code{SummarizedExperiment_object$meta_data_column_name}.}
 
-\item{qc_label}{class label for QC sample}
+\item{qc_label}{\code{character(1)} or \code{NULL}, class label used to
+identify QC samples.}
 
-\item{plot_grid}{number of data points to use for SSE optimisation}
+\item{plot_grid}{\code{integer(1)}, number of data points to use for SSE 
+optimisation.}
 }
 \value{
-ggplot object containing optimisation plot
+Class \code{ggplot} object containing optimisation plot.
 }
 \description{
 Plot SSE error of lambda optimisation process
 }
 \examples{
-
 classes <- pmp:::testData$class
 
 data <- mv_imputation(df=pmp:::testData$data, method='knn')

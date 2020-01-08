@@ -9,10 +9,11 @@ NULL
 #'
 #' https://doi.org/10.1186/1471-2105-8-234
 #'
-#' @param y values to be tranformed
-#' @param y0 offset applied to y (default=0).
-#' @param lambda transform parameter
-#' @return vector of transformed values
+#' @param y \code{numeric()}, values to be tranformed.
+#' @param y0 \code{numeric(1)}, offset applied to y (default=0).
+#' @param lambda \code{numeric(1)}, transform parameter.
+#' @return vector \code{numeric()}, of transformed values.
+#' @noRd
 
 glog <- function(y, y0=0, lambda){
     z <- log((y - y0) + sqrt((y - y0)^2 + lambda))
@@ -23,10 +24,11 @@ glog <- function(y, y0=0, lambda){
 #' Calculates the alternative Jacobian function described in
 #' https://doi.org/10.1186/1471-2105-8-234
 #'
-#' @param y values
-#' @param y0 offset applied to y (default=0)
-#' @param lambda lambda
-#' @return numeric, optimised glog parameter
+#' @param y \code{numeric()}, values.
+#' @param y0 \code{numeric1}, offset applied to y (default=0).
+#' @param lambda \code{numeric1}, lambda.
+#' @return \code{numeric(1)}, optimised glog parameter.
+#' @noRd
 
 jglog <- function(y, y0=0, lambda){
     z <- glog(y, y0, lambda)
@@ -39,10 +41,11 @@ jglog <- function(y, y0=0, lambda){
 
 #' Internal function to estimate SSE for optimising glog params
 #'
-#' @param y values.
-#' @param y0 offset applied to y (default=0)
-#' @param lambda transform parameter
-#' @return numeric, sum of squared difference
+#' @param y \code{numeric()}, values.
+#' @param y0 \code{numeric(1)}, offset applied to y (default=0).
+#' @param lambda \code{numeric(1)}, transform parameter.
+#' @return \code{numeric()}, sum of squared difference.
+#' @noRd
 
 SSE <- function(lambda, y0=0, y) {
     # calculate ML estimate
@@ -57,8 +60,9 @@ SSE <- function(lambda, y0=0, y) {
 #' If glog optimisation fails, this function will scale values in the 
 #' peak matrix to the 1/mean(total signal) over all samples.
 #' 
-#' @param df peak intensity matrix
-#' @return scaled peak matrix
+#' @param df \code{numeric()}, peak intensity matrix.
+#' @return \code{numeric()}, scaled peak matrix.
+#' @noRd
 
 glog_rescale_data <- function(df){
     scal_fact <- colSums(df, na.rm=TRUE)
@@ -70,10 +74,11 @@ glog_rescale_data <- function(df){
 
 #' Search for optimal value of lambda by minimasing SSE.
 #' 
-#' @param upper_lim upper limit to use for optimisation
-#' @param df_qc peak matrix of QC samples
+#' @param upper_lim \code{numeric(1)}, upper limit to use for optimisation.
+#' @param df_qc \code{numeric()}, peak matrix of QC samples.
 #'  
-#' @return optimised glog lambda value
+#' @return \code{numeric(1)}, optimised glog lambda value.
+#' @noRd
 
 glog_omptimise_lambda <- function(upper_lim, df_qc){
     lambda <- optimise(f=SSE, interval=c(0, upper_lim), y0=0,
@@ -82,15 +87,14 @@ glog_omptimise_lambda <- function(upper_lim, df_qc){
 }
 
 #' Plot SSE error of lambda optimisation process
-#' @param df Peak intensity matrix
-#' @param optimised_lambda Numeric value of optimised lambda from 
-#'     glog_transformation output
-#' @param classes vector of class labels
-#' @param qc_label class label for QC sample
-#' @param plot_grid number of data points to use for SSE optimisation
-#' @return ggplot object containing optimisation plot
-#' @examples 
+#' @inheritParams filter_peaks_by_blank
+#' @param optimised_lambda \code{numeric(1)}, value of optimised lambda from 
+#'  glog_transformation output.
+#' @param plot_grid \code{integer(1)}, number of data points to use for SSE 
+#' optimisation.
+#' @return Class \code{ggplot} object containing optimisation plot.
 #' 
+#' @examples 
 #' classes <- pmp:::testData$class
 #' 
 #' data <- mv_imputation(df=pmp:::testData$data, method='knn')
@@ -122,22 +126,29 @@ glog_plot_optimised_lambda <- function(df, optimised_lambda, classes, qc_label,
     return (g)
 }
 
-#' Performs glog transformation on the data set,
-#' using QC samples to estimate lambda.
-#'
+#' Variance stabilising generalised logarithm (glog) transformation
+#' 
+#' Performs glog transformation on the data set. QC samples can be used to 
+#' estimate technical variation in the data set and calculate transformation
+#' parameter lambda.
+#' 
+#' @references Parsons HM et. al., BMC Bionf., 8(234), 2007. 
 #' https://doi.org/10.1186/1471-2105-8-234
 #'
-#' @param df Peak intensity matrix
-#' @param classes vector of class labels
-#' @param qc_label class label for QC sample
-#' @param lambda If not NULL will use provided value for glog lambda
+#' @inheritParams filter_peaks_by_blank
+#' @param lambda \code{NULL} or \code{numeric(1)}, if not \code{NULL} will use
+#' provided value for glog lambda.
+#' 
 #' @examples
-#' out <- mv_imputation(df=pmp:::testData$data, method='knn')
-#' out <- glog_transformation (df=out, classes=pmp:::testData$class,
-#'     qc_label='QC')
+#' df <- MTBLS79[, MTBLS79$Batch == 1]
+#' out <- mv_imputation(df=df, method="knn")
+#' out <- glog_transformation (df=out, classes=df$Class,
+#'     qc_label="QC")
 #'
-#' @return An \link[SummarizedExperiment]{SummarizedExperiment} object
-#' or numeric object of original input data structure.
+#' @return Object of class \code{SummarizedExperiment}. If input data are a 
+#' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+#' the same R data structure as input with all value of data type 
+#' \code{numeric()}.
 #' @export glog_transformation
 
 glog_transformation <- function(df, classes, qc_label, lambda=NULL) {

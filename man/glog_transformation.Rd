@@ -2,30 +2,46 @@
 % Please edit documentation in R/glog_transformation.R
 \name{glog_transformation}
 \alias{glog_transformation}
-\title{Performs glog transformation on the data set,
-using QC samples to estimate lambda.}
+\title{Variance stabilising generalised logarithm (glog) transformation}
 \usage{
 glog_transformation(df, classes, qc_label, lambda = NULL)
 }
 \arguments{
-\item{df}{Peak intensity matrix}
+\item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) or 
+\link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
+class \code{numeric()} or \code{integer()} of peak intensities, areas or 
+other quantitative characteristic.}
 
-\item{classes}{vector of class labels}
+\item{classes}{\code{character()}, vector of class labels. Must be the same 
+length as the number of sample in the input peak table. If input is 
+\code{SummarizedExperiment} object, use 
+\code{SummarizedExperiment_object$meta_data_column_name}.}
 
-\item{qc_label}{class label for QC sample}
+\item{qc_label}{\code{character(1)} or \code{NULL}, class label used to
+identify QC samples.}
 
-\item{lambda}{If not NULL will use provided value for glog lambda}
+\item{lambda}{\code{NULL} or \code{numeric(1)}, if not \code{NULL} will use
+provided value for glog lambda.}
 }
 \value{
-An \link[SummarizedExperiment]{SummarizedExperiment} object
-or numeric object of original input data structure.
+Object of class \code{SummarizedExperiment}. If input data are a 
+matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+the same R data structure as input with all value of data type 
+\code{numeric()}.
 }
 \description{
-https://doi.org/10.1186/1471-2105-8-234
+Performs glog transformation on the data set. QC samples can be used to 
+estimate technical variation in the data set and calculate transformation
+parameter lambda.
 }
 \examples{
-out <- mv_imputation(df=pmp:::testData$data, method='knn')
-out <- glog_transformation (df=out, classes=pmp:::testData$class,
-    qc_label='QC')
+df <- MTBLS79[, MTBLS79$Batch == 1]
+out <- mv_imputation(df=df, method="knn")
+out <- glog_transformation (df=out, classes=df$Class,
+    qc_label="QC")
 
+}
+\references{
+Parsons HM et. al., BMC Bionf., 8(234), 2007. 
+https://doi.org/10.1186/1471-2105-8-234
 }
