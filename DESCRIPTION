@@ -7,7 +7,7 @@ Maintainer: Andris Jankevics <a.jankevics@bham.ac.uk>
 Description: Tools and filters for peak matrix scaling, normalisation and filtering.
 License: GPL-3
 biocViews: MassSpectrometry, Metabolomics, Software
-Depends: R (>= 4.0)
+Depends: R (>= 3.6)
 Imports: stats, impute, pcaMethods, missForest, ggplot2, methods, 
     SummarizedExperiment, S4Vectors, matrixStats
 Encoding: UTF-8

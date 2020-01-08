@@ -19,7 +19,7 @@ environment:
   # see https://github.com/krlmlr/r-appveyor#readme for details
   # USE_RTOOLS: true
   # R_REMOTES_STANDALONE: true
-  R_VERSION: devel
+  R_VERSION: stable
   BIOC_USE_DEVEL: TRUE
   USE_RTOOLS: true
   PKGTYPE: both
