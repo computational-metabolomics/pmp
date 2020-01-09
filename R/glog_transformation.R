@@ -95,13 +95,14 @@ glog_omptimise_lambda <- function(upper_lim, df_qc){
 #' @return Class \code{ggplot} object containing optimisation plot.
 #' 
 #' @examples 
-#' classes <- pmp:::testData$class
+#' data <- MTBLS79[, MTBLS79$Batch == 1]
+#' classes <- data$Class
 #' 
-#' data <- mv_imputation(df=pmp:::testData$data, method='knn')
+#' data <- mv_imputation(df=data, method='knn')
 #' out <- glog_transformation (df=data, classes=classes,
 #'     qc_label='QC')
 #' 
-#' optimised_lambda <- attributes(out)
+#' optimised_lambda <- S4Vectors::metadata(out)
 #' optimised_lambda <- 
 #'     optimised_lambda$processing_history$glog_transformation$lambda_opt
 #' 
@@ -111,12 +112,13 @@ glog_omptimise_lambda <- function(upper_lim, df_qc){
 
 glog_plot_optimised_lambda <- function(df, optimised_lambda, classes, qc_label,
     plot_grid=100){
+    df <- check_input_data(df, classes=classes)
     df_qc <- df[, classes == qc_label]
     lambda_lim <- c(optimised_lambda, optimised_lambda) +
         c(-optimised_lambda*0.8, optimised_lambda*0.8) 
     sse_df <- data.frame(lambda=seq(lambda_lim[1], lambda_lim[2], 
         length.out=plot_grid))
-    sse_df$SSE <- vapply(X=sse_df$lambda, FUN=SSE, y0=0, y=df_qc, 
+    sse_df$SSE <- vapply(X=sse_df$lambda, FUN=SSE, y0=0, y=assay(df_qc), 
         FUN.VALUE=numeric(1))
     g <- ggplot(data=sse_df, aes_string(x='lambda',y='SSE')) +
         geom_vline(xintercept=optimised_lambda, color="red") +

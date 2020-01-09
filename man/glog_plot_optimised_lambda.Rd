@@ -39,13 +39,14 @@ Class \code{ggplot} object containing optimisation plot.
 Plot SSE error of lambda optimisation process
 }
 \examples{
-classes <- pmp:::testData$class
+data <- MTBLS79[, MTBLS79$Batch == 1]
+classes <- data$Class
 
-data <- mv_imputation(df=pmp:::testData$data, method='knn')
+data <- mv_imputation(df=data, method='knn')
 out <- glog_transformation (df=data, classes=classes,
     qc_label='QC')
 
-optimised_lambda <- attributes(out)
+optimised_lambda <- S4Vectors::metadata(out)
 optimised_lambda <- 
     optimised_lambda$processing_history$glog_transformation$lambda_opt
 
