@@ -1,5 +1,6 @@
 #' Return list of function argument values
 #' @return List of funcation argument values in the current function call
+#' @noRd
 
 return_function_args <- function()
 {

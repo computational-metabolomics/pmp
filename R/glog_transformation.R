@@ -132,7 +132,19 @@ glog_plot_optimised_lambda <- function(df, optimised_lambda, classes, qc_label,
 #' 
 #' Performs glog transformation on the data set. QC samples can be used to 
 #' estimate technical variation in the data set and calculate transformation
-#' parameter lambda.
+#' parameter \eqn{\lambda} (lambda). QC samples usually comprise a pool of 
+#' aliquots taken from all other samples in the study  and analysed repeatedly 
+#' throughout an analytical batch.
+#' 
+#' Many univariate and multivariate statistical tests require homogeneity and
+#' n ormality of dataset variance. Real-world metabolomics datasets often fail 
+#' to meet these criteria due to asymmetric (i.e. non-'normal') and/or 
+#' heteroscedatic (i.e. non-homogenous) variance structure. To address this 
+#' issue, \code{glog} data transformations may be applied. \cr
+#' For each cell within the data matrix, transform the raw value (x) according 
+#' to:  \eqn{log10(x + sqrt(x^2 + \lambda))}. The parameter \eqn{\lambda} is 
+#' typically calculated using quality control (QC) samples analysed throughout
+#' an analysis batch.
 #' 
 #' @references Parsons HM et. al., BMC Bionf., 8(234), 2007. 
 #' https://doi.org/10.1186/1471-2105-8-234
@@ -141,16 +153,17 @@ glog_plot_optimised_lambda <- function(df, optimised_lambda, classes, qc_label,
 #' @param lambda \code{NULL} or \code{numeric(1)}, if not \code{NULL} will use
 #' provided value for glog lambda.
 #' 
+#' @return Object of class \code{SummarizedExperiment}. If input data are a 
+#' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+#' the same R data structure as input with all value of data type 
+#' \code{numeric()}.
+#' 
 #' @examples
 #' df <- MTBLS79[, MTBLS79$Batch == 1]
 #' out <- mv_imputation(df=df, method="knn")
 #' out <- glog_transformation (df=out, classes=df$Class,
 #'     qc_label="QC")
-#'
-#' @return Object of class \code{SummarizedExperiment}. If input data are a 
-#' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
-#' the same R data structure as input with all value of data type 
-#' \code{numeric()}.
+#' 
 #' @export glog_transformation
 
 glog_transformation <- function(df, classes, qc_label, lambda=NULL) {

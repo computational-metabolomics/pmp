@@ -20,7 +20,7 @@ data.}
 Object of class \code{SummarizedExperiment}. If input data are a 
 matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
 the same R data structure as input with all value of data type 
-\code{numeric()} or \code{integer()}.
+\code{numeric()}.
 }
 \description{
 Filter to remove features.

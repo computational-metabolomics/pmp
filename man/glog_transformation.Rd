@@ -32,7 +32,20 @@ the same R data structure as input with all value of data type
 \description{
 Performs glog transformation on the data set. QC samples can be used to 
 estimate technical variation in the data set and calculate transformation
-parameter lambda.
+parameter \eqn{\lambda} (lambda). QC samples usually comprise a pool of 
+aliquots taken from all other samples in the study  and analysed repeatedly 
+throughout an analytical batch.
+}
+\details{
+Many univariate and multivariate statistical tests require homogeneity and
+n ormality of dataset variance. Real-world metabolomics datasets often fail 
+to meet these criteria due to asymmetric (i.e. non-'normal') and/or 
+heteroscedatic (i.e. non-homogenous) variance structure. To address this 
+issue, \code{glog} data transformations may be applied. \cr
+For each cell within the data matrix, transform the raw value (x) according 
+to:  \eqn{log10(x + sqrt(x^2 + \lambda))}. The parameter \eqn{\lambda} is 
+typically calculated using quality control (QC) samples analysed throughout
+an analysis batch.
 }
 \examples{
 df <- MTBLS79[, MTBLS79$Batch == 1]

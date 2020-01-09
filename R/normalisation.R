@@ -2,13 +2,21 @@
 
 NULL
 
-#' Normalise peak table to the total sum of peak intensities
-#' @param df data frame
-#' @param check_df ff set to TRUE will check if input data needs to be
-#'transposed, so that features are in rows
-#' @return normalised peak matrix
+#' Normalisation by total sum of the features per sample
+#' 
+#' For each sample, every feature intensity value is divided by the total sum of
+#' all feature intensity values measured in that sample (\code{NA} values
+#' ignored by default), before multiplication by 100; the unit is \%.
+#' 
+#' @inheritParams mv_imputation
+#' 
+#' @return Object of class \code{SummarizedExperiment}. If input data are a 
+#' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+#' the same R data structure as input with all value of data type 
+#' \code{numeric()}.
+#' 
 #' @examples 
-#' df <- MTBLS79[, MTBLS79$Batch == 1]
+#' df <- MTBLS79[ ,MTBLS79$Batch == 1]
 #' out <- normalise_to_sum (df=df)
 #'
 #' @export
@@ -32,27 +40,41 @@ normalise_to_sum <- function(df, check_df=TRUE) {
     df
 }
 
-#' Calculate reference mean of  samples
+#' Calculate reference mean of samples
 #' 
-#' @param df_qc peak matrix of QC samples
+#' @param df_qc \code{numeric()}, peak matrix of QC samples.
 #' 
 #' @return vector of reference mean values
+#' @noRd
 calculate_ref_mean <- function(df_qc){
-    ref_mean <-rowMeans(df_qc, na.rm=TRUE)
+    ref_mean <- rowMeans(df_qc, na.rm=TRUE)
     return(ref_mean)
 }
 
-#' Normalise peak table using PQN method
-#'
-#' @param df data frame
-#' @param classes vector of class labels
-#' @param qc_label label used for QC samples. If set to 'all', all samples will
-#'be used to calculate correction factor
-#' @param ref_mean Vector of reference mean values to use instead of calculating
-#' from QC sample group. If set to NULL, QC sample data will be used.
-#' @return list of normalised data set and correction coefficients
-#' @examples 
+#' Probabilistic quotient normalisation (PQN)
 #' 
+#' For every feature the mean response is calculated across all QC samples. A 
+#' reference vector is then generated. The median between the reference vector
+#' and every sample is computed obtaining a vector of coefficients related to
+#' each sample. Each sample is then divided by the median value of the vector
+#' of coefficients; this median value is different for each sample. This 
+#' method was adapted by Dieterle et al. (2006) (see references). Its purpose 
+#' is to take into account the concentration changes of some metabolite 
+#' features that affect limited regions of the data.
+#'
+#' @references Dieterle F. et al., Anal. Chem., 78(13), 2006. 
+#' http://dx.doi.org/10.1021/ac051632c
+#'
+#' @inheritParams filter_peaks_by_blank 
+#' @param ref_mean \code{numeric()} or \code{NULL}, Vector of reference mean
+#' values to use instead of calculating from QC sample group. If set to 
+#' \code{NULL}, QC sample data will be used.
+#' @return Object of class \code{SummarizedExperiment}. If input data are a 
+#' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+#' the same R data structure as input with all value of data type 
+#' \code{numeric()}.
+#' 
+#' @examples 
 #' df <- MTBLS79[ , MTBLS79$Batch==1]
 #' pqn_normalisation(df=df,
 #'     classes=df$Class, qc_label='QC')

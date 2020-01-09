@@ -22,6 +22,7 @@ NULL
 #' @return \code{numeric()}, matrix-like object where samples are represented
 #' in columns and features in rows.
 #' 
+#' @noRd
 
 check_peak_matrix <- function(df, classes=NULL) {
     dims <- dim(df)
@@ -65,6 +66,7 @@ check_peak_matrix <- function(df, classes=NULL) {
 #' @return object of class of 
 #' \link[SummarizedExperiment]{SummarizedExperiment}. 
 #' 
+#' @noRd
 check_input_data <- function (df, classes=NULL){
     meta_data <- list(original_data_structure=class(df)[1])
     if(is(df, "SummarizedExperiment")){
@@ -96,9 +98,10 @@ check_input_data <- function (df, classes=NULL){
 #' @param summarized_experiment_object object of class
 #' \code{SummarizedExperiment}
 #' @return A matrix-like (e.g. an ordinary matrix, a data frame) object with
-#' all values of class \code{numeric()} or \code{integer()}. 
+#' all values of class \code{numeric()}. 
 #' Values from \code{colData} and \code{rowData} elements are not returned. 
 #' 
+#' @noRd
 return_original_data_structure <- function(summarized_experiment_object){
     meta_data <- metadata(summarized_experiment_object)
     if (!meta_data$original_data_structure == "SummarizedExperiment"){

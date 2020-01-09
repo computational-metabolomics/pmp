@@ -51,11 +51,11 @@
 #' \code{assay(MTBLS79)} Peak intensities of the DIMS data set. 
 #' Contains 172 samples and 2488 features. \cr
 #' \code{colData(MTBLS79)} Sample meta data containing 4 columns. \cr
-#'     \code{Batch} - sample batch name. \cr
-#'     \code{Sample_Rep} - sample replicate code. \cr
-#'     \code{Class} - sample class labels. \cr
-#'     \code{Class2} - alternative sample class labels grouping together 
-#'     replicate samples. \cr
+#'     \code{Batch} - \code{character()}, sample batch name. \cr
+#'     \code{Sample_Rep} - \code{character()}, sample replicate code. \cr
+#'     \code{Class} - \code{character()}, sample class labels. \cr
+#'     \code{Class2} - \code{character()}, alternative sample class labels
+#'     grouping together replicate samples. \cr
 # 
 #' @source https://www.ebi.ac.uk/metabolights/MTBLS79
 #' 
