@@ -1,13 +1,24 @@
 Package: pmp
 Type: Package
-Title: Peak matrix processing
+Title: Peak Matrix Processing for metabolomics data sets
 Version: 0.99.1
 Author: Andris Jankevics and Ralf Weber
 Maintainer: Andris Jankevics <a.jankevics@bham.ac.uk>
-Description: Tools and filters for peak matrix scaling, normalisation and filtering.
+Description: Tools for scaling, normalisation and filtering of metabolomics data
+   sets after raw data processing. Functionality includes: data filtering based
+   on fraction of missing values across samples or features, blank sample filter
+   and feature filter based on %RSD values using Quality Control (QC) samples.
+   A unified user interface for several commonly used missing value imputation 
+   algorithms is also provided. Supported methods are: k-nearest neighbours (knn),
+   random forests (rf), Bayesian PCA missing value estimator (bpca), mean or 
+   median value of the given feature and constant small value.
+   Variance stabilising generalised logarithm transformation (glog) algorithm is
+   implemented to help minimise contributions from unwanted technical variation. 
+   Probabilistic quotient normalisation (PQN) and normalisation to total signal 
+   intensity are also included.
 License: GPL-3
-biocViews: MassSpectrometry, Metabolomics, Software
-Depends: R (>= 3.6)
+biocViews: MassSpectrometry, Metabolomics, Software, QualityControl
+Depends: R (>= 4.0)
 Imports: stats, impute, pcaMethods, missForest, ggplot2, methods, 
     SummarizedExperiment, S4Vectors, matrixStats
 Encoding: UTF-8
