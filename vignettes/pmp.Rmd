@@ -1,5 +1,5 @@
 ---
-title: "Peak Matrix Processing for -omics data sets"
+title: "Peak Matrix Processing for metabolomics data sets"
 author: 
     name: "Andris Jankevics"
     affiliation: Phenome Centre Birmingham, University of Birmingham
@@ -16,7 +16,7 @@ output:
         toc_float: true
 
 vignette: >
-    %\VignetteIndexEntry{Peak Matrix Processing for -omics data sets}
+    %\VignetteIndexEntry{Peak Matrix Processing for metabolomics data sets}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
 ---
@@ -30,25 +30,17 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-R package pmp (Peak Matrix Processing for -omics data sets) contains many
-useful functions commonly used for -omics data pre-processing.
+Metabolomics data processing workflows consist of multiple steps including peak 
+picking or raw data processing, quality assurance, missing value
+imputation, normalisation and scaling. Several tools (commercial, R and non-R 
+based) are commonly used for raw data processing which generate outputs in
+the form of a two dimensional data matrix and meta data.  
 
-Offered functionality includes data filtering based on fraction of missing
-values across samples of features. Blank sample filter for LC-MS of DI-MS 
-data sets and feature filter based on quality control (QC)
-sample RSD \% values.
+Functions within `pmp` package are designed to help users to prepare data for 
+further statistical data analyis in fast, easy to use and reproducible manner.
 
-In this package we have implemented simplified unified interface for several
-missing value imputation algorithms. Supported methods are k-nearest neighbors 
-(knn), random forests (rf), Bayesian PCA missing value estimator (bpca), 
-mean or median value of the given feature and constant small value.
-
-Variance stabilising generalised logarithm transformation (glog) algorithm is 
-implimented to help to minimise contributions from unwanted technical variaton
-of sample collection.
-
-PQN and normalisation the the total signal intensity methods are implemented for
-normalisation of biological variability across measured samples.
+This document showcases the commonly used pre-processings steps of metabolomics
+data sets.
 
 # Installation
 
@@ -58,10 +50,47 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("pmp")
 ```
 
-
-# Standard peak matrix processing workflow for LC/MS or DI/MS data sets
-
 ```{r setup}
 library(pmp)
 ```
+
+# Data formats
+
+# Data integrity check
+
+# Filtering a data set
+
+Data filtering based on fraction of missing values across samples of features. 
+Blank sample. filter for LC-MS of DI-MS data sets and feature filter based on 
+quality control (QC) sample RSD \% values.
+
+# Data normalisation
+
+Probabilistic quotient normalisation (PQN) and normalisation the the total
+signal intensity methods are implemented for normalisation of biological
+variability across measured samples.
+
+# Missing value imputation
+
+several
+commonly used missing value imputation algorithms. Supported methods are 
+k-nearest neighbours (knn), random forests (rf), Bayesian PCA missing value 
+estimator (bpca), mean or median value of the given feature and constant 
+small value.
+
+# Data scaling
+
+Variance stabilising generalised logarithm transformation (glog) algorithm is 
+implimented to help to minimise contributions from unwanted technical 
+variaton of sample collection.
+
+# Processing history
+
+# Endomorphisms
+
+# Session information
+```{r}
+sessionInfo()
+```
+
 
