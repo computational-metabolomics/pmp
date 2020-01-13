@@ -15,6 +15,8 @@ output:
         number_sections: true  
         toc_float: true
 
+bibliography: pmp.bib
+
 vignette: >
     %\VignetteIndexEntry{Peak Matrix Processing for metabolomics data sets}
     %\VignetteEngine{knitr::rmarkdown}
@@ -28,20 +30,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Introduction
-
-Metabolomics data processing workflows consist of multiple steps including peak 
-picking or raw data processing, quality assurance, missing value
-imputation, normalisation and scaling. Several tools (commercial, R and non-R 
-based) are commonly used for raw data processing which generate outputs in
-the form of a two dimensional data matrix and meta data.  
-
-Functions within `pmp` package are designed to help users to prepare data for 
-further statistical data analyis in fast, easy to use and reproducible manner.
-
-This document showcases the commonly used pre-processings steps of metabolomics
-data sets.
-
 # Installation
 
 ```{r eval=FALSE, include=TRUE}
@@ -50,19 +38,144 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("pmp")
 ```
 
-```{r setup}
+```{r message=FALSE, warning=FALSE}
 library(pmp)
+library(SummarizedExperiment)
+library(S4Vectors)
+library(pcaMethods)
+library(ggplot2)
 ```
+
+# Introduction
+
+Metabolomics data processing workflows consist of multiple steps including peak 
+picking or raw data processing, quality assurance, missing value
+imputation, normalisation and scaling. Several tools (commercial,
+R and non-R based) are commonly used for raw data processing 
+which generate outputs in the form of a two dimensional data matrix and meta 
+data.  
+
+These outputs contain hundreds or thousands of so called uninformative or 
+unreproducible features. Such features could strongly hinder outputs of 
+subsequent statistical analysis, biomarker discovery or metabolic 
+pathway inference. Common practice is to apply peak matrix validation and 
+filtering procedures as described in @guida2016, @broadhurst2018 and 
+@schiffman2019. 
+
+Functions within `pmp` package are designed to help users to prepare data for 
+further statistical data analysis in fast, easy to use and reproducible manner.
+
+This document showcases the commonly used peak matrix processing steps of 
+metabolomics data sets.
 
 # Data formats
 
-# Data integrity check
+Recent review for R packages in metabolomics
+[@stanstrup2019] covers a broad range of heterogenous tools is availiable as 
+part of `Bioconductor` sofware collection or on `CRAN`, `Github` and similar 
+public repositories. `pmp` package utilises `r Biocpkg("SummarizedExperiment")`
+class from Bioconductor for data input and output.
+
+For example, outputs from widely used `r Biocpkg("xcms")` package can be 
+relatively easy converted to `SummarizedExperiment` object using functions 
+`featureDefinitions`, `featureValues` and `pData` on `xcms` output object. 
+
+Additioanlly `pmp` supports to input data to be any matrix-like `R` data 
+structure (e.g. and ordinary matrix, a data frame). If input if a matrix-like
+structure tools from `pmp` package will perform several checks for data 
+integrity as well. Please see section \@ref(endomorphisms) for more details.
+
+# Example data set, MTBLS79
+
+In this tutorial we will be using  an direct infusion mass spectrometry (DIMS) 
+data set consisting of 172 samples measured across 8 batches and is included in
+`pmp` package as `SummarizedExperiemnt` class object `MTBLS79`. 
+More detailed description of the data set is available from  @kirwan2014, 
+[MTBLS79](https://www.ebi.ac.uk/metabolights/MTBLS79) and R man page.
+
+```{r, eval=FALSE}
+help ("MTBLS79")
+```
+
+```{r}
+MTBLS79
+```
+
+This data set before peak matrix filtering contains 2488 features and 18222 
+missing values across all samples.
+
+```{r}
+sum(is.na(assay(MTBLS79)))
+```
+
+```{r}
+pc <- pca(t(assay(MTBLS79)), method="nipals", scale="uv")
+
+pc
+```
+
+```{r}
+pcdf <- as.data.frame(scores(pc))
+pcdf$Class <- MTBLS79$Class
+ggplot(pcdf, aes(PC1, PC2, colour=Class)) +
+    geom_point(size=2) + stat_ellipse() + theme_bw() + 
+    scale_color_brewer(palette="Set1")
+```
 
 # Filtering a data set
 
-Data filtering based on fraction of missing values across samples of features. 
-Blank sample. filter for LC-MS of DI-MS data sets and feature filter based on 
-quality control (QC) sample RSD \% values.
+Filter MV by sample
+```{r}
+MTBLS79_filtered <- filter_samples_by_mv(df=MTBLS79, max_perc_mv=0.1)
+
+MTBLS79_filtered
+
+sum(is.na(assay(MTBLS79_filtered)))
+```
+
+Filter MV fraction of quality control (QC) samples.
+```{r}
+MTBLS79_filtered <- filter_peaks_by_fraction(df=MTBLS79_filtered, min_frac=0.9, 
+    classes=MTBLS79_filtered$Class, method="QC", qc_label="QC")
+
+MTBLS79_filtered
+
+sum(is.na(assay(MTBLS79_filtered)))
+```
+
+Filter by MV fraction across all samples.
+```{r}
+MTBLS79_filtered <- filter_peaks_by_fraction(df=MTBLS79_filtered, min_frac=0.9, 
+    classes=MTBLS79_filtered$Class, method="across", qc_label="QC")
+
+MTBLS79_filtered
+
+sum(is.na(assay(MTBLS79_filtered)))
+```
+
+Filter by RSD%
+```{r}
+MTBLS79_filtered <- filter_peaks_by_rsd(df=MTBLS79_filtered, max_rsd=30, 
+    classes=MTBLS79_filtered$Class, qc_label="QC")
+
+MTBLS79_filtered
+
+sum(is.na(assay(MTBLS79_filtered)))
+```
+
+```{r}
+pc <- pca(t(assay(MTBLS79_filtered)), method="nipals", scale="uv")
+
+pc
+```
+
+```{r}
+pcdf <- as.data.frame(scores(pc))
+pcdf$Class <- MTBLS79_filtered$Class
+ggplot(pcdf, aes(PC1, PC2, colour=Class)) +
+    geom_point(size=2) + stat_ellipse() + theme_bw() + 
+    scale_color_brewer(palette="Set1")
+```
 
 # Data normalisation
 
@@ -86,11 +199,12 @@ variaton of sample collection.
 
 # Processing history
 
-# Endomorphisms
+# Data integrity check and endomorphisms {#endomorphisms}
 
 # Session information
 ```{r}
 sessionInfo()
 ```
 
+# References
 
