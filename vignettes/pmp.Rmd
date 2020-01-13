@@ -97,12 +97,16 @@ More detailed description of the data set is available from  @kirwan2014,
 help ("MTBLS79")
 ```
 
+For the purpose of this tutorial we will subset samples measured in batches 7 
+and 8.
+
 ```{r}
+MTBLS79 <- MTBLS79[, MTBLS79$Batch %in% c(1:6)]
 MTBLS79
 ```
 
-This data set before peak matrix filtering contains 2488 features and 18222 
-missing values across all samples.
+This data set before peak matrix filtering contains 22 samples, 2488 features
+and 11627 missing values across all samples.
 
 ```{r}
 sum(is.na(assay(MTBLS79)))
@@ -183,6 +187,11 @@ Probabilistic quotient normalisation (PQN) and normalisation the the total
 signal intensity methods are implemented for normalisation of biological
 variability across measured samples.
 
+```{r}
+MTBLS79_pqn_normalised <- pqn_normalisation(df=MTBLS79_filtered, 
+    classes=MTBLS79_filtered$Class, qc_label="QC")
+```
+
 # Missing value imputation
 
 several
@@ -191,17 +200,78 @@ k-nearest neighbours (knn), random forests (rf), Bayesian PCA missing value
 estimator (bpca), mean or median value of the given feature and constant 
 small value.
 
+```{r}
+MTBLS79_mv_imputed <- mv_imputation(df=MTBLS79_pqn_normalised, method="knn")
+```
+
 # Data scaling
 
 Variance stabilising generalised logarithm transformation (glog) algorithm is 
 implimented to help to minimise contributions from unwanted technical 
 variaton of sample collection.
 
+```{r}
+MTBLS79_glog <- glog_transformation(df=MTBLS79_mv_imputed,
+    classes=MTBLS79_filtered$Class, qc_label="QC")
+```
+
+```{r plot_glog}
+glog_plot_optimised_lambda(df=MTBLS79_mv_imputed, optimised_lambda=97102173,
+    classes=MTBLS79_filtered$Class, qc_label="QC")
+```
+
+```{r}
+pc <- pca(t(assay(MTBLS79_glog)), method="nipals", scale="none")
+
+pc
+```
+
+```{r}
+pcdf <- as.data.frame(scores(pc))
+pcdf$Class <- MTBLS79_filtered$Class
+ggplot(pcdf, aes(PC1, PC2, colour=Class)) +
+    geom_point(size=2) + stat_ellipse() + theme_bw() + 
+    scale_color_brewer(palette="Set1")
+```
+
 # Processing history
+
+```{r}
+metadata(MTBLS79_filtered)$processing_history
+```
+
 
 # Data integrity check and endomorphisms {#endomorphisms}
 
+`pmp` is designed to validate input data if user choose not to use 
+`r Biocpkg("SummarizedExperiment")` class objet. For example, if input is `matrix`
+with features stored in columns and sample in rows, any function of `pmp` 
+package will be able to handle this object.
+
+```{r}
+peak_matrix <- t(assay(MTBLS79))
+sample_classes <- MTBLS79$Class
+
+class(peak_matrix)
+dim(peak_matrix)
+class(sample_classes)
+```
+
+Let's try to use these objects as input for `mv_imputation`.
+
+```{r message=TRUE, warning=TRUE}
+mv_imputed <- mv_imputation(df=peak_matrix, method="mn")
+
+class (mv_imputed)
+dim (mv_imputed)
+```
+
+Note that `pmp` has automatically transposed input object to use largest
+dimension as features, while original R data type `matrix` has been retained
+also for function output.
+
 # Session information
+
 ```{r}
 sessionInfo()
 ```
