@@ -97,23 +97,24 @@ More detailed description of the data set is available from  @kirwan2014,
 help ("MTBLS79")
 ```
 
-For the purpose of this tutorial we will subset samples measured in batches 7 
-and 8.
+For the purpose of this tutorial we will subset samples measured in batches 
+from 1 to 6.
 
 ```{r}
-MTBLS79 <- MTBLS79[, MTBLS79$Batch %in% c(1:6)]
+MTBLS79 <- MTBLS79[, MTBLS79$Batch %in% c(7:8)]
 MTBLS79
 ```
 
-This data set before peak matrix filtering contains 22 samples, 2488 features
-and 11627 missing values across all samples.
+This data set before peak matrix filtering contains 128 samples, 2488 features
+and 11627 missing values across all samples what is roughly around 3.6%.
 
 ```{r}
 sum(is.na(assay(MTBLS79)))
+sum(is.na(assay(MTBLS79))) / length(assay(MTBLS79)) * 100
 ```
 
 ```{r}
-pc <- pca(t(assay(MTBLS79)), method="nipals", scale="uv")
+pc <- pca(t(assay(MTBLS79)), method="nipals", scale="none", center=TRUE)
 
 pc
 ```
@@ -168,7 +169,8 @@ sum(is.na(assay(MTBLS79_filtered)))
 ```
 
 ```{r}
-pc <- pca(t(assay(MTBLS79_filtered)), method="nipals", scale="uv")
+pc <- pca(t(assay(MTBLS79_filtered)), method="nipals", scale="none", 
+    center=TRUE)
 
 pc
 ```
@@ -216,7 +218,7 @@ MTBLS79_glog <- glog_transformation(df=MTBLS79_mv_imputed,
 ```
 
 ```{r plot_glog}
-glog_plot_optimised_lambda(df=MTBLS79_mv_imputed, optimised_lambda=97102173,
+glog_plot_optimised_lambda(df=MTBLS79_mv_imputed, optimised_lambda=718580657,
     classes=MTBLS79_filtered$Class, qc_label="QC")
 ```
 
@@ -244,9 +246,9 @@ metadata(MTBLS79_filtered)$processing_history
 # Data integrity check and endomorphisms {#endomorphisms}
 
 `pmp` is designed to validate input data if user choose not to use 
-`r Biocpkg("SummarizedExperiment")` class objet. For example, if input is `matrix`
-with features stored in columns and sample in rows, any function of `pmp` 
-package will be able to handle this object.
+`r Biocpkg("SummarizedExperiment")` class objet. For example, if input is 
+`matrix` with features stored in columns and sample in rows, any function of
+`pmp` package will be able to handle this object.
 
 ```{r}
 peak_matrix <- t(assay(MTBLS79))
