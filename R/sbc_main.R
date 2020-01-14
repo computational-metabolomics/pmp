@@ -32,15 +32,16 @@ NULL
 ##' classes <- MTBLS79$Class
 ##' batch <- MTBLS79$Batch
 ##' order <- c(1:ncol(MTBLS79))
-##' data <- SummarizedExperiment::assay(MTBLS79[1:10, ])
 ##' 
-##' out <- QCRSC(df = data, order = order, batch = batch, classes = classes,
-##'spar = 0, minQC = 4)
+##' out <- QCRSC(df = MTBLS79[1:10, ], order = order, batch = MTBLS79$Batch,
+##' classes = MTBLS79$Class, spar = 0, minQC = 4)
 ##' 
 ##' @export
 
 QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
     minQC = 5, qc_label="QC") {
+    
+    df <- check_input_data(df=df, classes=classes)
     
     if (length(which(classes == qc_label)) <= 0) {
         message("QC samples are not defined! Please see help page for
@@ -49,22 +50,28 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
     }
     
     message("The number of NA and <= 0 values in peaksData before QC-RSC: ",
-        sum(is.na(df) | df <= 0))
+        sum(is.na(assay(df)) | assay(df) <= 0))
     
     qcData <- df[, classes == qc_label]
     qc_batch <- batch[classes == qc_label]
     qc_order <- order[classes == qc_label]
-    QC_fit <- lapply(seq_len(nrow(df)), sbcWrapper, qcData = qcData, 
+    QC_fit <- lapply(seq_len(nrow(df)), sbcWrapper, qcData = assay(qcData), 
         order = order, qcBatch = qc_batch, qcOrder = qc_order, 
         log = log, spar = spar, batch = batch, minQC = minQC)
     QC_fit <- do.call(rbind, QC_fit)
     
     ## Median value for each fature, and divide it by predicted value
-    mpa <- apply(df, 1, median, na.rm = TRUE)
+    mpa <- apply(assay(df), 1, median, na.rm = TRUE)
     QC_fit <- QC_fit/mpa
     
     ## Divide measured value by correction factor
-    res <- df/QC_fit
-    res[res <= 0] <- NA
-    res
+    assay(df) <- assay(df)/QC_fit
+    assay(df)[assay(df) <= 0] <- NA
+    
+    meta_data <- metadata(df)
+    meta_data$processing_history$QCRSC <- return_function_args()
+    metadata(df) <- meta_data
+    df <- return_original_data_structure(df)
+    
+    return (df)
 }

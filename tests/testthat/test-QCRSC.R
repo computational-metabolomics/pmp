@@ -12,6 +12,7 @@ data <- assay(MTBLS79[features_to_select, ])
 test_that ("QC-RSC returns expected output", {
   out <- QCRSC(df = data, order = order, batch = batch, classes = classes,
                   spar = 0, minQC = 4)
+  attributes(out)$processing_history <- NULL
   expect_equal (out, testData$QCRSC)
 })
 

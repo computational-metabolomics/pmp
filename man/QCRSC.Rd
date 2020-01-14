@@ -53,10 +53,9 @@ validation to avoid overfitting.
 classes <- MTBLS79$Class
 batch <- MTBLS79$Batch
 order <- c(1:ncol(MTBLS79))
-data <- SummarizedExperiment::assay(MTBLS79[1:10, ])
 
-out <- QCRSC(df = data, order = order, batch = batch, classes = classes,
-spar = 0, minQC = 4)
+out <- QCRSC(df = MTBLS79[1:10, ], order = order, batch = MTBLS79$Batch,
+classes = MTBLS79$Class, spar = 0, minQC = 4)
 
 }
 \references{
