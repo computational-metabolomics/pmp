@@ -20,7 +20,7 @@ License: GPL-3
 biocViews: MassSpectrometry, Metabolomics, Software, QualityControl
 Depends: R (>= 4.0)
 Imports: stats, impute, pcaMethods, missForest, ggplot2, methods, 
-    SummarizedExperiment, S4Vectors, matrixStats
+    SummarizedExperiment, S4Vectors, matrixStats, grDevices, reshape2, utils
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.0.2
@@ -39,3 +39,6 @@ Collate:
     'glog_transformation.R'
     'mv_imputation.R'
     'normalisation.R'
+    'sbc_main.R'
+    'sbc_methods.R'
+    'sbcmsPlot.R'
