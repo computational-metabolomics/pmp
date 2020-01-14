@@ -41,4 +41,4 @@ Collate:
     'normalisation.R'
     'sbc_main.R'
     'sbc_methods.R'
-    'sbcmsPlot.R'
+    'sbc_plot.R'

@@ -25,20 +25,21 @@ NULL
 ##' 
 ##' @examples 
 ##' 
-##' classes <- MTBLS79$Class
-##' batch <- MTBLS79$Batch
 ##' order <- c(1:ncol(MTBLS79))
-##' data <- SummarizedExperiment::assay(MTBLS79[1:10, ] )
+##' data <- MTBLS79[1:10, ]
 ##' 
-##' out <- QCRSC(d =data, order=order, batch=batch, classes=classes,
-##'     spar=0, minQC=4)
-##' plots <- sbcmsPlot (df=data, corrected_df=out, classes, batch,
-##'     output=NULL) 
+##' out <- QCRSC(df =data, order=order, batch=MTBLS79$Batch, 
+##'    classes=MTBLS79$Class, spar=0, minQC=4)
+##' plots <- sbc_plot (df=data, corrected_df=out, classes=MTBLS79$Class,
+##'    batch=MTBLS79$Batch, output=NULL) 
 ##'
 ##' @export
 
-sbcmsPlot <- function(df, corrected_df, classes, batch, indexes = NULL,
+sbc_plot <- function(df, corrected_df, classes, batch, indexes = NULL,
     qc_label="QC", output = "sbcms_plots.pdf") {
+    
+    df <- check_input_data(df=df, classes=classes)
+    corrected_df <- check_input_data(df=corrected_df, classes=classes)
     
     shapes <- rep(19, length(classes))
     shapes[classes == qc_label] <- 3
@@ -61,8 +62,8 @@ sbcmsPlot <- function(df, corrected_df, classes, batch, indexes = NULL,
     }
     for (peakn in indexes) {
         A <- data.frame(x = c(seq_len(ncol(df))), 
-            original = log(df[peakn, ], 10),
-            corrected = log(corrected_df[peakn, ], 10), 
+            original = as.vector(log(assay(df[peakn, ]), 10)),
+            corrected = as.vector(log(assay(corrected_df[peakn, ]), 10)), 
             batch = as.factor(batch), shapes = shapes)
         A <- melt(A, id.vars = c("x", "batch", "shapes"))
         
