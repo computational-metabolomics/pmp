@@ -3,44 +3,41 @@
 #' @importFrom reshape2 melt
 NULL
 
-##' Plot the output from signal batch correction for the selected or
-##'the first 100 features
-##'
-##' @param df A data frame containing the original data before correction
-##'(samples in columns, features in rows).
-##' @param corrected_df A data frame containing the corrected data,
-##'as output by QCRSC
-##' @param batch A vector indicating the batch each sample was measured in.
-##'If only one batch was measured then all values should be set to 1
-##' @param classes A factor or character vector of sample classes.
-##'All QC samples should be labelled 'QC'.
-##' @param indexes Numeric vector defining whihc features from data frame to 
-##'plot. If set to NULL will plot the first 100.
-##' @param output Filename of the output pdf file. Can include the path.
-##'If set to NULL output will be list object containing ggplot2 plots.
-##' @param qc_label Class label for QC sample.
-##' 
-##' @return Pdf file or list object showing data before and after 
-##'signal correction
-##' 
-##' @examples 
-##' 
-##' order <- c(1:ncol(MTBLS79))
-##' data <- MTBLS79[1:10, ]
-##' 
-##' out <- QCRSC(df =data, order=order, batch=MTBLS79$Batch, 
-##'    classes=MTBLS79$Class, spar=0, minQC=4)
-##' plots <- sbc_plot (df=data, corrected_df=out, classes=MTBLS79$Class,
-##'    batch=MTBLS79$Batch, output=NULL) 
-##'
-##' @export
+#' Plot QCRSC corrected outputs
+#' 
+#' Plot the output from signal batch correction for the selected or
+#' the first 100 features.
+#'
+#' @inheritParams filter_peaks_by_blank
+#' @param corrected_df Output from \link[pmp]{QCRSC} function.
+#' @param batch \code{numeric()} or \code{character()}, a vector indicating
+#' the batch each sample was measured in. If only one batch was measured then
+#' all values should be set to 1
+#' @param indexes \code{numeric()}, a vector defining which features to plot.
+#' If set to \code{NULL} will plot the first 100.
+#' @param output \code{character()}, a filename of the output pdf file. 
+#' Can include the path. If set to \code{NULL} output will be list object 
+#' containing class \code{ggplot} plots.
+#' 
+#' @return Pdf file or \code{list()} object \code{ggplot} class showing data 
+#' before and after signal correction.
+#' 
+#' @examples 
+#' 
+#' order <- c(1:ncol(MTBLS79))
+#' data <- MTBLS79[1:10, ]
+#' 
+#' out <- QCRSC(df =data, order=order, batch=MTBLS79$Batch, 
+#'    classes=MTBLS79$Class, spar=0, minQC=4)
+#' plots <- sbc_plot (df=data, corrected_df=out, classes=MTBLS79$Class,
+#'    batch=MTBLS79$Batch, output=NULL) 
+#'
+#' @export
 
 sbc_plot <- function(df, corrected_df, classes, batch, indexes = NULL,
     qc_label="QC", output = "sbcms_plots.pdf") {
-    
     df <- check_input_data(df=df, classes=classes)
     corrected_df <- check_input_data(df=corrected_df, classes=classes)
-    
     shapes <- rep(19, length(classes))
     shapes[classes == qc_label] <- 3
     manual_color <- c("#386cb0", "#ef3b2c", "#7fc97f", "#fdb462", "#984ea3", 
@@ -54,7 +51,6 @@ sbc_plot <- function(df, corrected_df, classes, batch, indexes = NULL,
         size = 0.3, linetype = "dashed"), 
         panel.grid.minor.y = element_line(color = "gray80", size = 0.3))
     plots <- list()
-    
     if (is.null(indexes) & nrow(df) >= 100) {
         indexes <- seq_len(100)
     } else if (nrow(df) < 100 & is.null(indexes)) {
@@ -77,7 +73,6 @@ sbc_plot <- function(df, corrected_df, classes, batch, indexes = NULL,
     }
     # remove lists with NULL values
     plots <- plots[lengths(plots) != 0]
-    
     if (!is.null(output)) {
         pdf(output)
         invisible(lapply(plots, print))

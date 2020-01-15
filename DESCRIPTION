@@ -1,6 +1,6 @@
 Package: pmp
 Type: Package
-Title: Peak Matrix Processing for metabolomics data sets
+Title: Peak Matrix Processing and signal batch correction for metabolomics data sets
 Version: 0.99.1
 Author: Andris Jankevics and Ralf Weber
 Maintainer: Andris Jankevics <a.jankevics@bham.ac.uk>
@@ -16,8 +16,11 @@ Description: Tools for scaling, normalisation and filtering of metabolomics data
    implemented to help minimise contributions from unwanted technical variation. 
    Probabilistic quotient normalisation (PQN) and normalisation to total signal 
    intensity are also included.
+   Additionally this package provides implementation of Quality Control-Robust 
+   Spline Correction (QCRSC) signal batch effect correction method for mass 
+   spectrometry data sets.
 License: GPL-3
-biocViews: MassSpectrometry, Metabolomics, Software, QualityControl
+biocViews: MassSpectrometry, Metabolomics, Software, QualityControl, BatchEffect
 Depends: R (>= 4.0)
 Imports: stats, impute, pcaMethods, missForest, ggplot2, methods, 
     SummarizedExperiment, S4Vectors, matrixStats, grDevices, reshape2, utils
@@ -29,7 +32,8 @@ Suggests:
     covr,
     knitr,
     rmarkdown,
-    BiocStyle
+    BiocStyle,
+    gridExtra
 VignetteBuilder: knitr
 Collate:
     'checkPeakMatrix.R'

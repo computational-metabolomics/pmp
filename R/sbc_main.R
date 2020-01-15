@@ -1,42 +1,48 @@
 #' @importFrom stats median
 NULL
 
-##' @title Quality Control-Robust Spline Correction (QC-RSC)
-##' @description Implementation of signal correction algorithm as described
-##'in Kirwan et al, Anal. Bioanal. Chem., 405 (15), 2013
-##' @author Andris Jankevics \email{a.jankevics@bham.ac.uk}
-##' @references Kirwan et al, Anal. Bioanal. Chem., 405 (15), 2013
-##'\url{https://dx.doi.org/10.1007/s00216-013-6856-7}
-##' @details
-##' The smoothing parameter (spar) can be optimised using leave-one-out cross
-##'validation to avoid overfitting.
-##' 
-##' @param df A data frame of values to be corrected (samples in columns and
-##'features in rows).
-##' @param order A numeric vector indicating the order in which samples
-##'were measured.
-##' @param batch A vector indicating the batch each sample was measured in.
-##'If only one batch then all values should be set to 1.
-##' @param classes A factor or character vector of sample classes. All QC
-##'samples should be labelled  'QC'.
-##' @param spar Spline smoothing parameter. Should be in the range 0 to 1.
-##'If set to 0 it will be estimated using leave-one-out cross-validation.
-##' @param log TRUE or FALSE to perform the signal correction fit on the log
-##'scaled data. Default is TRUE.
-##' @param minQC Minimum number of QC samples required for signal correction.
-##' @param qc_label Class label for QC sample.
-##'
-##' @return A data frame of corrected values.
-##'
-##' @examples 
-##' classes <- MTBLS79$Class
-##' batch <- MTBLS79$Batch
-##' order <- c(1:ncol(MTBLS79))
-##' 
-##' out <- QCRSC(df = MTBLS79[1:10, ], order = order, batch = MTBLS79$Batch,
-##' classes = MTBLS79$Class, spar = 0, minQC = 4)
-##' 
-##' @export
+#' Quality Control-Robust Spline Correction (QC-RSC)
+#' 
+#' Implementation of Quality QC-RSC algorithm for signal drift and batch 
+#' effect correction within/across a multi-batch direct infusion mass
+#' spectrometry (DIMS) and liquid chromatography mass spectrometry (LCMS)
+#' datasets.
+#' This version supports missing values, but requires at least 4 data point 
+#' for quality control (QC) samples measured within each analytical batch.
+#' The smoothing parameter (spar) can be optimised using leave-one-out cross
+#' validation to avoid overfitting.
+#' 
+#' @author Andris Jankevics \email{a.jankevics@bham.ac.uk}
+#' @references Kirwan et al, Anal. Bioanal. Chem., 405 (15), 2013
+#'\url{https://dx.doi.org/10.1007/s00216-013-6856-7}
+#' 
+#' @inheritParams sbc_plot
+#' @param order \code{numeric()}, A numeric vector indicating the order in 
+#' which samples were measured.
+#' @param spar \code{numeric(1)}, Spline smoothing parameter. Should be in the 
+#' range 0 to 1. If set to 0 it will be estimated using leave-one-out 
+#' cross-validation.
+#' @param log \code{logical(1)}, to perform the signal correction fit on the
+#' log scaled data. Default is TRUE.
+#' @param minQC \code{integer(1)}, Minimum number of measured quality control
+#' (QC) samples required for signal correction within feature per batch. For 
+#' features where signal was measured in less QC samples than threshold signal
+#' correction won't be applied.
+#'
+#' @return Object of class \code{SummarizedExperiment}. If input data are a 
+#' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+#' the same R data structure as input with all value of data type 
+#' \code{numeric()}.
+#'
+#' @examples 
+#' classes <- MTBLS79$Class
+#' batch <- MTBLS79$Batch
+#' order <- c(1:ncol(MTBLS79))
+#' 
+#' out <- QCRSC(df = MTBLS79[1:10, ], order = order, batch = MTBLS79$Batch,
+#' classes = MTBLS79$Class, spar = 0, minQC = 4)
+#' 
+#' @export
 
 QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
     minQC = 5, qc_label="QC") {
@@ -60,11 +66,11 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
         log = log, spar = spar, batch = batch, minQC = minQC)
     QC_fit <- do.call(rbind, QC_fit)
     
-    ## Median value for each fature, and divide it by predicted value
+    # Median value for each fature, and divide it by predicted value
     mpa <- apply(assay(df), 1, median, na.rm = TRUE)
     QC_fit <- QC_fit/mpa
     
-    ## Divide measured value by correction factor
+    # Divide measured value by correction factor
     assay(df) <- assay(df)/QC_fit
     assay(df)[assay(df) <= 0] <- NA
     

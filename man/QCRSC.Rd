@@ -16,36 +16,51 @@ QCRSC(
 )
 }
 \arguments{
-\item{df}{A data frame of values to be corrected (samples in columns and
-features in rows).}
+\item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) or 
+\link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
+class \code{numeric()} or \code{integer()} of peak intensities, areas or 
+other quantitative characteristic.}
 
-\item{order}{A numeric vector indicating the order in which samples
-were measured.}
+\item{order}{\code{numeric()}, A numeric vector indicating the order in 
+which samples were measured.}
 
-\item{batch}{A vector indicating the batch each sample was measured in.
-If only one batch then all values should be set to 1.}
+\item{batch}{\code{numeric()} or \code{character()}, a vector indicating
+the batch each sample was measured in. If only one batch was measured then
+all values should be set to 1}
 
-\item{classes}{A factor or character vector of sample classes. All QC
-samples should be labelled  'QC'.}
+\item{classes}{\code{character()}, vector of class labels. Must be the same 
+length as the number of sample in the input peak table. If input is 
+\code{SummarizedExperiment} object, use 
+\code{SummarizedExperiment_object$meta_data_column_name}.}
 
-\item{spar}{Spline smoothing parameter. Should be in the range 0 to 1.
-If set to 0 it will be estimated using leave-one-out cross-validation.}
+\item{spar}{\code{numeric(1)}, Spline smoothing parameter. Should be in the 
+range 0 to 1. If set to 0 it will be estimated using leave-one-out 
+cross-validation.}
 
-\item{log}{TRUE or FALSE to perform the signal correction fit on the log
-scaled data. Default is TRUE.}
+\item{log}{\code{logical(1)}, to perform the signal correction fit on the
+log scaled data. Default is TRUE.}
 
-\item{minQC}{Minimum number of QC samples required for signal correction.}
+\item{minQC}{\code{integer(1)}, Minimum number of measured quality control
+(QC) samples required for signal correction within feature per batch. For 
+features where signal was measured in less QC samples than threshold signal
+correction won't be applied.}
 
-\item{qc_label}{Class label for QC sample.}
+\item{qc_label}{\code{character(1)} or \code{NULL}, class label used to
+identify QC samples.}
 }
 \value{
-A data frame of corrected values.
+Object of class \code{SummarizedExperiment}. If input data are a 
+matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+the same R data structure as input with all value of data type 
+\code{numeric()}.
 }
 \description{
-Implementation of signal correction algorithm as described
-in Kirwan et al, Anal. Bioanal. Chem., 405 (15), 2013
-}
-\details{
+Implementation of Quality QC-RSC algorithm for signal drift and batch 
+effect correction within/across a multi-batch direct infusion mass
+spectrometry (DIMS) and liquid chromatography mass spectrometry (LCMS)
+datasets.
+This version supports missing values, but requires at least 4 data point 
+for quality control (QC) samples measured within each analytical batch.
 The smoothing parameter (spar) can be optimised using leave-one-out cross
 validation to avoid overfitting.
 }

@@ -2,8 +2,7 @@
 % Please edit documentation in R/sbc_plot.R
 \name{sbc_plot}
 \alias{sbc_plot}
-\title{Plot the output from signal batch correction for the selected or
-the first 100 features}
+\title{Plot QCRSC corrected outputs}
 \usage{
 sbc_plot(
   df,
@@ -16,33 +15,39 @@ sbc_plot(
 )
 }
 \arguments{
-\item{df}{A data frame containing the original data before correction
-(samples in columns, features in rows).}
+\item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) or 
+\link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
+class \code{numeric()} or \code{integer()} of peak intensities, areas or 
+other quantitative characteristic.}
 
-\item{corrected_df}{A data frame containing the corrected data,
-as output by QCRSC}
+\item{corrected_df}{Output from \link[pmp]{QCRSC} function.}
 
-\item{classes}{A factor or character vector of sample classes.
-All QC samples should be labelled 'QC'.}
+\item{classes}{\code{character()}, vector of class labels. Must be the same 
+length as the number of sample in the input peak table. If input is 
+\code{SummarizedExperiment} object, use 
+\code{SummarizedExperiment_object$meta_data_column_name}.}
 
-\item{batch}{A vector indicating the batch each sample was measured in.
-If only one batch was measured then all values should be set to 1}
+\item{batch}{\code{numeric()} or \code{character()}, a vector indicating
+the batch each sample was measured in. If only one batch was measured then
+all values should be set to 1}
 
-\item{indexes}{Numeric vector defining whihc features from data frame to 
-plot. If set to NULL will plot the first 100.}
+\item{indexes}{\code{numeric()}, a vector defining which features to plot.
+If set to \code{NULL} will plot the first 100.}
 
-\item{qc_label}{Class label for QC sample.}
+\item{qc_label}{\code{character(1)} or \code{NULL}, class label used to
+identify QC samples.}
 
-\item{output}{Filename of the output pdf file. Can include the path.
-If set to NULL output will be list object containing ggplot2 plots.}
+\item{output}{\code{character()}, a filename of the output pdf file. 
+Can include the path. If set to \code{NULL} output will be list object 
+containing class \code{ggplot} plots.}
 }
 \value{
-Pdf file or list object showing data before and after 
-signal correction
+Pdf file or \code{list()} object \code{ggplot} class showing data 
+before and after signal correction.
 }
 \description{
 Plot the output from signal batch correction for the selected or
-the first 100 features
+the first 100 features.
 }
 \examples{
 
