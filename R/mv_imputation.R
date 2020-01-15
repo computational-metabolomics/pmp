@@ -115,6 +115,9 @@ mv_imputation <- function(df, method, k=10, rowmax=0.5, colmax=0.5,
     maxp=NULL, check_df=TRUE) {
     if (check_df == TRUE) {
         df <- check_input_data(df=df)
+    } else {
+        # Avoid transposing peak matrix using fake class label
+        df <- check_input_data(df=df, classes=rep(1, ncol(df)))
     }
     if (is.null(maxp)) {
         maxp <- max(dim(df))

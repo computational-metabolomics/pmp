@@ -1,14 +1,14 @@
 context("test-mv_imputation")
 
 test_that("Missing value imputation using knn method returns expected output", {
-  expect_warning (out <- mv_imputation(df=t(testData$data), method="knn"))
+  out <- mv_imputation(df=testData$data, method="knn", check_df=FALSE)
   attributes(out)$processing_history <- NULL
   out <- as.data.frame(out)
   expect_equal(out, testData$mv_imputation_knn)
 })
 
 test_that("Missing value imputation using rf method returns expected output", {
-  expect_warning (out <- mv_imputation(df=t(testData$data), method="rf"))
+  expect_warning(out <- mv_imputation(df=testData$data, method="rf"))
   attributes(out)$processing_history <- NULL
   out <- as.data.frame(out)
   expect_equal(out, testData$mv_imputation_rf)
