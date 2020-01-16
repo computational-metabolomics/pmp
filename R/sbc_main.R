@@ -1,4 +1,4 @@
-#' @importFrom stats median
+#' @importFrom matrixStats rowMedians
 NULL
 
 #' Quality Control-Robust Spline Correction (QC-RSC)
@@ -67,7 +67,7 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
     QC_fit <- do.call(rbind, QC_fit)
     
     # Median value for each fature, and divide it by predicted value
-    mpa <- apply(assay(df), 1, median, na.rm = TRUE)
+    mpa <- matrixStats::rowMedians(assay(df), na.rm=TRUE)
     QC_fit <- QC_fit/mpa
     
     # Divide measured value by correction factor
