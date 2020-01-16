@@ -72,6 +72,10 @@ data set consisting of 172 samples measured across 8 batches and is included in
 More detailed description of the data set is available from  @kirwan2014, 
 [MTBLS79](https://www.ebi.ac.uk/metabolights/MTBLS79) and R man page.
 
+```{r, eval=FALSE}
+help ("MTBLS79")
+```
+
 ```{r}
 data("MTBLS79")
 

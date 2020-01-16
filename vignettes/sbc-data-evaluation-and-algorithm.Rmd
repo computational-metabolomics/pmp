@@ -70,6 +70,10 @@ data set consisting of 172 samples measured across 8 batches and is included in
 More detailed description of the data set is available from  @kirwan2014, 
 [MTBLS79](https://www.ebi.ac.uk/metabolights/MTBLS79) and R man page.
 
+```{r, eval=FALSE}
+help ("MTBLS79")
+```
+
 ```{r}
 feature_names <- c("70.03364", "133.07379", "146.16519", "163.04515", 
     "174.89483", "200.03196", "207.07818", "221.05062", "240.02445",
