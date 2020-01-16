@@ -13,6 +13,7 @@ test_that ("Test that filter_peaks_by_blank returns expected output with QC samp
   out <- filter_peaks_by_blank(df=testData$data, fold_change=1.2, 
     classes=testData$class, blank_label="Blank", qc_label="QC",
     remove_samples=FALSE, remove_peaks=TRUE, fraction_in_blank=0)
+  expect_equal(processing_history(out$df)[[1]][[1]], 1.2)
     attributes(out$df)$processing_history <- NULL
   expect_equal(out$df, testData$filter_peaks_by_blank_qc$df)
 })

@@ -7,6 +7,11 @@ test_that("Missing value imputation using knn method returns expected output", {
   expect_equal(out, testData$mv_imputation_knn)
 })
 
+test_that("processing_history works with SummarizedExperiment class", {
+  out <- mv_imputation(df=MTBLS79[1:20, ], method="knn", check_df=FALSE)
+  expect_equal(processing_history(out)[[1]][[1]], "knn")
+})
+
 test_that("Missing value imputation using rf method returns expected output", {
   expect_warning(out <- mv_imputation(df=testData$data, method="rf"))
   attributes(out)$processing_history <- NULL
