@@ -192,8 +192,11 @@ filter_peaks_by_fraction <- function(df, min_frac, classes=NULL,
         df <- df[idxs, ]
     }
     meta_data <- metadata(df)
-    meta_data$processing_history$filter_peaks_by_fraction <- 
-        return_function_args()
+    function_arguments <- return_function_args()
+    filter_name <- paste("filter_peaks_by_fraction", 
+        function_arguments$method, sep="_")
+    meta_data$processing_history[[filter_name]] <- 
+        function_arguments
     metadata(df) <- meta_data
     df <- return_original_data_structure(df)
     return(df)
