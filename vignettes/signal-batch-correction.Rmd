@@ -164,7 +164,8 @@ pca_corrected_data <- pmp::glog_transformation(pca_corrected_data,
     classes=class, qc_label="QC")
 
 pca_data <- prcomp(t(assay(pca_data)), center=TRUE, scale=FALSE)
-pca_corrected_data <- prcomp(t(assay(pca_corrected_data)), center=TRUE, scale=FALSE)
+pca_corrected_data <- prcomp(t(assay(pca_corrected_data)),
+    center=TRUE, scale=FALSE)
 
 # Calculate percentage of explained variance of the first two PC's
 exp_var_pca <- round(((pca_data$sdev^2)/sum(pca_data$sdev^2)*100)[1:2],2)
