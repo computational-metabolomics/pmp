@@ -2,6 +2,7 @@ pmp v0.99.1
 =========================
 * Support for SummarizedExperiment class.
 * Updated documentation and vignette.
+* Added functions for QCRSC algorithm of signal-batch correction for MS data.
 
 pmp v0.2.6
 =========================
