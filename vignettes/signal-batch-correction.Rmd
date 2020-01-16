@@ -1,0 +1,217 @@
+---
+title: "Signal and batch correction for mass spectrometry"
+author: 
+    name: "Andris Jankevics"
+    affiliation: Phenome Centre Birmingham, University of Birmingham
+    email: a.jankevics@bham.ac.uk
+package: pmp
+date: "`r Sys.Date()`"
+output: 
+    BiocStyle::html_document:
+        toc: true
+        toc_depth: 2  
+        number_sections: true  
+        toc_float: true
+
+bibliography: pmp.bib
+
+vignette: >
+    %\VignetteIndexEntry{sbcms}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+)
+```
+
+# Introduction
+
+This vignette demonstrates how to apply Quality Control-Robust Spline 
+Correction (QC-RSC) [@kirwan2013] algorithm for signal drift and batch effect
+correction within/across a multi-batch direct infusion mass spectrometry (DIMS)
+and liquid chromatography mass spectrometry (LCMS) data sets.
+
+Please read "Signal and batch correction, data assessment and 
+correction" vignette to learn how to assess your data set and details on
+algorithm itself.
+
+# Installation
+
+You should have R version 4.0.0 or above and Rstudio installed to be able to
+run this notebook.
+
+Execute following commands from the R terminal.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
+install.packages("gridExtra")
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("pmp")
+```
+
+Load the required libraries into the R environment
+```{r, message=FALSE, warning=FALSE}
+library(S4Vectors)
+library(SummarizedExperiment)
+library(pmp)
+library(ggplot2)
+library(reshape2)
+library(gridExtra)
+```
+
+# Data set
+
+In this tutorial we will be using  an direct infusion mass spectrometry (DIMS) 
+data set consisting of 172 samples measured across 8 batches and is included in
+`pmp` package as `SummarizedExperiemnt` class object `MTBLS79`. 
+More detailed description of the data set is available from  @kirwan2014, 
+[MTBLS79](https://www.ebi.ac.uk/metabolights/MTBLS79) and R man page.
+
+```{r}
+data("MTBLS79")
+
+class <- MTBLS79$Class
+batch <- MTBLS79$Batch
+sample_order <- c(1:ncol(MTBLS79))
+
+# Input data structure
+MTBLS79
+
+class[1:10]
+batch[1:10]
+sample_order[1:10]
+```
+
+# Filtering a data set
+
+Current implementation of `QCRSC` algorithm does support missing values in the 
+input data object, but we would recommend to filter out features which were net 
+reproducibly measured across quality control (QC) sample. In this example we 
+will use 80% detection threshold.
+
+```{r}
+data <- filter_peaks_by_fraction(df=MTBLS79, classes=class, method="QC",
+    qc_label="QC", min_frac=0.8)
+```
+
+# Applying signal and batch correction 
+
+Function `QCRSC` should be used to apply signal batch correction. 
+
+Argument `df` should be `SummarizedExperiment` object or matrix-like R data 
+structure with all `numeric()` values.
+
+Argument `order` should be `numeric()` vector containing sample injection 
+order during analytical measurement and should be the same length as number of
+sample in the input object. 
+
+Argument `batch` should be `numeric()` or `character()` vector containing values
+of sample batch identifier. If all samples were measured in 1 batch, then all 
+values in the `batch` vector should be identical. 
+
+Values for `classes` should be character vector containing sample class labels.
+Class label for quality control sample has to be `QC`.
+
+```{r}
+corrected_data <- QCRSC(df=data, order=sample_order, batch=batch, 
+    classes=class, spar=0, minQC=4)
+```
+
+# Visualising results
+
+Function 'sbc_plot' provides visual comparison of the data before and after 
+correction. For example we can check output for features '1', '5', and '30' in 
+peak matrix.
+```{r message=FALSE, warning=FALSE, fig.height=6, fig.width=6}
+plots <- sbc_plot (df=MTBLS79, corrected_df=corrected_data, classes=class, 
+    batch=batch, output=NULL, indexes=c(1, 5, 30))
+plots
+```
+
+The scores plots of principal components analysis (PCA) before 
+and after correction can be used to asses effects of data correction. 
+
+In this example, `PQN` method is used to normalise data,
+`KNN` for missing value imputation and `glog` for data scaling. All functions 
+are availiable as a part of `r Biocpkg("pmp")` package.
+
+A more detailed overview on data pre-processing is detailed in @guida2016.
+
+```{r, fig.width=6, fig.height=8}
+
+manual_color = c("#386cb0", "#ef3b2c", "#7fc97f", "#fdb462", "#984ea3", 
+    "#a6cee3", "#778899", "#fb9a99", "#ffff33")
+
+pca_data <- pqn_normalisation(MTBLS79, classes=class, qc_label="QC")
+pca_data <- mv_imputation(pca_data, method="KNN", k=5, rowmax=0.5,
+    colmax=0.5, maxp=NULL, check_df=FALSE)
+pca_data <- glog_transformation(pca_data, classes=class, qc_label="QC")
+
+pca_corrected_data <- pmp::pqn_normalisation(corrected_data, classes=class,
+    qc_label="QC")
+pca_corrected_data <- pmp::mv_imputation(pca_corrected_data, method="KNN", k=5,
+    rowmax=0.5, colmax=0.5, maxp=NULL, check_df=FALSE)
+pca_corrected_data <- pmp::glog_transformation(pca_corrected_data, 
+    classes=class, qc_label="QC")
+
+pca_data <- prcomp(t(assay(pca_data)), center=TRUE, scale=FALSE)
+pca_corrected_data <- prcomp(t(assay(pca_corrected_data)), center=TRUE, scale=FALSE)
+
+# Calculate percentage of explained variance of the first two PC's
+exp_var_pca <- round(((pca_data$sdev^2)/sum(pca_data$sdev^2)*100)[1:2],2)
+exp_var_pca_corrected <- round(((pca_corrected_data$sdev^2) /
+    sum(pca_corrected_data$sdev^2)*100)[1:2],2)
+
+plots <- list()
+
+plotdata <- data.frame(PC1=pca_data$x[, 1], PC2=pca_data$x[, 2], 
+    batch=as.factor(batch), class=class)
+
+plots[[1]] <- ggplot(data=plotdata, aes(x=PC1, y=PC2, col=batch)) +
+    geom_point(size=2) + theme(panel.background=element_blank()) +
+    scale_color_manual(values=manual_color) +
+    ggtitle("PCA scores, before correction") +
+    xlab(paste0("PC1 (", exp_var_pca[1] ," %)")) +
+    ylab(paste0("PC2 (", exp_var_pca[2] ," %)"))
+
+plots[[2]] <- ggplot(data=plotdata, aes(x=PC1, y=PC2, col=class)) +
+    geom_point(size=2) + theme(panel.background=element_blank()) +
+    scale_color_manual(values=manual_color) +
+    ggtitle("PCA scores, before correction") +
+    xlab(paste0("PC1 (", exp_var_pca[1] ," %)")) +
+    ylab(paste0("PC2 (", exp_var_pca[2] ," %)"))
+
+plotdata_corr <- data.frame(PC1=pca_corrected_data$x[, 1], 
+    PC2=pca_corrected_data$x[, 2], batch=as.factor(batch), class=class)
+
+plots[[3]] <- ggplot(data=plotdata_corr, aes(x=PC1, y=PC2, col=batch)) +
+    geom_point(size=2) +
+    theme(panel.background=element_blank()) +
+    scale_color_manual(values=manual_color) +
+    ggtitle("PCA scores, after correction") +
+    xlab(paste0("PC1 (", exp_var_pca_corrected[1] ," %)")) +
+    ylab(paste0("PC2 (", exp_var_pca_corrected[2] ," %)"))
+
+plots[[4]] <- ggplot(data=plotdata_corr, aes(x=PC1, y=PC2, col=class)) +
+    geom_point(size=2) +
+    theme(panel.background=element_blank()) +
+    scale_color_manual(values=manual_color) +
+    ggtitle("PCA scores, after correction") +
+    xlab(paste0("PC1 (", exp_var_pca_corrected[1] ," %)")) +
+    ylab(paste0("PC2 (", exp_var_pca_corrected[2] ," %)"))
+
+grid.arrange(ncol=2, plots[[1]], plots[[2]], plots[[3]], plots[[4]])
+```
+
+# Session information
+
+```{r}
+sessionInfo()
+```
+
+# References

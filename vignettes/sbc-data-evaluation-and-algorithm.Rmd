@@ -1,5 +1,5 @@
 ---
-title: "Signal and Batch Correction, data assesment and correction"
+title: "Signal and batch Correction, data assesment and correction"
 author: 
     name: "Andris Jankevics"
     affiliation: Phenome Centre Birmingham, University of Birmingham
@@ -35,8 +35,7 @@ batch effects within/across a multi-batch direct infusion mass spectrometry
 (DIMS) dataset. The same approach can be used on liquid chromatography mass
 spectrometry (LCMS) peak table as well.
 
-This tutorial assumes that you have basic R scripting skills. Here are some 
-other resources you might find useful:
+Deeper details on how the algorithm works are detailed in \@ref(algorithm)
 
 # Installation
 
@@ -499,7 +498,7 @@ ggplot(data=plotdata, aes(x=batch, y=feature, fill=value)) +
     geom_tile() + scale_fill_gradient2()
 ```
 
-## Example of signal and batch correction for a single feature
+## Example of signal and batch correction for a single feature {#algorithm}
 
 Let's have a closer look to '451.01086' measured feature and how signal
 correction can be applied.
@@ -1025,6 +1024,12 @@ plots[[4]] <- ggplot(data=plotdata_corr, aes(x=PC1, y=PC2, col=class)) +
     ylab(paste0("PC2 (", exp_var_pca_corrected[2] ," %)"))
 
 grid.arrange(ncol=2, plots[[1]], plots[[2]], plots[[3]], plots[[4]])
+```
+
+# Session information
+
+```{r}
+sessionInfo()
 ```
 
 # References
