@@ -42,8 +42,6 @@ BiocManager::install("pmp")
 library(pmp)
 library(SummarizedExperiment)
 library(S4Vectors)
-library(pcaMethods)
-library(ggplot2)
 ```
 
 # Introduction
@@ -97,39 +95,24 @@ More detailed description of the data set is available from  @kirwan2014,
 help ("MTBLS79")
 ```
 
-For the purpose of this tutorial we will subset samples measured in batches 
-from 1 to 6.
-
 ```{r}
-MTBLS79 <- MTBLS79[, MTBLS79$Batch %in% c(7:8)]
+data(MTBLS79)
 MTBLS79
 ```
 
-This data set before peak matrix filtering contains 128 samples, 2488 features
-and 11627 missing values across all samples what is roughly around 3.6%.
+This data set before peak matrix filtering contains 172 samples, 2488 features
+and 18222 missing values across all samples what is roughly around 4.2%.
 
 ```{r}
 sum(is.na(assay(MTBLS79)))
 sum(is.na(assay(MTBLS79))) / length(assay(MTBLS79)) * 100
 ```
 
-```{r}
-pc <- pca(t(assay(MTBLS79)), method="nipals", scale="none", center=TRUE)
-
-pc
-```
-
-```{r}
-pcdf <- as.data.frame(scores(pc))
-pcdf$Class <- MTBLS79$Class
-ggplot(pcdf, aes(PC1, PC2, colour=Class)) +
-    geom_point(size=2) + stat_ellipse() + theme_bw() + 
-    scale_color_brewer(palette="Set1")
-```
-
 # Filtering a data set
 
-Filter MV by sample
+Missing values in the data set can be filtered across samples or features. The
+command below will remove all samples with more than 10 % missing values.
+
 ```{r}
 MTBLS79_filtered <- filter_samples_by_mv(df=MTBLS79, max_perc_mv=0.1)
 
@@ -138,7 +121,12 @@ MTBLS79_filtered
 sum(is.na(assay(MTBLS79_filtered)))
 ```
 
-Filter MV fraction of quality control (QC) samples.
+Missing values sample filter has removed two samples from the initial data set. 
+Outputs from any `pmp` function can be used as inputs for another function. For 
+example we can apply missing value filter across features on the output of the 
+previous command. Command below will filter only within quality control (QC) 
+sample group.
+
 ```{r}
 MTBLS79_filtered <- filter_peaks_by_fraction(df=MTBLS79_filtered, min_frac=0.9, 
     classes=MTBLS79_filtered$Class, method="QC", qc_label="QC")
@@ -148,17 +136,26 @@ MTBLS79_filtered
 sum(is.na(assay(MTBLS79_filtered)))
 ```
 
-Filter by MV fraction across all samples.
+Similarly as we did before, we can add another filter on previous result. At 
+this we will use the same filter, but now missing values wil be calculated 
+across all samples and not only within "QC" group.
+
 ```{r}
 MTBLS79_filtered <- filter_peaks_by_fraction(df=MTBLS79_filtered, min_frac=0.9, 
-    classes=MTBLS79_filtered$Class, method="across", qc_label="QC")
+    classes=MTBLS79_filtered$Class, method="across")
 
 MTBLS79_filtered
 
 sum(is.na(assay(MTBLS79_filtered)))
 ```
 
-Filter by RSD%
+Applying these 3 filters has reduced number of missing values from 18222 to 
+4779. 
+
+Commonly used approach in metabolomics studies is to filter features by the by 
+coefficient of variation (CV) or RSD% of QC samples.Example below will use 30% 
+threshold.
+
 ```{r}
 MTBLS79_filtered <- filter_peaks_by_rsd(df=MTBLS79_filtered, max_rsd=30, 
     classes=MTBLS79_filtered$Class, qc_label="QC")
@@ -168,26 +165,22 @@ MTBLS79_filtered
 sum(is.na(assay(MTBLS79_filtered)))
 ```
 
-```{r}
-pc <- pca(t(assay(MTBLS79_filtered)), method="nipals", scale="none", 
-    center=TRUE)
+# Processing history
 
-pc
-```
+Every funcition in `pmp` provides history of applied parameter values. If user
+has saved outputs from R sessesion, it's easy to check what commands were 
+executed.
 
 ```{r}
-pcdf <- as.data.frame(scores(pc))
-pcdf$Class <- MTBLS79_filtered$Class
-ggplot(pcdf, aes(PC1, PC2, colour=Class)) +
-    geom_point(size=2) + stat_ellipse() + theme_bw() + 
-    scale_color_brewer(palette="Set1")
+processing_history(MTBLS79_filtered)
 ```
 
 # Data normalisation
 
 Probabilistic quotient normalisation (PQN) and normalisation the the total
 signal intensity methods are implemented for normalisation of biological
-variability across measured samples.
+variability across measured samples. Example below demonstrates how to apply 
+PQN method.
 
 ```{r}
 MTBLS79_pqn_normalised <- pqn_normalisation(df=MTBLS79_filtered, 
@@ -196,14 +189,15 @@ MTBLS79_pqn_normalised <- pqn_normalisation(df=MTBLS79_filtered,
 
 # Missing value imputation
 
-several
-commonly used missing value imputation algorithms. Supported methods are 
-k-nearest neighbours (knn), random forests (rf), Bayesian PCA missing value 
+Several commonly used missing value imputation algorithms. Supported methods 
+are k-nearest neighbours (knn), random forests (rf), Bayesian PCA missing value 
 estimator (bpca), mean or median value of the given feature and constant 
-small value.
+small value. Within `mv_imputaion` interface user can easily apply different 
+mehtod without worrying about input data type or tranposing data set.
 
 ```{r}
-MTBLS79_mv_imputed <- mv_imputation(df=MTBLS79_pqn_normalised, method="knn")
+MTBLS79_mv_imputed <- mv_imputation(df=MTBLS79_pqn_normalised,
+    method="knn")
 ```
 
 # Data scaling
@@ -217,38 +211,24 @@ MTBLS79_glog <- glog_transformation(df=MTBLS79_mv_imputed,
     classes=MTBLS79_filtered$Class, qc_label="QC")
 ```
 
+`glog_transformation` function uses QC samples to optimse scaling factor 
+`lambda`. Using function `glog_plot_plot_optimised_lambda` it's possibe to
+visualise if optimsation of the given parameter has converged at the minima.
+
 ```{r plot_glog}
-glog_plot_optimised_lambda(df=MTBLS79_mv_imputed, optimised_lambda=718580657,
+opt_lambda <- 
+    processing_history(MTBLS79_glog)$glog_transformation$lambda_opt
+glog_plot_optimised_lambda(df=MTBLS79_mv_imputed,
+    optimised_lambda=opt_lambda,
     classes=MTBLS79_filtered$Class, qc_label="QC")
 ```
 
-```{r}
-pc <- pca(t(assay(MTBLS79_glog)), method="nipals", scale="none")
-
-pc
-```
-
-```{r}
-pcdf <- as.data.frame(scores(pc))
-pcdf$Class <- MTBLS79_filtered$Class
-ggplot(pcdf, aes(PC1, PC2, colour=Class)) +
-    geom_point(size=2) + stat_ellipse() + theme_bw() + 
-    scale_color_brewer(palette="Set1")
-```
-
-# Processing history
-
-```{r}
-metadata(MTBLS79_filtered)$processing_history
-```
-
-
 # Data integrity check and endomorphisms {#endomorphisms}
 
-`pmp` is designed to validate input data if user choose not to use 
-`r Biocpkg("SummarizedExperiment")` class objet. For example, if input is 
-`matrix` with features stored in columns and sample in rows, any function of
-`pmp` package will be able to handle this object.
+Function in `pmp` package are designed to validate input data if user chose 
+not to use `r Biocpkg("SummarizedExperiment")` class objet. For example, if 
+input is `matrix` with features stored in columns and sample in rows, any 
+function of `pmp` package will be able to handle this object.
 
 ```{r}
 peak_matrix <- t(assay(MTBLS79))
