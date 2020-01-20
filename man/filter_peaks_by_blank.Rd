@@ -47,11 +47,11 @@ fraction in how many blanks peaks should be present.}
 \value{
 Object of class \code{SummarizedExperiment}. If input data are a 
 matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
-\code{list()} of two elements. Element \code{df} is \code{numeric()} 
-matrix-like object of filtered data set and \code{flags} is a 
-\link[S4Vectors]{DataFrame} with five columns. The same 
-\code{DataFrame} object containing flags is added to \code{rowData()} 
-element of \code{SummarizedExperiment} object as well.\cr
+\code{numeric()} matrix-like object of filtered data set. Function 
+\code{flags} are added to the object \code{attributes} and is a 
+\link[S4Vectors]{DataFrame} with five columns. The same \code{DataFrame} 
+object containing flags is added to \code{rowData()} element of 
+\code{SummarizedExperiment} object as well.\cr
 \cr
 Columns in \code{rowData()} or \code{flags} element contain: \cr
 \code{median_non_blanks} median intensities of features of non-blank

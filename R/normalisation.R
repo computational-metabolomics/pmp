@@ -108,7 +108,7 @@ pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL) {
     metadata(df) <- meta_data
     df <- return_original_data_structure(df)
     if (!is(df, "SummarizedExperiment")){
-        df <- list(df=df, coef=as.matrix(col_data))
+        attributes(df)$flags <- as.matrix(col_data)
     }
     return(df)
 }

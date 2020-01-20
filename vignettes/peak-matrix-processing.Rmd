@@ -239,13 +239,19 @@ dim(peak_matrix)
 class(sample_classes)
 ```
 
-Let's try to use these objects as input for `mv_imputation`.
+Let's try to use these objects as input for `mv_imputation` and 
+`filter_peaks_by_rsd`.
 
 ```{r message=TRUE, warning=TRUE}
 mv_imputed <- mv_imputation(df=peak_matrix, method="mn")
+rsd_filtered <- filter_peaks_by_rsd(df=mv_imputed, max_rsd=30, 
+    classes=sample_classes, qc_label="QC")
 
 class (mv_imputed)
 dim (mv_imputed)
+
+class (rsd_filtered)
+dim (rsd_filtered)
 ```
 
 Note that `pmp` has automatically transposed input object to use largest

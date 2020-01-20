@@ -117,8 +117,8 @@ return_original_data_structure <- function(summarized_experiment_object){
         meta_data$original_data_structure <- NULL
         attributes(peak_data) <- c(attributes(peak_data), meta_data)
         if (ncol(rowData(summarized_experiment_object)) != 0){
-            peak_data <- list(df=peak_data, 
-                flags=rowData(summarized_experiment_object))
+            attributes(peak_data)$flags <- 
+                rowData(summarized_experiment_object)
         }
         return (peak_data)
     } else {

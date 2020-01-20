@@ -40,11 +40,11 @@ NULL
 #' 
 #' @return Object of class \code{SummarizedExperiment}. If input data are a 
 #' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
-#' \code{list()} of two elements. Element \code{df} is \code{numeric()} 
-#' matrix-like object of filtered data set and \code{flags} is a 
-#' \link[S4Vectors]{DataFrame} with five columns. The same 
-#' \code{DataFrame} object containing flags is added to \code{rowData()} 
-#' element of \code{SummarizedExperiment} object as well.\cr
+#' \code{numeric()} matrix-like object of filtered data set. Function 
+#' \code{flags} are added to the object \code{attributes} and is a 
+#' \link[S4Vectors]{DataFrame} with five columns. The same \code{DataFrame} 
+#' object containing flags is added to \code{rowData()} element of 
+#' \code{SummarizedExperiment} object as well.\cr
 #' \cr
 #' Columns in \code{rowData()} or \code{flags} element contain: \cr
 #' \code{median_non_blanks} median intensities of features of non-blank
@@ -128,12 +128,13 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
 #'
 #' @return Object of class \code{SummarizedExperiment}. If input data are a 
 #' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
-#' \code{list()} of two elements. Element \code{df} is \code{numeric()} 
-#' matrix-like object of filtered data set and \code{flags} is a 
-#' \link[S4Vectors]{DataFrame} with at least two columns depending which
-#' \code{method} was used. The same \code{DataFrame} object containing flags is 
-#' added to \code{rowData()} element of \code{SummarizedExperiment} object as 
-#' well.\cr
+#' \code{numeric()} matrix-like object of filtered data set. Function 
+#' \code{flags} are added to the object \code{attributes} and is a 
+#' \link[S4Vectors]{DataFrame} with five columns. The same \code{DataFrame} 
+#' object containing flags is added to \code{rowData()} element of 
+#' \code{SummarizedExperiment} object as well.\cr
+#' \cr
+#' 
 #' Columns in \code{rowData()} or \code{flags} element contain \code{fractions} 
 #' of missing values per feature within QC samples (mehtod \code{QC}), 
 #' across (method \code{across}) or within (mehtod \code{within}) each sample 
@@ -254,11 +255,11 @@ remove_peaks <- function(df, rem_index) {
 #' 
 #' @return Object of class \code{SummarizedExperiment}. If input data are a 
 #' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
-#' \code{list()} of two elements. Element \code{df} is \code{numeric()} 
-#' matrix-like object of filtered data set and \code{flags} is a 
-#' \link[S4Vectors]{DataFrame} with two columns. The same 
-#' \code{DataFrame} object containing flags is added to \code{rowData()} 
-#' element of \code{SummarizedExperiment} object as well.\cr
+#' \code{numeric()} matrix-like object of filtered data set. Function 
+#' \code{flags} are added to the object \code{attributes} and is a 
+#' \link[S4Vectors]{DataFrame} with five columns. The same \code{DataFrame} 
+#' object containing flags is added to \code{rowData()} element of 
+#' \code{SummarizedExperiment} object as well.\cr
 #' \cr
 #' Columns in \code{rowData()} or \code{flags} element contain: \cr
 #' \code{rsd_QC} \code{numeric()}, RSD\% value of QC samples per feature; \cr
@@ -308,14 +309,14 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label,
 #' 
 #' @return Object of class \code{SummarizedExperiment}. If input data are a 
 #' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
-#' \code{list()} of two elements. Element \code{df} is \code{numeric()} 
-#' matrix-like object of filtered data set and \code{flags} is a 
-#' \link[S4Vectors]{DataFrame} with two columns. The same 
-#' \code{DataFrame} object containing flags is added to \code{colData()} 
-#' element of \code{SummarizedExperiment} object as well. If element 
-#' \code{colData()} already exists flags are appended to existing 
-#' values.\cr
+#' \code{numeric()} matrix-like object of filtered data set. Function 
+#' \code{flags} are added to the object \code{attributes} and is a 
+#' \link[S4Vectors]{DataFrame} with five columns. The same \code{DataFrame} 
+#' object containing flags is added to \code{rowData()} element of 
+#' \code{SummarizedExperiment} object as well. If element 
+#' \code{colData()} already exists flags are appended to existing values.\cr
 #' \cr
+#' 
 #' Columns in \code{colData()} or \code{flags} element contain: \cr
 #' \code{perc_mv} \code{numeric()}, fraction of missing values per sample; \cr
 #' \code{flags} \code{integer()},if 0 feature is flagged to be removed. \cr
@@ -343,7 +344,7 @@ filter_samples_by_mv <- function(df, max_perc_mv, classes=NULL,
     metadata(df) <- meta_data
     df <- return_original_data_structure(df)
     if (!is(df, "SummarizedExperiment")){
-        df <- list(df=df, flags=as.matrix(col_data))
+        attributes(df)$flags <- as.matrix(col_data)
     }
     return(df)
 }
