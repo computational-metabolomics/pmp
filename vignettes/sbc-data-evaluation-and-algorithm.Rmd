@@ -969,13 +969,13 @@ and after correction.
 # Di Guida et al, Metabolomics, 12:93, 2016
 # https://dx.doi.org/10.1007/s11306-016-1030-9
 
-pca_data <- pqn_normalisation(data, classes=class, qc_label="QC")[[1]]
+pca_data <- pqn_normalisation(data, classes=class, qc_label="QC")
 pca_data <- mv_imputation(pca_data, method="KNN", k=5, rowmax=0.5,
     colmax=0.5, maxp=NULL, check_df=FALSE)
 pca_data <- glog_transformation(pca_data, classes=class, qc_label="QC")
 
 pca_corrected_data <- pqn_normalisation(corrected_data, classes=class,
-    qc_label="QC")[[1]]
+    qc_label="QC")
 pca_corrected_data <- mv_imputation(pca_corrected_data, method="KNN", k=5,
     rowmax=0.5, colmax=0.5, maxp=NULL, check_df=FALSE)
 pca_corrected_data <- glog_transformation(pca_corrected_data, 
