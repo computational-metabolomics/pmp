@@ -5,5 +5,14 @@ cache:
 sudo: required
 warnings_are_errors: false
 dist: xenial
+
+addons:
+  apt:
+    update: true
+    sources:
+      - sourceline: 'ppa:cran/imagemagick'
+    packages:
+      - libmagick++-dev
+
 after_success:
     - Rscript -e 'covr::codecov()'
