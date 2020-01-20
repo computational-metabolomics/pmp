@@ -8,6 +8,6 @@ x_sample <- c(4, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 17, 19, 20, 21, 22)
 test_that ("splineSmoother returns expected output", {
   out <- splineSmoother(x=x_qc, y=y_qc, newX=x_sample,
     log=TRUE, spar=0, a=1)
-  expect_equal (out, testData$splineSmoother)
+  expect_equal (out, testData$splineSmoother, tolerance=10^-5)
 
 })

@@ -14,7 +14,7 @@ test_that ("sbcWrapper returns expected output", {
   out <- sbcWrapper(id=4, qcData=qcData, order=order, qcOrder=qc_order, qcBatch=qc_batch,
                        log=TRUE, spar=0, batch=batch, minQC=4)
 
-  expect_equal (out, testData$sbcWrapper)
+  expect_equal (out, testData$sbcWrapper, tolerance=10^-7)
 
 })
 

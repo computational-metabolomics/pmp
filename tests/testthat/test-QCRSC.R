@@ -13,7 +13,7 @@ test_that ("QC-RSC returns expected output", {
   out <- QCRSC(df = data, order = order, batch = batch, classes = classes,
                   spar = 0, minQC = 4)
   attributes(out)$processing_history <- NULL
-  expect_equal (out, testData$QCRSC)
+  expect_equal (out, testData$QCRSC, tolerance = 10^-5)
 })
 
 test_that ("QC-RSC returns error if QC sample label is wrong", {
