@@ -33,7 +33,8 @@ Suggests:
     knitr,
     rmarkdown,
     BiocStyle,
-    gridExtra
+    gridExtra,
+    magick
 VignetteBuilder: knitr
 Collate:
     'checkPeakMatrix.R'
