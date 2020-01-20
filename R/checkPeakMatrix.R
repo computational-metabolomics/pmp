@@ -30,8 +30,8 @@ check_peak_matrix <- function(df, classes=NULL) {
         df <- t(df)
         warning("Peak table was transposed to have features as rows and samples
     in columns. \n
-    As there were no class labels availiable please check that peak table is \n
-    still properly rotated, samples as columns and features in rows. \n
+    There were no class labels available please check that peak table is \n
+    still properly rotated. \n
     Use 'check_df=FALSE' to keep original peak matrix orientation.")
     }
     if (!is.numeric(as.matrix(df))){
