@@ -1,10 +1,21 @@
+pmp v0.99.1
+=========================
+* Support for SummarizedExperiment class.
+* Updated documentation and vignette.
+* Added functions for QCRSC algorithm of signal-batch correction for MS data.
+
+pmp v0.2.6
+=========================
+* glog transformation can use fixed lambda value input.
+* Plot to visualise output of glog lambda value optimisation.
+
 pmp v0.2.5
 =========================
-  Pre-calculated  mean reference values can be used with PQN normalisation 
-  function.
+* Pre-calculated  mean reference values can be used with PQN normalisation 
+* function.
 
 pmp v0.2.4 (Release date: 2019-08-07)
 =========================
-  Updated documetation and usage examples.
-  Refactored glog scaling function.
-  PQN normalisation supports using all samples to calculate correction factor.
+* Updated documetation and usage examples.
+* Refactored glog scaling function.
+* PQN normalisation supports using all samples to calculate correction factor.

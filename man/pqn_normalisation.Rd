@@ -2,29 +2,51 @@
 % Please edit documentation in R/normalisation.R
 \name{pqn_normalisation}
 \alias{pqn_normalisation}
-\title{Normalise peak table using PQN method}
+\title{Probabilistic quotient normalisation (PQN)}
 \usage{
 pqn_normalisation(df, classes, qc_label, ref_mean = NULL)
 }
 \arguments{
-\item{df}{data frame}
+\item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) or 
+\link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
+class \code{numeric()} or \code{integer()} of peak intensities, areas or 
+other quantitative characteristic.}
 
-\item{classes}{vector of class labels}
+\item{classes}{\code{character()}, vector of class labels. Must be the same 
+length as the number of sample in the input peak table. If input is 
+\code{SummarizedExperiment} object, use 
+\code{SummarizedExperiment_object$meta_data_column_name}.}
 
-\item{qc_label}{label used for QC samples. If set to 'all', all samples will
-be used to calculate correction factor}
+\item{qc_label}{\code{character(1)} or \code{NULL}, class label used to
+identify QC samples.}
 
-\item{ref_mean}{Vector of reference mean values to use instead of calculating
-from QC sample group. If set to NULL, QC sample data will be used.}
+\item{ref_mean}{\code{numeric()} or \code{NULL}, Vector of reference mean
+values to use instead of calculating from QC sample group. If set to 
+\code{NULL}, QC sample data will be used.}
 }
 \value{
-list of normalised data set and correction coefficients
+Object of class \code{SummarizedExperiment}. If input data are a 
+matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+the same R data structure as input with all value of data type 
+\code{numeric()}.
 }
 \description{
-Normalise peak table using PQN method
+For every feature the mean response is calculated across all QC samples. A 
+reference vector is then generated. The median between the reference vector
+and every sample is computed obtaining a vector of coefficients related to
+each sample. Each sample is then divided by the median value of the vector
+of coefficients; this median value is different for each sample. This 
+method was adapted by Dieterle et al. (2006) (see references). Its purpose 
+is to take into account the concentration changes of some metabolite 
+features that affect limited regions of the data.
 }
 \examples{
-attach (testData)
-pqn_normalisation(df=testData$data, classes=testData$class, qc_label='QC')
+df <- MTBLS79[ , MTBLS79$Batch==1]
+pqn_normalisation(df=df,
+    classes=df$Class, qc_label='QC')
 
+}
+\references{
+Dieterle F. et al., Anal. Chem., 78(13), 2006. 
+http://dx.doi.org/10.1021/ac051632c
 }

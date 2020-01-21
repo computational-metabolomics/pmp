@@ -1,32 +1,49 @@
 context("test-mv_imputation")
 
 test_that("Missing value imputation using knn method returns expected output", {
-  expect_warning (out <- mv_imputation(df=t(testData$data), method="knn"))
+  out <- mv_imputation(df=testData$data, method="knn", check_df=FALSE)
+  attributes(out)$processing_history <- NULL
+  out <- as.data.frame(out)
   expect_equal(out, testData$mv_imputation_knn)
 })
 
+test_that("processing_history works with SummarizedExperiment class", {
+  out <- mv_imputation(df=MTBLS79[1:20, ], method="knn", check_df=FALSE)
+  expect_equal(processing_history(out)[[1]][[1]], "knn")
+})
+
 test_that("Missing value imputation using rf method returns expected output", {
-  expect_warning (out <- mv_imputation(df=t(testData$data), method="rf"))
-  expect_equal(out, testData$mv_imputation_rf)
+  expect_warning(out <- mv_imputation(df=testData$data, method="rf"))
+  attributes(out)$processing_history <- NULL
+  out <- as.data.frame(out)
+  expect_equal(out, testData$mv_imputation_rf, tolerance = 0.15)
 })
 
 test_that("Missing value imputation using bpca method returns expected output", {
   expect_warning (out <- mv_imputation(df=t(testData$data), method="bpca"))
+  attributes(out)$processing_history <- NULL
+  out <- as.data.frame(out)
   expect_equal(out, testData$mv_imputation_bpca)
 })
 
 test_that("Missing value imputation using sv method returns expected output", {
   expect_warning (out <- mv_imputation(df=t(testData$data), method="sv"))
+  attributes(out)$processing_history <- NULL
+  out <- as.data.frame(out)
   expect_equal(out, testData$mv_imputation_sv)
 })
 
 test_that("Missing value imputation using mn method returns expected output", {
   expect_warning (out <- mv_imputation(df=t(testData$data), method="mn"))
+  attributes(out)$processing_history <- NULL
+  out <- as.data.frame(out)
   expect_equal(out, testData$mv_imputation_mn)
 })
 
 test_that("Missing value imputation using md method returns expected output", {
   expect_warning (out <- mv_imputation(df=t(testData$data), method="md"))
+  attributes(out)$processing_history <- NULL
+  out <- as.data.frame(out)
   expect_equal(out, testData$mv_imputation_md)
 })
 

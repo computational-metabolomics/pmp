@@ -1,9 +1,25 @@
 context("test-glog_transformation")
 
 test_that("Glog function returns expected output", {
-  out <- mv_imputation(df=testData$data, method="knn")
-  expect_equal (glog_transformation (df=out, classes=testData$class,
-    qc_label="QC"), testData$glog_transformation)
+  data <- mv_imputation(df=testData$data, method="knn")
+  out <- glog_transformation (df=data, classes=testData$class,
+    qc_label="QC")
+  
+  lambda <- as.integer(7865716)
+  testthat::expect_true(lambda == as.integer(attributes(out)$
+    processing_history$glog_transformation$lambda_opt))
+  
+  optimised_lambda <- attributes(out)
+  optimised_lambda <- 
+  optimised_lambda$processing_history$glog_transformation$lambda_opt
+  
+  graph <- glog_plot_optimised_lambda(df=data, optimised_lambda=optimised_lambda,
+    classes=testData$class, qc_label="QC",)
+  expect_equal(graph[[9]]$x, "lambda")
+  expect_equal(graph[[9]]$y, "SSE")
+  
+  attributes(out)$processing_history <- NULL
+  expect_equal (as.data.frame(out), testData$glog_transformation)
 })
 
 test_that("Glog function fails if qc_label is wrong or QC samples don't exist", {
@@ -17,22 +33,14 @@ test_that("Scale factor is applied if optimisation fails", {
     classes <- iris$Species
     df <- df[,-5]
     expect_output(glog_transformation(df,classes,qc_label='versicolor'),
-      regexp='Error!Lambda')
+     regexp='Error!Lambda')
 })
 
 test_that("If feature variance is 0 replace it with small value", {
     out <- mv_imputation(df=testData$data, method="knn")
     out[3,] <- 3
     expect_output(out <- glog_transformation (df=out, classes=testData$class,
-      qc_label="QC")[3,], regexp='Error!Lambda')
+      qc_label="QC"), regexp='Error!Lambda')
+    out <- out[3,]
     testthat::expect_true(all(out[1:3] == out[4:6]))
-})
-
-test_that("glog function returns optimised lambda value if requested", {
-  out <- mv_imputation(df=testData$data, method="knn")
-  out <- glog_transformation (df=out, classes=testData$class,
-    qc_label="QC", store_lambda=TRUE)
-  lambda <- as.integer(7865716)
-  testthat::expect_true(length(out) == 4)
-  testthat::expect_true(lambda == as.integer(out[[2]]))
 })

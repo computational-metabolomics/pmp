@@ -4,23 +4,53 @@
 \alias{filter_peaks_by_fraction}
 \title{Filter features by fraction of missing values}
 \usage{
-filter_peaks_by_fraction(df, min_frac, classes = NULL, method = "QC",
-  qc_label = "QC")
+filter_peaks_by_fraction(
+  df,
+  min_frac,
+  classes = NULL,
+  method = "QC",
+  qc_label = "QC",
+  remove_peaks = TRUE
+)
 }
 \arguments{
-\item{df}{peak intensity matrix}
+\item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) or 
+\link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
+class \code{numeric()} or \code{integer()} of peak intensities, areas or 
+other quantitative characteristic.}
 
-\item{min_frac}{threshold of fraction of detection}
+\item{min_frac}{\code{numeric(1)}, value between 0 and 1, a threshold of 
+fraction of detection.}
 
-\item{classes}{vector of class labels}
+\item{classes}{\code{character()}, vector of class labels. Must be the same 
+length as the number of sample in the input peak table. If input is 
+\code{SummarizedExperiment} object, use 
+\code{SummarizedExperiment_object$meta_data_column_name}.}
 
-\item{method}{method to use. 'QC' - withing QC samples, within' - within 
-each sample class or across' - across all samples}
+\item{method}{\code{character(1)}, method to use. \code{QC} - within 
+QC samples, \code{within} - within each sample class or \code{across} - 
+across all samples.}
 
-\item{qc_label}{class label for QC sample}
+\item{qc_label}{\code{character(1)} or \code{NULL}, class label used to
+identify QC samples.}
+
+\item{remove_peaks}{\code{logical(1)}, remove filtered features from peak 
+matrix or not.}
 }
 \value{
-list of filtered peak intensity matrix and matrix with flags
+Object of class \code{SummarizedExperiment}. If input data are a 
+matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+\code{numeric()} matrix-like object of filtered data set. Function 
+\code{flags} are added to the object \code{attributes} and is a 
+\link[S4Vectors]{DataFrame} with five columns. The same \code{DataFrame} 
+object containing flags is added to \code{rowData()} element of 
+\code{SummarizedExperiment} object as well.\cr
+\cr
+
+Columns in \code{rowData()} or \code{flags} element contain \code{fractions} 
+of missing values per feature within QC samples (mehtod \code{QC}), 
+across (method \code{across}) or within (mehtod \code{within}) each sample 
+group.
 }
 \description{
 Metabolomics datasets often contain 'features' with irreproducible peak 
@@ -30,15 +60,14 @@ relative proportion (minimum fraction) of samples containing non-missing
 values.
 }
 \examples{
-attach (testData)
-
-out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
-    classes=testData$class, method='QC', qc_label='QC')
+df <- MTBLS79[ ,MTBLS79$Batch == 1]
+out <- filter_peaks_by_fraction(df=df, min_frac=1, 
+    classes=df$Class, method='QC', qc_label='QC')
     
-out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
-    classes=testData$class, method='across', qc_label='QC')
+out <- filter_peaks_by_fraction(df=df, min_frac=1, 
+    classes=df$Class, method='across', qc_label='QC')
 
-out <- filter_peaks_by_fraction(df=testData$data, min_frac=1, 
-    classes=testData$class, method='within', qc_label='QC')
+out <- filter_peaks_by_fraction(df=df, min_frac=1, 
+    classes=df$Class, method='within', qc_label='QC')
 
 }

@@ -2,24 +2,32 @@
 % Please edit documentation in R/normalisation.R
 \name{normalise_to_sum}
 \alias{normalise_to_sum}
-\title{Normalise peak table to the total sum of peak intensities}
+\title{Normalisation by total sum of the features per sample}
 \usage{
 normalise_to_sum(df, check_df = TRUE)
 }
 \arguments{
-\item{df}{data frame}
+\item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) or 
+\link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
+class \code{numeric()} or \code{integer()} of peak intensities, areas or 
+other quantitative characteristic.}
 
-\item{check_df}{ff set to TRUE will check if input data needs to be
-transposed, so that features are in rows}
+\item{check_df}{\code{logical(1)}, if set to TRUE will check if input data 
+needs to be transposed, so that features are in rows.}
 }
 \value{
-normalised peak matrix
+Object of class \code{SummarizedExperiment}. If input data are a 
+matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+the same R data structure as input with all value of data type 
+\code{numeric()}.
 }
 \description{
-Normalise peak table to the total sum of peak intensities
+For each sample, every feature intensity value is divided by the total sum of
+all feature intensity values measured in that sample (\code{NA} values
+ignored by default), before multiplication by 100; the unit is \%.
 }
 \examples{
-attach (testData)
-out <- normalise_to_sum (testData$data)
+df <- MTBLS79[ ,MTBLS79$Batch == 1]
+out <- normalise_to_sum (df=df)
 
 }

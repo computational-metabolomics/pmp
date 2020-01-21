@@ -2,31 +2,59 @@
 % Please edit documentation in R/glog_transformation.R
 \name{glog_transformation}
 \alias{glog_transformation}
-\title{Performs glog transformation on the data set,
-using QC samples to estimate lambda.}
+\title{Variance stabilising generalised logarithm (glog) transformation}
 \usage{
-glog_transformation(df, classes, qc_label, store_lambda = FALSE)
+glog_transformation(df, classes, qc_label, lambda = NULL)
 }
 \arguments{
-\item{df}{Peak intensity matrix}
+\item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) or 
+\link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
+class \code{numeric()} or \code{integer()} of peak intensities, areas or 
+other quantitative characteristic.}
 
-\item{classes}{vector of class labels}
+\item{classes}{\code{character()}, vector of class labels. Must be the same 
+length as the number of sample in the input peak table. If input is 
+\code{SummarizedExperiment} object, use 
+\code{SummarizedExperiment_object$meta_data_column_name}.}
 
-\item{qc_label}{class label for QC sample}
+\item{qc_label}{\code{character(1)} or \code{NULL}, class label used to
+identify QC samples.}
 
-\item{store_lambda}{if value of optimised lambda parameter needs to be
-returned}
+\item{lambda}{\code{NULL} or \code{numeric(1)}, if not \code{NULL} will use
+provided value for glog lambda.}
 }
 \value{
-data frame, peak inntensity matrix after glog transformation
+Object of class \code{SummarizedExperiment}. If input data are a 
+matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+the same R data structure as input with all value of data type 
+\code{numeric()}.
 }
 \description{
-https://doi.org/10.1186/1471-2105-8-234
+Performs glog transformation on the data set. QC samples can be used to 
+estimate technical variation in the data set and calculate transformation
+parameter \eqn{\lambda} (lambda). QC samples usually comprise a pool of 
+aliquots taken from all other samples in the study  and analysed repeatedly 
+throughout an analytical batch.
+}
+\details{
+Many univariate and multivariate statistical tests require homogeneity and
+n ormality of dataset variance. Real-world metabolomics datasets often fail 
+to meet these criteria due to asymmetric (i.e. non-'normal') and/or 
+heteroscedatic (i.e. non-homogenous) variance structure. To address this 
+issue, \code{glog} data transformations may be applied. \cr
+For each cell within the data matrix, transform the raw value (x) according 
+to:  \eqn{log10(x + sqrt(x^2 + \lambda))}. The parameter \eqn{\lambda} is 
+typically calculated using quality control (QC) samples analysed throughout
+an analysis batch.
 }
 \examples{
-attach (testData)
-out <- mv_imputation(df=testData$data, method='knn')
-out <- glog_transformation (df=out, classes=testData$class,
-    qc_label='QC')
+df <- MTBLS79[, MTBLS79$Batch == 1]
+out <- mv_imputation(df=df, method="knn")
+out <- glog_transformation (df=out, classes=df$Class,
+    qc_label="QC")
 
+}
+\references{
+Parsons HM et. al., BMC Bionf., 8(234), 2007. 
+https://doi.org/10.1186/1471-2105-8-234
 }

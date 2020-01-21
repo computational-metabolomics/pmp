@@ -4,35 +4,91 @@
 \alias{mv_imputation}
 \title{Missing value imputation using different algorithms}
 \usage{
-mv_imputation(df, method, k = 10, rowmax = 0.5, colmax = 0.5,
-  maxp = NULL, check_df = TRUE)
+mv_imputation(
+  df,
+  method,
+  k = 10,
+  rowmax = 0.5,
+  colmax = 0.5,
+  maxp = NULL,
+  check_df = TRUE
+)
 }
 \arguments{
-\item{df}{a peak matrix with features in the rows, samples in the columns}
+\item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) or 
+\link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
+class \code{numeric()} or \code{integer()} of peak intensities, areas or 
+other quantitative characteristic.}
 
-\item{method}{missing value imputation method. Supported methods are 'knn',
-'rf', 'bpca', 'sv', 'mn' and 'md'}
+\item{method}{\code{character(1)}, missing value imputation method.
+Supported methods are \code{knn}, \code{rf}, \code{bpca}, \code{sv},
+\code{'mn'} and \code{'md'}.}
 
-\item{k}{number of neighbors to be used in the imputation}
+\item{k}{\code{numeric(1)}, for a given sample containing a missing value,
+the number of nearest neighbours to include to calculate a replacement 
+value. Used only for method \code{knn}.}
 
-\item{rowmax}{fraction of missing values per row}
+\item{rowmax}{\code{numeric(1)}, the maximum percentage of missing data 
+allowed in any row. For any rows exceeding given limit, missing values are 
+imputed using the overall mean per sample. Used only for method \code{knn}.}
 
-\item{colmax}{fraction of missing values per column}
+\item{colmax}{\code{numeric(1)}, the maximum percent missing data allowed in
+any column. If any column exceeds given limit, the function will report an
+error Used only for method \code{knn}.}
 
-\item{maxp}{number of features to run on single core. If set to NULL will
-use total number of features}
+\item{maxp}{\code{integer(1)}, number of features to run on single core.
+If set to NULL will use total number of features.}
 
-\item{check_df}{if set to TRUE will check if input data needs to be
-transposed, so that features are in rows}
+\item{check_df}{\code{logical(1)}, if set to TRUE will check if input data 
+needs to be transposed, so that features are in rows.}
 }
 \value{
-data frame of missing value imputed peak intensity matrix
+Object of class \code{SummarizedExperiment}. If input data are a 
+matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+the same R data structure as input with all value of data type 
+\code{numeric()}.
 }
 \description{
-Missing value imputation using different algorithms
+Missing values in metabolomics data sets occur widely and can originate from 
+a number of sources, including technical and biological reasons. \cr
+Missing values imputation is applied to replace non-existing values 
+with an estimated values while maintaining the data structure. A number of 
+different methods are available as part of this function. \cr
+}
+\details{
+Supported missing value imputation methods are: \cr
+\cr
+\code{knn} - K-nearest neighbour. For each feature in each sample, missing 
+values are replaced by the mean average value (non-weighted) calculated 
+from its \code{k} closest neighbours in multivariate space (default distance 
+metric: euclidean distance); \cr
+\cr
+\code{rf} - Random Forest. This method is a wrapper of 
+\link[missForest]{missForest} function. For each feature, missing values are 
+iteratively imputed until a maximum number of iterations (10), or until the
+difference between consecutively-imputed matrices becomes positive. 
+Trees per forest are set to 100, variables included per tree are calculate 
+using formula \eqn{sqrt(total number of variables)}; \cr
+\cr
+\code{bpca} - Bayesian principal component analysis. This method is a 
+wrapper of \link[pcaMethods]{pca} function. Missing values are replaced by
+the values obtained from principal component analysis regression with a 
+Bayesian method. Therefore every imputed missing value does not occur 
+multiple times, neither across the samples nor across the metabolite 
+features; \cr
+\cr
+\code{sv} - Small value. For each feature, replace missing values with half
+of the lowest value recorded in the entire data matrix; \cr
+\cr
+\code{'mn'} - Mean. For each feature, replace missing values with the mean 
+average (non-weighted) of all other non-missing values for that variable;\cr
+\cr
+\code{'md'} - Median. For each feature, replace missing values with the 
+median of all other non-missing values for that variable. \cr
+\cr
 }
 \examples{
-attach (testData)
-out <- mv_imputation(df=t(testData$data), method='knn')
+df <- MTBLS79[ ,MTBLS79$Batch == 1]
+out <- mv_imputation(df=df, method='knn')
 
 }

@@ -2,41 +2,82 @@
 % Please edit documentation in R/filters.R
 \name{filter_peaks_by_blank}
 \alias{filter_peaks_by_blank}
-\title{Filter peaks by blank}
+\title{Filter features by blank samples}
 \usage{
-filter_peaks_by_blank(df, fold_change, classes, blank_label,
-  qc_label = NULL, remove = TRUE, fraction_in_blank = 0)
+filter_peaks_by_blank(
+  df,
+  fold_change,
+  classes,
+  blank_label,
+  qc_label = NULL,
+  remove_samples = TRUE,
+  remove_peaks = TRUE,
+  fraction_in_blank = 0
+)
 }
 \arguments{
-\item{df}{peak intensity matrix}
+\item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) or 
+\link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
+class \code{numeric()} or \code{integer()} of peak intensities, areas or 
+other quantitative characteristic.}
 
-\item{fold_change}{minimum fold change between analytical and blank samples.}
+\item{fold_change}{\code{numeric(1)}, fold_change minimum fold change 
+between analytical and blank samples.}
 
-\item{classes}{vector of class labels}
+\item{classes}{\code{character()}, vector of class labels. Must be the same 
+length as the number of sample in the input peak table. If input is 
+\code{SummarizedExperiment} object, use 
+\code{SummarizedExperiment_object$meta_data_column_name}.}
 
-\item{blank_label}{class label used to identify blank samples}
+\item{blank_label}{\code{character(1)}, class label used to identify blank
+samples.}
 
-\item{qc_label}{class label for QC sample. If not NULL will use QC samples 
-to calculate the mean intensity}
+\item{qc_label}{\code{character(1)} or \code{NULL}, class label used to
+identify QC samples.}
 
-\item{remove}{remove blank samples from peak matrix or not}
+\item{remove_samples}{\code{logical(1)}, remove blank samples from peak 
+matrix or not.}
 
-\item{fraction_in_blank}{number between 0 to 1 to specify fraction in how 
-many blanks peaks should be present}
+\item{remove_peaks}{\code{logical(1)}, remove filtered features from peak 
+matrix or not.}
+
+\item{fraction_in_blank}{\code{numeric(1)}, value between 0 to 1 to specify 
+fraction in how many blanks peaks should be present.}
 }
 \value{
-list of filtered peak intensity matrix and matrix with flags
+Object of class \code{SummarizedExperiment}. If input data are a 
+matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
+\code{numeric()} matrix-like object of filtered data set. Function 
+\code{flags} are added to the object \code{attributes} and is a 
+\link[S4Vectors]{DataFrame} with five columns. The same \code{DataFrame} 
+object containing flags is added to \code{rowData()} element of 
+\code{SummarizedExperiment} object as well.\cr
+\cr
+Columns in \code{rowData()} or \code{flags} element contain: \cr
+\code{median_non_blanks} median intensities of features of non-blank
+samples; \cr
+\code{median_blanks} median intensities of features of blank samples; \cr
+\code{fold_change} fold change between analytical and blank samples; \cr
+\code{blank_flags} \code{integer()}, if 0 feature is flagged to be 
+removed; \cr
+\code{blank_fraction_flags} \code{numeric()}, fraction in how many blank
+samples peaks is present. \cr
 }
 \description{
-Metabolomics datasets often contain many 'features' of non-biological 
+Metabolomics datasets often contain many features of non-biological 
 origin e.g. those associated with extraction and analysis solvents. 
 This tool facilitates the removal of such features from the data matrix, 
-as defined using an appropriate blank' sample.
+as defined using an appropriate blank sample.
+}
+\details{
+If parameter \code{qc_label} is not \code{NULL}, QC samples which will be 
+used to calculate the median signal intensity.
 }
 \examples{
-attach (testData)
-out <- filter_peaks_by_blank(df=testData$data, fold_change=1.2, 
-   classes=testData$class, blank_label='Blank', qc_label=NULL, 
-   remove=FALSE, fraction_in_blank=0)
+df <- MTBLS79[ ,MTBLS79$Batch == 1]
+df$Class[1:2] <- "Blank"
+out <- filter_peaks_by_blank(df=df, fold_change=1.2, 
+   classes=df$Class, blank_label="Blank", qc_label=NULL, 
+   remove_samples=FALSE, remove_peaks=TRUE, fraction_in_blank=0)
 
 }
