@@ -4,7 +4,8 @@
 \name{MTBLS79}
 \alias{MTBLS79}
 \title{Direct-infusion mass spectrometry (DIMS) data set}
-\format{A \link[SummarizedExperiment]{SummarizedExperiment} object. \cr
+\format{A \link[SummarizedExperiment]{RangedSummarizedExperiment-class} 
+object. \cr
 \code{assay(MTBLS79)} Peak intensities of the DIMS data set. 
 Contains 172 samples and 2488 features. \cr
 \code{colData(MTBLS79)} Sample meta data containing 4 columns. \cr

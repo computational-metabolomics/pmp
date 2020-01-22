@@ -56,7 +56,7 @@ check_peak_matrix <- function(df, classes=NULL) {
 }
 
 #' If needed convert input data to object of class 
-#' \link[SummarizedExperiment]{SummarizedExperiment}
+#' \link[SummarizedExperiment]{RangedSummarizedExperiment-class}
 #' 
 #' @param df A matrix-like (e.g. an ordinary matrix, a data frame) object with
 #' all values of class \code{numeric()} or \code{integer()} of peak
@@ -64,7 +64,7 @@ check_peak_matrix <- function(df, classes=NULL) {
 #' @param classes \code{character()}, vector of class labels. Must be the same 
 #' length as the number of sample in the input peak table.
 #' @return object of class of 
-#' \link[SummarizedExperiment]{SummarizedExperiment}. 
+#' \link[SummarizedExperiment]{RangedSummarizedExperiment-class}. 
 #' 
 #' @noRd
 check_input_data <- function (df, classes=NULL){
@@ -89,7 +89,7 @@ check_input_data <- function (df, classes=NULL){
 }
 
 #' If input data object was not of class of 
-#' \link[SummarizedExperiment]{SummarizedExperiment},
+#' \link[SummarizedExperiment]{RangedSummarizedExperiment-class},
 #' convert output to the original R data structure. 
 #' 
 #' All values stored in \code{metadata} element of \code{SummarizedExperiment}

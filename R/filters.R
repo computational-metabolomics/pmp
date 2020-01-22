@@ -18,9 +18,9 @@ NULL
 #' used to calculate the median signal intensity.
 #'
 #' @param df A matrix-like (e.g. an ordinary matrix, a data frame) or 
-#' \link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
-#' class \code{numeric()} or \code{integer()} of peak intensities, areas or 
-#' other quantitative characteristic.
+#' \link[SummarizedExperiment]{RangedSummarizedExperiment-class} object with 
+#' all values of class \code{numeric()} or \code{integer()} of peak 
+#' intensities, areas or other quantitative characteristic.
 #' @param fold_change \code{numeric(1)}, fold_change minimum fold change 
 #' between analytical and blank samples.
 #' @param classes \code{character()}, vector of class labels. Must be the same 
@@ -42,9 +42,9 @@ NULL
 #' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
 #' \code{numeric()} matrix-like object of filtered data set. Function 
 #' \code{flags} are added to the object \code{attributes} and is a 
-#' \link[S4Vectors]{DataFrame} with five columns. The same \code{DataFrame} 
-#' object containing flags is added to \code{rowData()} element of 
-#' \code{SummarizedExperiment} object as well.\cr
+#' \link[S4Vectors]{DataFrame-class} with five columns. The same 
+#' \code{DataFrame} object containing flags is added to \code{rowData()} 
+#' element of \code{SummarizedExperiment} object as well.\cr
 #' \cr
 #' Columns in \code{rowData()} or \code{flags} element contain: \cr
 #' \code{median_non_blanks} median intensities of features of non-blank
@@ -130,9 +130,9 @@ filter_peaks_by_blank <- function(df, fold_change, classes, blank_label,
 #' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
 #' \code{numeric()} matrix-like object of filtered data set. Function 
 #' \code{flags} are added to the object \code{attributes} and is a 
-#' \link[S4Vectors]{DataFrame} with five columns. The same \code{DataFrame} 
-#' object containing flags is added to \code{rowData()} element of 
-#' \code{SummarizedExperiment} object as well.\cr
+#' \link[S4Vectors]{DataFrame-class} with five columns. The same 
+#' \code{DataFrame} object containing flags is added to \code{rowData()} 
+#' element of \code{SummarizedExperiment} object as well.\cr
 #' \cr
 #' 
 #' Columns in \code{rowData()} or \code{flags} element contain \code{fractions} 
@@ -257,9 +257,9 @@ remove_peaks <- function(df, rem_index) {
 #' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
 #' \code{numeric()} matrix-like object of filtered data set. Function 
 #' \code{flags} are added to the object \code{attributes} and is a 
-#' \link[S4Vectors]{DataFrame} with five columns. The same \code{DataFrame} 
-#' object containing flags is added to \code{rowData()} element of 
-#' \code{SummarizedExperiment} object as well.\cr
+#' \link[S4Vectors]{DataFrame-class} with five columns. The same 
+#' \code{DataFrame-class} object containing flags is added to \code{rowData()} 
+#' element of \code{SummarizedExperiment} object as well.\cr
 #' \cr
 #' Columns in \code{rowData()} or \code{flags} element contain: \cr
 #' \code{rsd_QC} \code{numeric()}, RSD\% value of QC samples per feature; \cr
@@ -311,9 +311,9 @@ filter_peaks_by_rsd <- function(df, max_rsd, classes, qc_label,
 #' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
 #' \code{numeric()} matrix-like object of filtered data set. Function 
 #' \code{flags} are added to the object \code{attributes} and is a 
-#' \link[S4Vectors]{DataFrame} with five columns. The same \code{DataFrame} 
-#' object containing flags is added to \code{rowData()} element of 
-#' \code{SummarizedExperiment} object as well. If element 
+#' \link[S4Vectors]{DataFrame-class} with five columns. The same 
+#' \code{DataFrame} object containing flags is added to \code{rowData()} 
+#' element of \code{SummarizedExperiment} object as well. If element 
 #' \code{colData()} already exists flags are appended to existing values.\cr
 #' \cr
 #' 

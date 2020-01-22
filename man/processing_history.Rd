@@ -8,9 +8,9 @@ processing_history(df)
 }
 \arguments{
 \item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) or 
-\link[SummarizedExperiment]{SummarizedExperiment} object with all values of 
-class \code{numeric()} or \code{integer()} of peak intensities, areas or 
-other quantitative characteristic.}
+\link[SummarizedExperiment]{RangedSummarizedExperiment-class} object with 
+all values of class \code{numeric()} or \code{integer()} of peak 
+intensities, areas or other quantitative characteristic.}
 }
 \value{
 List of function  names and argument values.

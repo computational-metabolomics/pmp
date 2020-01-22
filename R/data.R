@@ -47,7 +47,8 @@
 #' @references Kirwan et al, Scientific Data volume 1,
 #'Article number: 140012 (2014) https://www.nature.com/articles/sdata201412
 #'
-#' @format A \link[SummarizedExperiment]{SummarizedExperiment} object. \cr
+#' @format A \link[SummarizedExperiment]{RangedSummarizedExperiment-class} 
+#' object. \cr
 #' \code{assay(MTBLS79)} Peak intensities of the DIMS data set. 
 #' Contains 172 samples and 2488 features. \cr
 #' \code{colData(MTBLS79)} Sample meta data containing 4 columns. \cr

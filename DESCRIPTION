@@ -1,7 +1,7 @@
 Package: pmp
 Type: Package
 Title: Peak Matrix Processing and signal batch correction for metabolomics data sets
-Version: 0.99.1
+Version: 0.99.2
 Author: Andris Jankevics and Ralf Weber
 Maintainer: Andris Jankevics <a.jankevics@bham.ac.uk>
 Description: Tools for scaling, normalisation and filtering of metabolomics data
