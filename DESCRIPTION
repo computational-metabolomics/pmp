@@ -21,7 +21,7 @@ Description: Tools for scaling, normalisation and filtering of metabolomics data
    spectrometry data sets.
 License: GPL-3
 biocViews: MassSpectrometry, Metabolomics, Software, QualityControl, BatchEffect
-Depends: R (>= 4.0)
+Depends: R (>= 3.6)
 Imports: stats, impute, pcaMethods, missForest, ggplot2, methods, 
     SummarizedExperiment, S4Vectors, matrixStats, grDevices, reshape2, utils
 Encoding: UTF-8

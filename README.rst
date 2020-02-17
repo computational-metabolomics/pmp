@@ -20,7 +20,7 @@ Github
       install.packages("BiocManager")
   BiocManager::install("impute")
   BiocManager::install("pcaMethods")
-  install_github('computational-metabolomics/pmp')
+  install_github('computational-metabolomics/pmp', ref="R_3.6.x")
  
 Conda
 ------------
