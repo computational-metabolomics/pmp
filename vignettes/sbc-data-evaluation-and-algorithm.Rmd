@@ -1,5 +1,5 @@
 ---
-title: "Signal and batch Correction, data assesment and correction"
+title: "Signal and batch Correction, data assessment and correction"
 author: 
     name: "Andris Jankevics"
     affiliation: Phenome Centre Birmingham, University of Birmingham
@@ -16,7 +16,7 @@ output:
 bibliography: pmp.bib
 
 vignette: >
-    %\VignetteIndexEntry{sbc-algorithm}
+    %\VignetteIndexEntry{Details signal/batch correction and data assessment}
     %\VignetteEncoding{UTF-8}
     %\VignetteEngine{knitr::rmarkdown}
 ---

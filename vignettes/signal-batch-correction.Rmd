@@ -16,7 +16,7 @@ output:
 bibliography: pmp.bib
 
 vignette: >
-    %\VignetteIndexEntry{sbcms}
+    %\VignetteIndexEntry{Signal and batch correction for mass spectrometry}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
 ---
