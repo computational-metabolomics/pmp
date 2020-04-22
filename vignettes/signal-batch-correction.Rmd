@@ -33,10 +33,10 @@ knitr::opts_chunk$set(
 This vignette demonstrates how to apply Quality Control-Robust Spline 
 Correction (QC-RSC) [@kirwan2013] algorithm for signal drift and batch effect
 correction within/across a multi-batch direct infusion mass spectrometry (DIMS)
-and liquid chromatography mass spectrometry (LCMS) data sets.
+and liquid chromatography mass spectrometry (LCMS) datasets.
 
 Please read "Signal and batch correction, data assessment and 
-correction" vignette to learn how to assess your data set and details on
+correction" vignette to learn how to assess your dataset and details on
 algorithm itself.
 
 # Installation
@@ -64,12 +64,12 @@ library(reshape2)
 library(gridExtra)
 ```
 
-# Data set
+# Dataset
 
 In this tutorial we will be using  an direct infusion mass spectrometry (DIMS) 
-data set consisting of 172 samples measured across 8 batches and is included in
+dataset consisting of 172 samples measured across 8 batches and is included in
 `pmp` package as `SummarizedExperiemnt` class object `MTBLS79`. 
-More detailed description of the data set is available from  @kirwan2014, 
+More detailed description of the dataset is available from  @kirwan2014, 
 [MTBLS79](https://www.ebi.ac.uk/metabolights/MTBLS79) and R man page.
 
 ```{r, eval=FALSE}
@@ -91,7 +91,7 @@ batch[1:10]
 sample_order[1:10]
 ```
 
-# Filtering a data set
+# Filtering a dataset
 
 Current implementation of `QCRSC` algorithm does support missing values in the 
 input data object, but we would recommend to filter out features which were net 

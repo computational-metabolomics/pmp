@@ -62,12 +62,12 @@ library(reshape2)
 library(gridExtra)
 ```
 
-# Data set
+# Dataset
 
 In this tutorial we will be using  an direct infusion mass spectrometry (DIMS) 
-data set consisting of 172 samples measured across 8 batches and is included in
+dataset consisting of 172 samples measured across 8 batches and is included in
 `pmp` package as `SummarizedExperiemnt` class object `MTBLS79`. 
-More detailed description of the data set is available from  @kirwan2014, 
+More detailed description of the dataset is available from  @kirwan2014, 
 [MTBLS79](https://www.ebi.ac.uk/metabolights/MTBLS79) and R man page.
 
 ```{r, eval=FALSE}
@@ -110,7 +110,7 @@ variation (CV). An RSD% for the QC samples below 20-30% is commonly used as an
 acceptable level of technical variation where signal correction is not required.
 
 The following code calculates and plots the RSD% values of the features within
-the data set.
+the dataset.
 
 ```{r fig.height=9, fig.width=5, message=FALSE, warning=FALSE}
 #  separate the LCMS data from the meta data
@@ -268,7 +268,7 @@ The D-ratio is a convenient measure to assess if technical variation in the QC
 samples (MAD QC) is higher than the variation within the biological samples
 (MAD sample). Ratio values close to, or higher than 1  indicate that technical
 variation of the measured feature is higher than the biological variation and
-therefore should be treated carefully during interperation of the data set.
+therefore should be treated carefully during interperation of the dataset.
 The colors in the figure above indicate different analytical batches. In the
 example above we can see that feature '409.05716' has a d-ratio value above 1
 in four batches, while for features '70.0336' and '393.35878' the D-ratio

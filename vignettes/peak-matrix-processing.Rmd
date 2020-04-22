@@ -1,5 +1,5 @@
 ---
-title: "Peak Matrix Processing for metabolomics data sets"
+title: "Peak Matrix Processing for metabolomics datasets"
 author: 
     name: "Andris Jankevics"
     affiliation: Phenome Centre Birmingham, University of Birmingham
@@ -18,7 +18,7 @@ output:
 bibliography: pmp.bib
 
 vignette: >
-    %\VignetteIndexEntry{Peak Matrix Processing for metabolomics data sets}
+    %\VignetteIndexEntry{Peak Matrix Processing for metabolomics datasets}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
 ---
@@ -64,7 +64,7 @@ Functions within `pmp` package are designed to help users to prepare data for
 further statistical data analysis in fast, easy to use and reproducible manner.
 
 This document showcases the commonly used peak matrix processing steps of 
-metabolomics data sets.
+metabolomics datasets.
 
 # Data formats
 
@@ -83,12 +83,12 @@ structure (e.g. and ordinary matrix, a data frame). If input if a matrix-like
 structure tools from `pmp` package will perform several checks for data 
 integrity as well. Please see section \@ref(endomorphisms) for more details.
 
-# Example data set, MTBLS79
+# Example dataset, MTBLS79
 
 In this tutorial we will be using  an direct infusion mass spectrometry (DIMS) 
-data set consisting of 172 samples measured across 8 batches and is included in
+dataset consisting of 172 samples measured across 8 batches and is included in
 `pmp` package as `SummarizedExperiemnt` class object `MTBLS79`. 
-More detailed description of the data set is available from  @kirwan2014, 
+More detailed description of the dataset is available from  @kirwan2014, 
 [MTBLS79](https://www.ebi.ac.uk/metabolights/MTBLS79) and R man page.
 
 ```{r, eval=FALSE}
@@ -100,7 +100,7 @@ data(MTBLS79)
 MTBLS79
 ```
 
-This data set before peak matrix filtering contains 172 samples, 2488 features
+This dataset before peak matrix filtering contains 172 samples, 2488 features
 and 18222 missing values across all samples what is roughly around 4.2%.
 
 ```{r}
@@ -108,9 +108,9 @@ sum(is.na(assay(MTBLS79)))
 sum(is.na(assay(MTBLS79))) / length(assay(MTBLS79)) * 100
 ```
 
-# Filtering a data set
+# Filtering a dataset
 
-Missing values in the data set can be filtered across samples or features. The
+Missing values in the dataset can be filtered across samples or features. The
 command below will remove all samples with more than 10 % missing values.
 
 ```{r}
@@ -121,7 +121,7 @@ MTBLS79_filtered
 sum(is.na(assay(MTBLS79_filtered)))
 ```
 
-Missing values sample filter has removed two samples from the initial data set. 
+Missing values sample filter has removed two samples from the initial dataset. 
 Outputs from any `pmp` function can be used as inputs for another function. For 
 example we can apply missing value filter across features on the output of the 
 previous command. Command below will filter only within quality control (QC) 
@@ -193,7 +193,7 @@ Several commonly used missing value imputation algorithms. Supported methods
 are k-nearest neighbours (knn), random forests (rf), Bayesian PCA missing value 
 estimator (bpca), mean or median value of the given feature and constant 
 small value. Within `mv_imputaion` interface user can easily apply different 
-mehtod without worrying about input data type or tranposing data set.
+mehtod without worrying about input data type or tranposing dataset.
 
 ```{r}
 MTBLS79_mv_imputed <- mv_imputation(df=MTBLS79_pqn_normalised,
