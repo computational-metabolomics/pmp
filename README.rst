@@ -36,7 +36,7 @@ References
 
 
 .. |Build Status (Travis)| image:: https://img.shields.io/travis/computational-metabolomics/pmp/master.svg?label=Travis
-   :target: https://travis-ci.org/computational-metabolomics/pmp
+   :target: https://travis-ci.com/computational-metabolomics/pmp
 
 .. |Build Status (AppVeyor)| image:: https://ci.appveyor.com/api/projects/status/github/computational-metabolomics/pmp?branch=master&svg=true
    :target: https://ci.appveyor.com/project/computational-metabolomics/pmp
