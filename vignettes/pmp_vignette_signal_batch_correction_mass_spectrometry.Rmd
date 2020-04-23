@@ -1,9 +1,12 @@
 ---
 title: "Signal drift and batch effect correction for mass spectrometry"
 author: 
-    name: "Andris Jankevics"
-    affiliation: Phenome Centre Birmingham, University of Birmingham
-    email: a.jankevics@bham.ac.uk
+- name: "Andris Jankevics"
+  affiliation: Phenome Centre Birmingham, University of Birmingham, UK
+  email: a.jankevics@bham.ac.uk
+- name: Ralf Johannes Maria Weber
+  affiliation: Phenome Centre Birmingham, University of Birmingham, UK
+  email: r.j.weber@bham.ac.uk
 package: pmp
 date: "`r Sys.Date()`"
 output: 
