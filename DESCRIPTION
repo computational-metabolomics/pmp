@@ -1,24 +1,26 @@
 Package: pmp
 Type: Package
-Title: Peak Matrix Processing and signal batch correction for metabolomics data sets
+Title: Peak Matrix Processing and signal batch correction for metabolomics datasets
 Version: 0.99.3
 Author: Andris Jankevics and Ralf Johannes Maria Weber
 Maintainer: Andris Jankevics <a.jankevics@bham.ac.uk>
-Description: Tools for scaling, normalisation and filtering of metabolomics data
-   sets after raw data processing. Functionality includes: data filtering based
-   on fraction of missing values across samples or features, blank sample filter
-   and feature filter based on %RSD values using Quality Control (QC) samples.
-   A unified user interface for several commonly used missing value imputation 
-   algorithms is also provided. Supported methods are: k-nearest neighbours (knn),
-   random forests (rf), Bayesian PCA missing value estimator (bpca), mean or 
-   median value of the given feature and constant small value.
-   Variance stabilising generalised logarithm transformation (glog) algorithm is
-   implemented to help minimise contributions from unwanted technical variation. 
-   Probabilistic quotient normalisation (PQN) and normalisation to total signal 
-   intensity are also included.
-   Additionally this package provides implementation of Quality Control-Robust 
-   Spline Correction (QCRSC) signal batch effect correction method for mass 
-   spectrometry data sets.
+Description: Methods and tools for (pre-)processing of metabolomics datasets
+    (i.e. peak matrices), including filtering, normalisation, missing value
+    imputation, scaling, and signal drift and batch effect correction methods.
+    Filtering methods are based on: the fraction of missing values (across
+    samples or features); Relative Standard Deviation (RSD) calculated from the
+    Quality Control (QC) samples; the blank samples. Normalisation methods
+    include Probabilistic Quotient Normalisation (PQN) and normalisation to
+    total signal intensity. A unified user interface for several commonly used
+    missing value imputation algorithms is also provided. Supported methods
+    are: k-nearest neighbours (knn), random forests (rf), Bayesian PCA missing
+    value estimator (bpca), mean or median value of the given feature and a
+    constant small value. The generalised logarithm (glog) transformation
+    algorithm is available to stabilise the variance across low and high
+    intensity mass spectral features. Finally, this package provides an
+    implementation of the Quality Control-Robust Spline Correction (QCRSC)
+    algorithm for signal drift and batch effect correction of mass
+    spectrometry-based datasets.
 License: GPL-3
 biocViews: MassSpectrometry, Metabolomics, Software, QualityControl, BatchEffect
 Depends: R (>= 4.0)
