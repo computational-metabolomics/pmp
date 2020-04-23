@@ -1,5 +1,5 @@
 ---
-title: "Signal and batch correction for mass spectrometry"
+title: "Signal drift and batch effect correction for mass spectrometry"
 author: 
     name: "Andris Jankevics"
     affiliation: Phenome Centre Birmingham, University of Birmingham
@@ -16,7 +16,7 @@ output:
 bibliography: pmp.bib
 
 vignette: >
-    %\VignetteIndexEntry{Signal and batch correction for mass spectrometry}
+    %\VignetteIndexEntry{Signal drift and batch effect correction for mass spectrometry}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
 ---
@@ -35,8 +35,8 @@ Correction (QC-RSC) [@kirwan2013] algorithm for signal drift and batch effect
 correction within/across a multi-batch direct infusion mass spectrometry (DIMS)
 and liquid chromatography mass spectrometry (LCMS) datasets.
 
-Please read "Signal and batch correction, data assessment and 
-correction" vignette to learn how to assess your dataset and details on
+Please read "Signal drift and batch effect correction and mass spectral quality
+assessment" vignette to learn how to assess your dataset and details on
 algorithm itself.
 
 # Installation
@@ -66,7 +66,7 @@ library(gridExtra)
 
 # Dataset
 
-In this tutorial we will be using  an direct infusion mass spectrometry (DIMS) 
+In this tutorial we will be using  a direct infusion mass spectrometry (DIMS) 
 dataset consisting of 172 samples measured across 8 batches and is included in
 `pmp` package as `SummarizedExperiemnt` class object `MTBLS79`. 
 More detailed description of the dataset is available from  @kirwan2014, 
@@ -140,11 +140,13 @@ plots
 The scores plots of principal components analysis (PCA) before 
 and after correction can be used to asses effects of data correction. 
 
-In this example, `PQN` method is used to normalise data,
-`KNN` for missing value imputation and `glog` for data scaling. All functions 
-are availiable as a part of `r Biocpkg("pmp")` package.
+In this example, probabilistic quotient normalisation (`PQN`) method is used to
+normalise data, k-nearest neighbours (`KNN`) for missing value imputation and
+`glog` for data scaling. All functions are availiable as a part of
+`r Biocpkg("pmp")` package.
 
-A more detailed overview on data pre-processing is detailed in @guida2016.
+See @guida2016 for a more detailed review on common pre-processing steps and
+methods.
 
 ```{r, fig.width=6, fig.height=8}
 
