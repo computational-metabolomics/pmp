@@ -2,7 +2,7 @@
 title: "Peak Matrix Processing for metabolomics datasets"
 author: 
     name: "Andris Jankevics"
-    affiliation: Phenome Centre Birmingham, University of Birmingham
+    affiliation: Phenome Centre Birmingham, University of Birmingham, UK
     email: a.jankevics@bham.ac.uk
 
 package: pmp
@@ -30,7 +30,33 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Introduction
+
+Metabolomics data (pre-)processing workflows consist of multiple steps
+including peak picking, quality assessment, missing value imputation,
+normalisation and scaling. Several software solutions (commercial and
+open-source) are available for raw data processing, including r-package XCMS, 
+to generate processed outputs in the form of a two dimensional data matrix.
+
+These outputs contain hundreds or thousands of so called "uninformative" or
+"irreproducible" features. Such features could strongly hinder outputs of
+subsequent statistical analysis, biomarker discovery or metabolic pathway
+inference. Common practice is to apply peak matrix validation and filtering
+procedures as described in @guida2016, @broadhurst2018 and @schiffman2019. 
+
+Functions within the `pmp` (Peak Matrix Processing) package are designed to
+help users to prepare data for further statistical data analysis in a fast,
+easy to use and reproducible manner.
+
+This vignette showcases a range of commonly applied Peak Matrix Processing
+steps for metabolomics datasets.
+
 # Installation
+
+You should have R version 4.0.0 or above and Rstudio installed to be able to
+run this notebook.
+
+Execute following commands from the R terminal.
 
 ```{r eval=FALSE, include=TRUE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -44,48 +70,27 @@ library(SummarizedExperiment)
 library(S4Vectors)
 ```
 
-# Introduction
-
-Metabolomics data processing workflows consist of multiple steps including peak 
-picking or raw data processing, quality assurance, missing value
-imputation, normalisation and scaling. Several tools (commercial,
-R and non-R based) are commonly used for raw data processing 
-which generate outputs in the form of a two dimensional data matrix and meta 
-data.  
-
-These outputs contain hundreds or thousands of so called uninformative or 
-unreproducible features. Such features could strongly hinder outputs of 
-subsequent statistical analysis, biomarker discovery or metabolic 
-pathway inference. Common practice is to apply peak matrix validation and 
-filtering procedures as described in @guida2016, @broadhurst2018 and 
-@schiffman2019. 
-
-Functions within `pmp` package are designed to help users to prepare data for 
-further statistical data analysis in fast, easy to use and reproducible manner.
-
-This document showcases the commonly used peak matrix processing steps of 
-metabolomics datasets.
-
 # Data formats
 
-Recent review for R packages in metabolomics
-[@stanstrup2019] covers a broad range of heterogenous tools is availiable as 
-part of `Bioconductor` sofware collection or on `CRAN`, `Github` and similar 
-public repositories. `pmp` package utilises `r Biocpkg("SummarizedExperiment")`
-class from Bioconductor for data input and output.
+Recently a review by [@stanstrup2019] reported and discussed a broad range of
+heterogeneous R tools and packages that are available via `Bioconductor`,
+`CRAN`, `Github` and similar public repositories. 
+
+`pmp` package utilises `r Biocpkg("SummarizedExperiment")` class from 
+Bioconductor for data input and output.
 
 For example, outputs from widely used `r Biocpkg("xcms")` package can be 
-relatively easy converted to `SummarizedExperiment` object using functions 
-`featureDefinitions`, `featureValues` and `pData` on `xcms` output object. 
+converted to a `SummarizedExperiment` object using functions
+`featureDefinitions`, `featureValues` and `pData` on the `xcms` output object.
 
-Additioanlly `pmp` supports to input data to be any matrix-like `R` data 
-structure (e.g. and ordinary matrix, a data frame). If input if a matrix-like
-structure tools from `pmp` package will perform several checks for data 
-integrity as well. Please see section \@ref(endomorphisms) for more details.
+Additionally `pmp` also supports any matrix-like `R` data 
+structure (e.g. an ordinary matrix, a data frame) as an input. If the input is
+a matrix-like structure `pmp` will perform several checks for data integrity.
+Please see section \@ref(endomorphisms) for more details.
 
 # Example dataset, MTBLS79
 
-In this tutorial we will be using  an direct infusion mass spectrometry (DIMS) 
+In this tutorial we will be using a direct infusion mass spectrometry (DIMS) 
 dataset consisting of 172 samples measured across 8 batches and is included in
 `pmp` package as `SummarizedExperiemnt` class object `MTBLS79`. 
 More detailed description of the dataset is available from  @kirwan2014, 
@@ -121,11 +126,11 @@ MTBLS79_filtered
 sum(is.na(assay(MTBLS79_filtered)))
 ```
 
-Missing values sample filter has removed two samples from the initial dataset. 
-Outputs from any `pmp` function can be used as inputs for another function. For 
-example we can apply missing value filter across features on the output of the 
-previous command. Command below will filter only within quality control (QC) 
-sample group.
+Missing values sample filter has removed two samples from the dataset. 
+Outputs from any `pmp` function can be used as inputs for another `pmp`
+function. For example we can apply missing value filter across features on the
+output of the previous call. The function call below will filter features based
+on the quality control (QC) sample group only.
 
 ```{r}
 MTBLS79_filtered <- filter_peaks_by_fraction(df=MTBLS79_filtered, min_frac=0.9, 
@@ -136,9 +141,9 @@ MTBLS79_filtered
 sum(is.na(assay(MTBLS79_filtered)))
 ```
 
-Similarly as we did before, we can add another filter on previous result. At 
-this we will use the same filter, but now missing values wil be calculated 
-across all samples and not only within "QC" group.
+We can add another filter on top of the previous result. For this additional
+filter  we will use the same function call, but this time missing values will
+be calculated across all samples and not only within the “QC” group.
 
 ```{r}
 MTBLS79_filtered <- filter_peaks_by_fraction(df=MTBLS79_filtered, min_frac=0.9, 
@@ -149,11 +154,11 @@ MTBLS79_filtered
 sum(is.na(assay(MTBLS79_filtered)))
 ```
 
-Applying these 3 filters has reduced number of missing values from 18222 to 
+Applying these 3 filters has reduced the number of missing values from 18222 to 
 4779. 
 
-Commonly used approach in metabolomics studies is to filter features by the by 
-coefficient of variation (CV) or RSD% of QC samples.Example below will use 30% 
+Another common filter approach is to filter features by the coefficient of
+variation (CV) or RSD% of QC samples. The example shown below will use a 30%
 threshold.
 
 ```{r}
@@ -167,9 +172,9 @@ sum(is.na(assay(MTBLS79_filtered)))
 
 # Processing history
 
-Every funcition in `pmp` provides history of applied parameter values. If user
-has saved outputs from R sessesion, it's easy to check what commands were 
-executed.
+Every function in `pmp` provides a history of parameter values that have been
+applied. If a user has saved outputs from an R session, it’s also easy to check
+what function calls were executed.
 
 ```{r}
 processing_history(MTBLS79_filtered)
@@ -177,9 +182,7 @@ processing_history(MTBLS79_filtered)
 
 # Data normalisation
 
-Probabilistic quotient normalisation (PQN) and normalisation the the total
-signal intensity methods are implemented for normalisation of biological
-variability across measured samples. Example below demonstrates how to apply 
+Next, we will apply probabilistic quotient normalisation (PQN).
 PQN method.
 
 ```{r}
@@ -187,12 +190,19 @@ MTBLS79_pqn_normalised <- pqn_normalisation(df=MTBLS79_filtered,
     classes=MTBLS79_filtered$Class, qc_label="QC")
 ```
 
+normalisation the the total
+signal intensity methods are implemented for normalisation of biological
+variability across measured samples. Example below demonstrates how to apply 
+
 # Missing value imputation
 
-Several commonly used missing value imputation algorithms. Supported methods 
-are k-nearest neighbours (knn), random forests (rf), Bayesian PCA missing value 
-estimator (bpca), mean or median value of the given feature and constant 
-small value. Within `mv_imputaion` interface user can easily apply different 
+A unified function call for several commonly used missing value imputation
+algorithms is also included in pmp. Supported methods are: k-nearest neighbours
+(knn), random forests (rf), Bayesian PCA missing value estimator (bpca), mean
+or median value of the given feature and a constant small value. In the example
+below we will apply knn imputation. 
+
+Within `mv_imputaion` interface user can easily apply different 
 mehtod without worrying about input data type or tranposing dataset.
 
 ```{r}
@@ -201,10 +211,8 @@ MTBLS79_mv_imputed <- mv_imputation(df=MTBLS79_pqn_normalised,
 ```
 
 # Data scaling
-
-Variance stabilising generalised logarithm transformation (glog) algorithm is 
-implimented to help to minimise contributions from unwanted technical 
-variaton of sample collection.
+The generalised logarithm (glog) transformation algorithm is available to
+stabilise the variance across low and high intensity mass spectral features.
 
 ```{r}
 MTBLS79_glog <- glog_transformation(df=MTBLS79_mv_imputed,
@@ -212,8 +220,9 @@ MTBLS79_glog <- glog_transformation(df=MTBLS79_mv_imputed,
 ```
 
 `glog_transformation` function uses QC samples to optimse scaling factor 
-`lambda`. Using function `glog_plot_plot_optimised_lambda` it's possibe to
-visualise if optimsation of the given parameter has converged at the minima.
+`lambda`. Using the function `glog_plot_plot_optimised_lambda` it's possible to
+visualise if the optimsation of the given parameter has converged at the
+minima.
 
 ```{r plot_glog}
 opt_lambda <- 
@@ -225,10 +234,12 @@ glog_plot_optimised_lambda(df=MTBLS79_mv_imputed,
 
 # Data integrity check and endomorphisms {#endomorphisms}
 
-Function in `pmp` package are designed to validate input data if user chose 
-not to use `r Biocpkg("SummarizedExperiment")` class objet. For example, if 
-input is `matrix` with features stored in columns and sample in rows, any 
-function of `pmp` package will be able to handle this object.
+Functions in the `pmp` package are designed to validate input data if the user
+chooses not to use the `r Biocpkg("SummarizedExperiment")` class object.
+
+For example, if the input `matrix` consists of features stored in columns and
+samples in rows or *vice versa*, any function within the `pmp` package will be
+able to handle this in the correct manner.
 
 ```{r}
 peak_matrix <- t(assay(MTBLS79))
@@ -254,9 +265,9 @@ class (rsd_filtered)
 dim (rsd_filtered)
 ```
 
-Note that `pmp` has automatically transposed input object to use largest
-dimension as features, while original R data type `matrix` has been retained
-also for function output.
+Note that `pmp` has automatically transposed the input object to use the
+largest dimension as features, while the original R data type `matrix` has been
+retained also for the function output.
 
 # Session information
 
