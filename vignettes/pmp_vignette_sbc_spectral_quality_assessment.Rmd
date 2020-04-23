@@ -4,7 +4,7 @@ author:
 - name: "Andris Jankevics"
   affiliation: Phenome Centre Birmingham, University of Birmingham, UK
   email: a.jankevics@bham.ac.uk
-- name: Gavin R Lloyd
+- name: Gavin Rhys Lloyd
   affiliation: Phenome Centre Birmingham, University of Birmingham, UK
   email: g.r.lloyd@bham.ac.uk
 - name: Ralf Johannes Maria Weber
