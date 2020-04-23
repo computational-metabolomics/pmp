@@ -94,7 +94,7 @@ batch[1:10]
 sample_order[1:10]
 ```
 
-# Filtering a dataset
+# Missing values
 
 Current implementation of `QCRSC` algorithm does support missing values in the 
 input data object, but we would recommend to filter out features which were net 
@@ -106,7 +106,7 @@ data <- filter_peaks_by_fraction(df=MTBLS79, classes=class, method="QC",
     qc_label="QC", min_frac=0.8)
 ```
 
-# Applying signal and batch correction 
+# Applying signal drift and batch effect correction 
 
 Function `QCRSC` should be used to apply signal batch correction. 
 
@@ -129,7 +129,7 @@ corrected_data <- QCRSC(df=data, order=sample_order, batch=batch,
     classes=class, spar=0, minQC=4)
 ```
 
-# Visualising results
+# Visual comparison of the results
 
 Function 'sbc_plot' provides visual comparison of the data before and after 
 correction. For example we can check output for features '1', '5', and '30' in 
