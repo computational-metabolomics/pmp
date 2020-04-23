@@ -1,5 +1,5 @@
 ---
-title: "Signal and batch Correction, data assessment and correction"
+title: "Signal drift and batch effect correction and mass spectral quality assessment"
 author: 
     name: "Andris Jankevics"
     affiliation: Phenome Centre Birmingham, University of Birmingham
@@ -16,7 +16,7 @@ output:
 bibliography: pmp.bib
 
 vignette: >
-    %\VignetteIndexEntry{Details signal/batch correction and data assessment}
+    %\VignetteIndexEntry{Signal drift and batch effect correction and mass spectral quality assessment}
     %\VignetteEncoding{UTF-8}
     %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -64,7 +64,7 @@ library(gridExtra)
 
 # Dataset
 
-In this tutorial we will be using  an direct infusion mass spectrometry (DIMS) 
+In this tutorial we will be using  a direct infusion mass spectrometry (DIMS) 
 dataset consisting of 172 samples measured across 8 batches and is included in
 `pmp` package as `SummarizedExperiemnt` class object `MTBLS79`. 
 More detailed description of the dataset is available from  @kirwan2014, 
@@ -98,7 +98,7 @@ unique(MTBLS79$Batch)
 unique(MTBLS79$Class)
 ```
 
-# Explorative example
+# Exploratory data analysis
 
 A more detailed overview and guidelines on strategies for quality control of
 mass spectrometry assays is detailed in recent work by @broadhurst2018.
@@ -161,11 +161,11 @@ ggplot(data=plotdata, aes(x=Class, y=RSD, fill=Class)) +
     theme(panel.background=element_blank())
 ```
 
-The plots indicates that there are some features with a QC RSD% lower than  30%,
-which is a commonly accepted threshold, but for some features QC RSD % exceeds
-30% and is similar to the signal variation of the biological samples. 
-We can calculate similar statistics per batch and visualise the results with
-a box plot.
+The plots indicates that most features have a QC RSD% lower than 30%, which is
+a commonly accepted threshold, but for some features the QC RSD% exceeds 30%
+and is more similar to the signal variation of the biological samples. We can
+calculate similar statistics per batch and visualise the results with a box
+plot.
 
 ```{r message=FALSE, warning=FALSE, fig.width=6, fig.height=6}
 # prepare some matrices to store the results
@@ -223,7 +223,7 @@ higher in the analytical samples than it is in the QC samples for all 20
 measured features. A few outlier QC samples can be observed.
 
 An alternative measure of QC and biological sample variability is the so called
-d-ratio, which indicates if the technical variation within the QC samples
+D-ratio, which indicates if the technical variation within the QC samples
 exceeds the biological variation within biological samples.
 
 ```{r message=FALSE, warning=FALSE, fig.width=6, fig.height=6}
@@ -270,17 +270,20 @@ samples (MAD QC) is higher than the variation within the biological samples
 variation of the measured feature is higher than the biological variation and
 therefore should be treated carefully during interperation of the dataset.
 The colors in the figure above indicate different analytical batches. In the
-example above we can see that feature '409.05716' has a d-ratio value above 1
+example above we can see that feature '409.05716' has a D-ratio value above 1
 in four batches, while for features '70.0336' and '393.35878' the D-ratio
 is reproducibly low within all eight batches.
 
-Principal components analysis (PCA) can be used to check common trends in data.
-Let's inspect the scores of the first two principal components and color samples
-by batch and class. For PCA model data should be normalised and missing values
-should be replaced using imputation, followed by data scaling. We will use PQN
-method to normalise data, KNN for missing value imputation and finally glog
-scaling method using other functions from `pmp` package. 
-A more detailed description on data filtering is detailed in @guida2016.
+Principal components analysis (PCA) can be used to check common trends in  the
+data. Let's inspect the scores of the first two principal components and
+samples colored by batch and class. For PCA model data should be normalised and 
+missing values should be replaced using imputation, followed by data scaling.
+We will use the probabilistic quotient normalisation (PQN) method to normalise
+the data, k-nearest neighbours (KNN) for missing value imputation and finally
+the glog method to stabilise the variance across low and high intensity mass
+spectral features.
+See @guida2016 for a more detailed review on common pre-processing steps and 
+methods.
 
 ```{r, fig.width=6, fig.height=6}
 pca_data <- MTBLS79[feature_names, ]
@@ -323,13 +326,13 @@ differentiating from bathes 1 to 6. On the right hand side plot the seperation
 between samples classes is still visible, but also seperation between
 measurement batches is clearly visible across PC2 axis.
 
-## Correlation between signal intensity and measurment order of QC samples
+## Correlation between signal intensity and injection order of QC samples
 
-Alternatively, trends in measured signal related to measurement order could
-indicate if signal and/or batch correction is required. The plot below
-illustrates the measured signal of QC samples across all 8 batches. To be able
-to compare all 20 features measured at different signal ranges, the data will
-be scaled to unit variance (UV).
+Alternatively, trends in measured signal related to injection order could
+indicate if signal drif and/or batch effect correction is required. The plot
+below illustrates the measured signal of QC samples across all 8 batches. To be
+able to compare all 20 features measured at different signal ranges, the data
+will be scaled to unit variance (UV).
 
 ```{r message=FALSE, warning=FALSE, fig.height=12, fig.width=6}
 
@@ -353,7 +356,7 @@ ggplot(data=plotdata, aes(x=index, y=intensity, col=batch)) +
 
 This figure indicates that there is some fluctuation in the measured signal
 across the eight batches, and that some features are following a similar
-pattern , i.e. they are correlated. We can create a similar plot to the one
+pattern, i.e. they are correlated. We can create a similar plot to the one
 above including linear regression fit between measured data points.
 
 ```{r, warning=FALSE, fig.height=12, fig.width=6}
@@ -389,7 +392,7 @@ correlations
 ```
 
 While most of the calculated *tau* values and corresponding *p-values* indicate
-that there is not a strong trend between measurement order and the measured QC
+that there is not a strong trend between injection order and the measured QC
 sample signal, some of the values don't match the trends we can observe in
 figure above. For features "133.07379" and "376.03962" calculated correlation
 values are aroun 0.6 and in figure above intensity increasing tren can be
@@ -440,9 +443,9 @@ Figure above indicates that there are significant acquisition order related
 trends within some batches. Fore example, bathes 4 and 6 for features
 '451.01081' and '409.05716'.
 
-## Using regression to estimate signal trends and variability within QC sample
+## Using regression to estimate signal trends and variability across QC sample
 
-It is possible to apply univariate regression to the QC sample measurement
+It is possible to apply univariate regression to the QC sample injection
 order and signal intensity, to estimate correlation and spread (R2) of the
 measured data points.
 
@@ -502,7 +505,7 @@ ggplot(data=plotdata, aes(x=batch, y=feature, fill=value)) +
     geom_tile() + scale_fill_gradient2()
 ```
 
-## Example of signal and batch correction for a single feature {#algorithm}
+## Example of signal drift and batch effect correction for a single feature{#algorithm}
 
 Let's have a closer look to '451.01086' measured feature and how signal
 correction can be applied.
@@ -567,7 +570,7 @@ From the outputs above it's clear that variance of measured QC sample
 intensities between batches is high (RSD% = 50), and is relatively high within
 batches 1 to 5. For batch 3 QC variation exceeds that of the biological samples.
 
-# Signal/batch correction using smoothed spline fitting
+# Signal drift and batch effect correction using smoothed spline fitting
 
 We will apply QC-RSC signal correction method as it is described in @kirwan2013.
 
@@ -596,7 +599,7 @@ nbatch <- unique(qc_batch)
 
 nb <- 6
 
-# Sample measurement order
+# Sample injection order
 x <- qc_order[qc_batch==nbatch[nb]]
 
 # Measured peak intensity or area
