@@ -19,6 +19,7 @@ output:
         toc_float: true
 
 bibliography: pmp.bib
+csl: harvard-university-of-birmingham.csl
 
 vignette: >
     %\VignetteIndexEntry{Peak Matrix Processing for metabolomics datasets}
@@ -75,7 +76,7 @@ library(S4Vectors)
 
 # Data formats
 
-Recently a review by [@stanstrup2019] reported and discussed a broad range of
+Recently a review by @stanstrup2019 reported and discussed a broad range of
 heterogeneous R tools and packages that are available via `Bioconductor`,
 `CRAN`, `Github` and similar public repositories. 
 

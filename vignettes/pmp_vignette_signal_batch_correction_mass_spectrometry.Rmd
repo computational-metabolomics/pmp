@@ -17,6 +17,7 @@ output:
         toc_float: true
 
 bibliography: pmp.bib
+csl: harvard-university-of-birmingham.csl
 
 vignette: >
     %\VignetteIndexEntry{Signal drift and batch effect correction for mass spectrometry}
