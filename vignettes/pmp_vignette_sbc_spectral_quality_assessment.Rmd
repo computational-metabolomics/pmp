@@ -30,7 +30,9 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
     collapse = TRUE,
-    comment = "#>"
+    comment = "#>",
+    fig.width=5,
+    fig.height=5
 )
 ```
 
@@ -118,7 +120,7 @@ acceptable level of technical variation where signal correction is not required.
 The following code calculates and plots the RSD% values of the features within
 the dataset.
 
-```{r fig.height=9, fig.width=5, message=FALSE, warning=FALSE}
+```{r fig.height=5, fig.width=4, message=FALSE, warning=FALSE}
 #  separate the LCMS data from the meta data
 data(MTBLS79)
 data <- SummarizedExperiment::assay(MTBLS79[feature_names, ])
@@ -160,10 +162,11 @@ ggplot(data=plotdata, aes(x=Class, y=feature, fill=RSD)) +
 
 A violin plot is a useful way of summarising the RSD% over all samples/QCs in
 the data set. Note a very high QC sample RSD% value for feature '409.05716'.
-```{r, fig.width=6, fig.height=6}
+```{r}
 ggplot(data=plotdata, aes(x=Class, y=RSD, fill=Class)) +
     geom_violin(draw_quantiles=c(0.25,0.5,0.75)) +
     ylab("RSD%") + 
+    guides(fill=FALSE) +
     theme(panel.background=element_blank())
 ```
 
@@ -173,7 +176,7 @@ and is more similar to the signal variation of the biological samples. We can
 calculate similar statistics per batch and visualise the results with a box
 plot.
 
-```{r message=FALSE, warning=FALSE, fig.width=6, fig.height=6}
+```{r message=FALSE, warning=FALSE, fig.height=6}
 # prepare some matrices to store the results
 RSDQC <- matrix(ncol=8, nrow=nrow(data))
 RSDsample <- matrix(ncol=8, nrow=nrow(data))
@@ -211,7 +214,10 @@ plotdata$Class <- as.factor(plotdata$Class)
 ggplot(data=plotdata, aes(x=Class, y=RSD, fill=Class)) + geom_boxplot() +
     facet_wrap(~ batch, ncol=3) +
     ylab("RSD%") +
-    theme(panel.background=element_blank())
+    xlab("") +
+    scale_x_discrete(labels=NULL) +
+    theme(panel.background=element_blank(), axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 ```
 
 **Summary of RSD% of QC samples**
@@ -232,7 +238,7 @@ An alternative measure of QC and biological sample variability is the so called
 D-ratio, which indicates if the technical variation within the QC samples
 exceeds the biological variation within biological samples.
 
-```{r message=FALSE, warning=FALSE, fig.width=6, fig.height=6}
+```{r message=FALSE, warning=FALSE}
 
 # prepare a list of colours for plotting
 manual_color = c("#386cb0", "#ef3b2c", "#7fc97f", "#fdb462", "#984ea3", 
@@ -291,7 +297,7 @@ spectral features.
 See @guida2016 for a more detailed review on common pre-processing steps and 
 methods.
 
-```{r, fig.width=6, fig.height=6}
+```{r, fig.width=6.5, fig.height=5}
 pca_data <- MTBLS79[feature_names, ]
 
 pca_data <- pqn_normalisation(pca_data, classes=class, qc_label="QC")
@@ -340,7 +346,7 @@ below illustrates the measured signal of QC samples across all 8 batches. To be
 able to compare all 20 features measured at different signal ranges, the data
 will be scaled to unit variance (UV).
 
-```{r message=FALSE, warning=FALSE, fig.height=12, fig.width=6}
+```{r message=FALSE, warning=FALSE, fig.height=10}
 
 # autoscale the QC data
 QCdata <- data[ ,QChits]
@@ -365,7 +371,7 @@ across the eight batches, and that some features are following a similar
 pattern, i.e. they are correlated. We can create a similar plot to the one
 above including linear regression fit between measured data points.
 
-```{r, warning=FALSE, fig.height=12, fig.width=6}
+```{r, warning=FALSE, fig.height=10}
 ggplot(data=plotdata, aes(x=index, y=intensity, col=batch)) + 
     geom_point(size=2) +
     facet_wrap(~ variable, ncol=4) +
@@ -379,7 +385,7 @@ calculate actual correlation values within QC samples for each measured
 feature, and we will use Kendall's *tau* statistic to estimate a rank-based
 measure of association.
 
-```{r message=FALSE, warning=FALSE, fig.height=15, fig.width=10}
+```{r message=FALSE, warning=FALSE, fig.height=7.5}
 sampleorder <- c(1:ncol(QCdata))
 
 correlations <- matrix(ncol=2, nrow=nrow(data))
@@ -516,7 +522,7 @@ ggplot(data=plotdata, aes(x=batch, y=feature, fill=value)) +
 Let's have a closer look to '451.01086' measured feature and how signal
 correction can be applied.
 
-```{r, warning=FALSE, message=FALSE, fig.width=6, fig.height=6}
+```{r, warning=FALSE, message=FALSE}
 data <- data.frame(data=
     as.vector(SummarizedExperiment::assay(MTBLS79["451.01086", ])), batch=batch,
     class=factor(class, ordered=TRUE))
@@ -534,7 +540,7 @@ measured intensities can be observed between analytical batches.
 
 Similar plot for QC samples only
 
-```{r, fig.width=6, fig.height=6}
+```{r}
 
 QCdata <- data[data$class == "QC",]
 
@@ -645,7 +651,7 @@ out
 Now the smoothed spline fit is used to predict values for  the biological
 sample for the current batch.
 
-```{r, fig.width=6, fig.height=6}
+```{r}
 valuePredict=predict(sp.obj, order[batch==nb])
 
 plotchr <- as.numeric(data$class)
@@ -674,7 +680,7 @@ for signal drift. This can usually be done by subtracting the fitted values
 from the actual measured values for each feature. To avoid getting negative
 values we will add the median value of the feature to the corrected data.
 
-```{r, fig.width=6, fig.height=6, warning=FALSE}
+```{r, warning=FALSE}
 fitmedian <- median(plotdata$measured, na.rm=TRUE)
 plotdata$corrected_subt <- (plotdata$measured - plotdata$fitted) + fitmedian
 
@@ -697,7 +703,7 @@ An alternative to subtraction of the fitted values is to divide them by the
 median of the fit and use the resulting coefficients to correct the data points.
 The same general relative trends should be observed in either case.
 
-```{r, fig.width=6, fig.height=6, warning=FALSE}
+```{r, warning=FALSE}
 plotdata$corrected_div <- plotdata$measured/(plotdata$fitted/fitmedian)
 
 plotdata3 <- plotdata[,c("Class", "order", "corrected_subt", "corrected_div")]
@@ -720,7 +726,7 @@ ggplot(data=plotdata3, aes(x=order, y=intensity, color=data, shape=Class)) +
 So far we have applied signal correction for data points within one analytical 
 batch. The code below will perform the same steps for each of the 8 batches.
 
-```{r, fig.width=6, fig.height=6, warning=FALSE}
+```{r, warning=FALSE}
 
 outl <- rep(NA, nrow(data))
 
@@ -766,7 +772,7 @@ ggplot(data=plotdata2, aes(x=order, y=log(intensity,10),
 After smoothed spline fit per each batch is calculated, we can apply signal 
 correction within each batch.
 
-```{r, fig.width=6, fig.height=6, warning=FALSE}
+```{r, warning=FALSE}
 
 # median intensity value is used to adjust batch effect
 
@@ -807,7 +813,7 @@ First, a grand median is calculated across all batches, and then difference
 between each batch median and the grand median is subtracted from all the
 samples in that batch, to remove the difference.
 
-```{r, fig.width=6, fig.height=6, warning=FALSE}
+```{r, warning=FALSE}
 mpa <- rep(NA, nrow(data))
 
 for (bch in 1:8) {
@@ -845,7 +851,7 @@ ggplot(data=plotdata2, aes(x=order, y=log(intensity,10),
 
 We can calculate RSD% before and after correction.
 
-```{r, fig.width=6, fig.height=6, warning=FALSE}
+```{r, warning=FALSE}
 FUN <- function(x) sd(x, na.rm=TRUE)/mean(x, na.rm=TRUE) * 100
 
 # RSD% of biological and QC samples within all 6 batches:
@@ -892,7 +898,7 @@ corrected_data <- QCRSC(df=data, order=sample_order, batch=batch,
 We can calculate RSD% statistics per batch before and after correction and
 visualise the results with a box plot.
 
-```{r, fig.width=6, fig.height=6, warning=FALSE}
+```{r, warning=FALSE}
 data <- SummarizedExperiment::assay(data)
 corrected_data <- SummarizedExperiment::assay(corrected_data)
 RSDQC <- matrix(ncol=8, nrow=nrow(data))
@@ -952,7 +958,10 @@ plotdata$Class <- as.factor(plotdata$Class)
 ggplot(data=plotdata, aes(x=Class, y=RSD, fill=Class)) + geom_boxplot() +
     facet_wrap(~ batch, ncol=3) +
     ylab("RSD%") +
-    theme(panel.background=element_blank()) +
+    xlab("") +
+    scale_x_discrete(labels=NULL) +
+    theme(panel.background=element_blank(), axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
     scale_y_continuous(limits=c(0, 50))
 
 plotdata <- rbind(plotdataBio, plotdataBio_corrected)
@@ -963,7 +972,9 @@ plotdata$Class <- as.factor(plotdata$Class)
 ggplot(data=plotdata, aes(x=Class, y=RSD, fill=Class)) + geom_boxplot() +
     facet_wrap(~ batch, ncol=3) +
     ylab("RSD%") +
-    theme(panel.background=element_blank())
+    xlab("") +
+    theme(panel.background=element_blank(), axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 
 ```
 

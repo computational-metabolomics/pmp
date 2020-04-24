@@ -134,7 +134,7 @@ corrected_data <- QCRSC(df=data, order=sample_order, batch=batch,
 Function 'sbc_plot' provides visual comparison of the data before and after 
 correction. For example we can check output for features '1', '5', and '30' in 
 peak matrix.
-```{r message=FALSE, warning=FALSE, fig.height=6, fig.width=6}
+```{r message=FALSE, warning=FALSE, fig.height=5, fig.width=5}
 plots <- sbc_plot (df=MTBLS79, corrected_df=corrected_data, classes=class, 
     batch=batch, output=NULL, indexes=c(1, 5, 30))
 plots

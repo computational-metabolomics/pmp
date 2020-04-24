@@ -227,7 +227,7 @@ MTBLS79_glog <- glog_transformation(df=MTBLS79_mv_imputed,
 visualise if the optimsation of the given parameter has converged at the
 minima.
 
-```{r plot_glog}
+```{r plot_glog, fig.width=5}
 opt_lambda <- 
     processing_history(MTBLS79_glog)$glog_transformation$lambda_opt
 glog_plot_optimised_lambda(df=MTBLS79_mv_imputed,
