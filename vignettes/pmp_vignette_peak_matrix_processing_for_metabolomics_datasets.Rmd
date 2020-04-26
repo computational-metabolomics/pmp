@@ -187,16 +187,11 @@ processing_history(MTBLS79_filtered)
 # Data normalisation
 
 Next, we will apply probabilistic quotient normalisation (PQN).
-PQN method.
 
 ```{r}
 MTBLS79_pqn_normalised <- pqn_normalisation(df=MTBLS79_filtered, 
     classes=MTBLS79_filtered$Class, qc_label="QC")
 ```
-
-normalisation the the total
-signal intensity methods are implemented for normalisation of biological
-variability across measured samples. Example below demonstrates how to apply 
 
 # Missing value imputation
 
