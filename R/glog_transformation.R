@@ -112,8 +112,13 @@ glog_omptimise_lambda <- function(upper_lim, df_qc){
 
 glog_plot_optimised_lambda <- function(df, optimised_lambda, classes, qc_label,
     plot_grid=100){
+    
     df <- check_input_data(df, classes=classes)
     df_qc <- df[, classes == qc_label]
+    
+    offset <- min(assay(df_qc), na.rm=TRUE)#set offset to the minimum QC samples
+    assay(df_qc) <- assay(df_qc) - offset # set minimum of qc data to 0
+    
     lambda_lim <- c(optimised_lambda, optimised_lambda) +
         c(-optimised_lambda*0.8, optimised_lambda*0.8) 
     sse_df <- data.frame(lambda=seq(lambda_lim[1], lambda_lim[2], 
@@ -123,8 +128,8 @@ glog_plot_optimised_lambda <- function(df, optimised_lambda, classes, qc_label,
     g <- ggplot(data=sse_df, aes_string(x='lambda',y='SSE')) +
         geom_vline(xintercept=optimised_lambda, color="red") +
         geom_line(size=1.1) + theme_bw() +
-        labs (title="Optimisation outup of glog lambda parameter",
-            caption=paste("lambda=",optimised_lambda, sep=""))
+        labs (title="glog parameter optimisation",
+            caption=paste("optimum = ",round(optimised_lambda,2), sep=""))
     return (g)
 }
 
@@ -173,8 +178,13 @@ glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
     }
     df <- check_input_data(df=df, classes=classes)
     df_qc <- df[, classes == qc_label]
+    
+    # offset for QC samples
     offset <- min(assay(df_qc), na.rm=TRUE)#set offset to the minimum QC samples
+    
     assay(df_qc) <- assay(df_qc) - offset # set minimum of qc data to 0
+    assay(df) <- assay(df) - offset # apply qc offset to samples
+    
     VF <- rowVars(assay(df_qc), na.rm=TRUE) # variance of all features
     # Upper limit max var or largest ratio max(var)/min(var)
     upper_lim <- max(pmax(VF, max(VF) / sort(VF)[sort(VF) > 0][1]))
@@ -195,7 +205,7 @@ glog_transformation <- function(df, classes, qc_label, lambda=NULL) {
         lambda <- 5.0278 * 10^(-9)
         assay(df) <- glog_rescale_data(assay(df))
     }
-    assay(df) <- assay(df) - min(assay(df), na.rm=TRUE)
+
     # set minimum over all values to 0
     assay(df) <- glog(assay(df), 0, lambda) # apply glog
     meta_data <- metadata(df)
