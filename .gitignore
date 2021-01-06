@@ -4,3 +4,4 @@ pmp/.Rhistory
 pmp/pmp.Rproj
 .Rproj.user
 inst/doc
+*.Rproj
