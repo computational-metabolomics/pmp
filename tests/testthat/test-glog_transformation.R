@@ -13,8 +13,12 @@ test_that("Glog function returns expected output", {
   optimised_lambda <- 
   optimised_lambda$processing_history$glog_transformation$lambda_opt
   
-  graph <- glog_plot_optimised_lambda(df=data, optimised_lambda=optimised_lambda,
-    classes=testData$class, qc_label="QC",)
+  graph <- glog_plot_optimised_lambda(
+    df=data, 
+    optimised_lambda=optimised_lambda,
+    classes=testData$class, 
+    qc_label="QC")
+  
   expect_equal(graph[[9]]$x, "lambda")
   expect_equal(graph[[9]]$y, "SSE")
   
