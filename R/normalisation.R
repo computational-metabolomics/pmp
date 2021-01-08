@@ -81,10 +81,10 @@ calculate_ref_mean <- function(df_qc,ref_method='mean'){
 #' @param qc_frac \code{numeric()} A value between 0 and 1 to indicate the 
 #' minimum proportion of QC samples a feature must be present in for it to be included 
 #' when computing the reference. Default \code{qc_frac = 0}.
-#' @param sample_frac \code{numeric} A value between 0 and 1 to indicate the 
+#' @param sample_frac \code{numeric()} A value between 0 and 1 to indicate the 
 #' minimum proportion of samples a feature must be present in for it to be considered 
 #' when computing the normalisation coefficients. Default \code{sample_frac = 0}.
-#' @param ref_method \code{character} Method used to compute the reference from
+#' @param ref_method \code{character()} Method used to compute the reference from
 #' the QC samples. Default \code{ref_method = 'mean'}. Allowed
 #' values are "mean" or "median".
 #' @return Object of class \code{SummarizedExperiment}. If input data are a 
