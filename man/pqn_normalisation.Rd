@@ -33,12 +33,12 @@ values to use instead of calculating from QC sample group. If set to
 \code{NULL}, QC sample data will be used.}
 
 \item{qc_frac}{\code{numeric()} A value between 0 and 1 to indicate the 
-proportion NA acceptable for a feature to be included in the
-reference. Default \code{qc_frac = 0}.}
+minimum proportion of QC samples a feature must be present in for it to be included 
+when computing the reference. Default \code{qc_frac = 0}.}
 
 \item{sample_frac}{\code{numeric} A value between 0 and 1 to indicate the 
-proportion NA acceptable for a feature to be considered when computing
-the normalisation coefficient. Default \code{qc_frac = 0}.}
+minimum proportion of samples a feature must be present in for it to be considered 
+when computing the normalisation coefficients. Default \code{sample_frac = 0}.}
 
 \item{ref_method}{\code{character} Method used to compute the reference from
 the QC samples. Default \code{ref_method = 'mean'}. Allowed
