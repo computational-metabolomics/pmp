@@ -4,7 +4,15 @@
 \alias{pqn_normalisation}
 \title{Probabilistic quotient normalisation (PQN)}
 \usage{
-pqn_normalisation(df, classes, qc_label, ref_mean = NULL)
+pqn_normalisation(
+  df,
+  classes,
+  qc_label,
+  ref_mean = NULL,
+  qc_frac = 0,
+  sample_frac = 0,
+  ref_method = "mean"
+)
 }
 \arguments{
 \item{df}{A matrix-like (e.g. an ordinary matrix, a data frame) or 
@@ -23,6 +31,18 @@ identify QC samples.}
 \item{ref_mean}{\code{numeric()} or \code{NULL}, Vector of reference mean
 values to use instead of calculating from QC sample group. If set to 
 \code{NULL}, QC sample data will be used.}
+
+\item{qc_frac}{\code{numeric()} A value between 0 and 1 to indicate the 
+proportion NA acceptable for a feature to be included in the
+reference. Default \code{qc_frac = 0}.}
+
+\item{sample_frac}{\code{numeric} A value between 0 and 1 to indicate the 
+proportion NA acceptable for a feature to be considered when computing
+the normalisation coefficient. Default \code{qc_frac = 0}.}
+
+\item{ref_method}{\code{character} Method used to compute the reference from
+the QC samples. Default \code{ref_method = 'mean'}. Allowed
+values are "mean" or "median".}
 }
 \value{
 Object of class \code{SummarizedExperiment}. If input data are a 
