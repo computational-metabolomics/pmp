@@ -216,11 +216,11 @@ pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL, qc_frac=0,
     meta_data$processing_history$pqn_normalisation <- c(
         return_function_args(),
         list('reference_feature_count'=n_ref,
-             'sample_feature_count',n_samp,
-             'coef_feature_count',coef_count,
-             'coef_idx',coef_idx,
-             'coef_idx_name',coef_idx_name,
-             'ref_mean',ref_mean
+             'sample_feature_count'=n_samp,
+             'coef_feature_count'=coef_count,
+             'coef_idx'=coef_idx,
+             'coef_idx_name'=coef_idx_name,
+             'computed_ref'=ref_mean
         )
     )
     metadata(df) <- meta_data
