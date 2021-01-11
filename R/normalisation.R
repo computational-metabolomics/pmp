@@ -57,6 +57,7 @@ calculate_ref_mean <- function(df_qc,ref_method='mean'){
             '". Valid options are ',
             '"mean" or "median".'))
     }
+    names(ref_mean)=rownames(df_qc)
     return(ref_mean)
 }
 
