@@ -87,9 +87,10 @@ calculate_ref_mean <- function(df_qc,ref_method='mean'){
 #' @param ref_method \code{character()} Method used to compute the reference from
 #' the QC samples. Default \code{ref_method = 'mean'}. Allowed
 #' values are "mean" or "median".
-#' @return Object of class \code{SummarizedExperiment}. If input data are a 
-#' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
-#' the same R data structure as input with all value of data type 
+#' @return Object of class \code{SummarizedExperiment}. If input data are 
+#' matrix-like (e.g. an ordinary matrix, a data frame) object, the same R data 
+#' structure as the input will be returned with all values of the data type.
+#' 
 #' \code{numeric()}.
 #' 
 #' @examples 
@@ -191,13 +192,20 @@ pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL, qc_frac=0,
         return(sum(!is.na(x)))
     })
     # median coefficient for each sample
-    coef = matrixStats::colMedians(coef,na.rm=TRUE)
+    coef_med = matrixStats::colMedians(coef,na.rm=TRUE)
+    # index of coefficient used for normalisation
+    # (lowest index of, in event of ties)
+    coef_idx = apply(coef,2,function(x) {
+        return(which.min(abs(x - median(x,na.rm=TRUE)))[1])
+    })
+    # name of featured used for scaling
+    coef_idx_name=rownames(df_filt)[coef_idx] 
     # convert to matrix
-    coef=matrix(coef,nrow=nrow(df),ncol=length(coef),byrow = TRUE)
+    coef_med=matrix(coef_med,nrow=nrow(df),ncol=length(coef_med),byrow = TRUE)
     
     # apply normalisation
-    assay(df) <- assay(df) / coef 
-    col_data <- DataFrame(pqn_coef=coef[1,])
+    assay(df) <- assay(df) / coef_med 
+    col_data <- DataFrame(pqn_coef=coef_med[1,])
     colData(df) <- cbind(colData(df), col_data)
     meta_data <- metadata(df)
     meta_data$processing_history$pqn_normalisation <- c(
@@ -205,6 +213,8 @@ pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL, qc_frac=0,
         list('reference_feature_count'=n_ref,
              'sample_feature_count',n_samp,
              'coef_feature_count',coef_count,
+             'coef_idx',coef_idx,
+             'coef_idx_name',coef_idx_name,
              'ref_mean',ref_mean
         )
     )
