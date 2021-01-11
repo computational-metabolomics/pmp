@@ -64,9 +64,9 @@ test_that("PQN computation of reference works as expected for mean and median",{
   expect_equal(mean_ref[[1]],106308.238,tolerance = 0.0005)
   
   out <- pqn_normalisation(df=testData$data, classes=testData$class, 
-    qc_label="QC",ref_method = 'mean')
+    qc_label="QC",ref_method = 'median')
   median_ref=attributes(out)$processing_history$pqn_normalisation$computed_ref
-  expect_equal(median_ref[[1]],106308.238,tolerance = 0.0005)
+  expect_equal(median_ref[[1]],88597.333,tolerance = 0.0005)
 })
 
 
@@ -77,7 +77,7 @@ test_that("PQN check reference when appling additional filtering",{
   expect_equal(mean_ref[[1]],19855.36,tolerance = 0.0005)
   
   out <- pqn_normalisation(df=testData$data, classes=testData$class, 
-    qc_label="QC",qc_frac = 1,sample_frac=1,ref_method = 'mean')
+    qc_label="QC",qc_frac = 1,sample_frac=1,ref_method = 'median')
   median_ref=attributes(out)$processing_history$pqn_normalisation$computed_ref
-  expect_equal(median_ref[[1]],19855.36,tolerance = 0.0005)
+  expect_equal(median_ref[[1]],10773.31,tolerance = 0.0005)
 })
