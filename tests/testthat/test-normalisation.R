@@ -52,6 +52,6 @@ test_that("PQN normalisation returns correct output when matrix needs to be tran
 test_that("PQN normalisation doesn't crash if only one feature is selected for normalisation", {
   out <- matrix(nrow=3, ncol=9)
   out <- rbind(out, testData$data[1, ])
-  out <- pqn_normalisation(df=out, classes=testData$class, qc_label="QC")
+  expect_warning(out <- pqn_normalisation(df=out, classes=testData$class, qc_label="QC"))
   expect_true(nrow(out) == 4)
 })

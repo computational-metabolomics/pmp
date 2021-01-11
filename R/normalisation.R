@@ -203,6 +203,11 @@ pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL, qc_frac=0,
     # convert to matrix
     coef_med=matrix(coef_med,nrow=nrow(df),ncol=length(coef_med),byrow = TRUE)
     
+    if (any(is.na(coef_med))) {
+        warning(paste0('A normlisation coefficient could not be computed for ',
+        'one or more samples.'))
+    }
+    
     # apply normalisation
     assay(df) <- assay(df) / coef_med 
     col_data <- DataFrame(pqn_coef=coef_med[1,])
