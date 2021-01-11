@@ -36,18 +36,19 @@ values to use instead of calculating from QC sample group. If set to
 minimum proportion of QC samples a feature must be present in for it to be included 
 when computing the reference. Default \code{qc_frac = 0}.}
 
-\item{sample_frac}{\code{numeric} A value between 0 and 1 to indicate the 
+\item{sample_frac}{\code{numeric()} A value between 0 and 1 to indicate the 
 minimum proportion of samples a feature must be present in for it to be considered 
 when computing the normalisation coefficients. Default \code{sample_frac = 0}.}
 
-\item{ref_method}{\code{character} Method used to compute the reference from
+\item{ref_method}{\code{character()} Method used to compute the reference from
 the QC samples. Default \code{ref_method = 'mean'}. Allowed
 values are "mean" or "median".}
 }
 \value{
-Object of class \code{SummarizedExperiment}. If input data are a 
-matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
-the same R data structure as input with all value of data type 
+Object of class \code{SummarizedExperiment}. If input data are 
+matrix-like (e.g. an ordinary matrix, a data frame) object, the same R data 
+structure as the input will be returned with all values of the data type.
+
 \code{numeric()}.
 }
 \description{
