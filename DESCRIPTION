@@ -1,9 +1,31 @@
 Package: pmp
 Type: Package
 Title: Peak Matrix Processing and signal batch correction for metabolomics datasets
-Version: 1.3.0
-Author: Andris Jankevics and Ralf Johannes Maria Weber
-Maintainer: Andris Jankevics <a.jankevics@bham.ac.uk>
+Version: 1.3.1
+Authors@R: c(
+    person(
+        c("Andris"),
+          "Jankevics",
+           role=c("aut"),
+           email="a.jankevics@bham.ac.uk"),
+    person(
+        c("Gavin","Rhys"),
+          "Lloyd",
+           role=c("aut","cre"),
+           email="g.r.lloyd@bham.ac.uk"),
+    person(
+        c("Ralf","Johannes", "Maria"),
+          "Weber",
+           role=c("aut"),
+           email="r.j.weber@bham.ac.uk")
+    )
+Maintainer@R: c(
+    person(
+        c("Gavin","Rhys"),
+          "Lloyd",
+           role=c("aut","cre"),
+           email="g.r.lloyd@bham.ac.uk")
+    )
 Description: Methods and tools for (pre-)processing of metabolomics datasets
     (i.e. peak matrices), including filtering, normalisation, missing value
     imputation, scaling, and signal drift and batch effect correction methods.
@@ -28,7 +50,7 @@ Imports: stats, impute, pcaMethods, missForest, ggplot2, methods,
     SummarizedExperiment, S4Vectors, matrixStats, grDevices, reshape2, utils
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     covr,
