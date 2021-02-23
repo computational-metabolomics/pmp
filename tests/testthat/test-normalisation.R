@@ -52,6 +52,32 @@ test_that("PQN normalisation returns correct output when matrix needs to be tran
 test_that("PQN normalisation doesn't crash if only one feature is selected for normalisation", {
   out <- matrix(nrow=3, ncol=9)
   out <- rbind(out, testData$data[1, ])
-  out <- pqn_normalisation(df=out, classes=testData$class, qc_label="QC")
+  expect_warning(out <- pqn_normalisation(df=out, classes=testData$class, qc_label="QC"))
   expect_true(nrow(out) == 4)
+})
+
+
+test_that("PQN computation of reference works as expected for mean and median",{
+  out <- pqn_normalisation(df=testData$data, classes=testData$class, 
+    qc_label="QC",ref_method = 'mean')
+  mean_ref=attributes(out)$processing_history$pqn_normalisation$computed_ref
+  expect_equal(mean_ref[[1]],106308.238,tolerance = 0.0005)
+  
+  out <- pqn_normalisation(df=testData$data, classes=testData$class, 
+    qc_label="QC",ref_method = 'median')
+  median_ref=attributes(out)$processing_history$pqn_normalisation$computed_ref
+  expect_equal(median_ref[[1]],88597.333,tolerance = 0.0005)
+})
+
+
+test_that("PQN check reference when appling additional filtering",{
+  out <- pqn_normalisation(df=testData$data, classes=testData$class, 
+    qc_label="QC",qc_frac = 1,sample_frac=1,ref_method = 'mean')
+  mean_ref=attributes(out)$processing_history$pqn_normalisation$computed_ref
+  expect_equal(mean_ref[[1]],19855.36,tolerance = 0.0005)
+  
+  out <- pqn_normalisation(df=testData$data, classes=testData$class, 
+    qc_label="QC",qc_frac = 1,sample_frac=1,ref_method = 'median')
+  median_ref=attributes(out)$processing_history$pqn_normalisation$computed_ref
+  expect_equal(median_ref[[1]],10773.31,tolerance = 0.0005)
 })
