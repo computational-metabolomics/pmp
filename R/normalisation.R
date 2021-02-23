@@ -46,8 +46,18 @@ normalise_to_sum <- function(df, check_df=TRUE) {
 #' 
 #' @return vector of reference mean values
 #' @noRd
-calculate_ref_mean <- function(df_qc){
-    ref_mean <- rowMeans(df_qc, na.rm=TRUE)
+calculate_ref_mean <- function(df_qc,ref_method='mean'){
+    
+    if (ref_method=='mean') {
+        ref_mean <- rowMeans(df_qc, na.rm=TRUE)
+    } else if (ref_method=='median') {
+        ref_mean <- rowMedians(df_qc,na.rm=TRUE)
+    } else {
+        stop(paste0('Unknown ref_method for calculate_ref_mean: "',ref_method,
+            '". Valid options are ',
+            '"mean" or "median".'))
+    }
+    names(ref_mean)=rownames(df_qc)
     return(ref_mean)
 }
 
@@ -69,9 +79,19 @@ calculate_ref_mean <- function(df_qc){
 #' @param ref_mean \code{numeric()} or \code{NULL}, Vector of reference mean
 #' values to use instead of calculating from QC sample group. If set to 
 #' \code{NULL}, QC sample data will be used.
-#' @return Object of class \code{SummarizedExperiment}. If input data are a 
-#' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
-#' the same R data structure as input with all value of data type 
+#' @param qc_frac \code{numeric()} A value between 0 and 1 to indicate the 
+#' minimum proportion of QC samples a feature must be present in for it to be included 
+#' when computing the reference. Default \code{qc_frac = 0}.
+#' @param sample_frac \code{numeric()} A value between 0 and 1 to indicate the 
+#' minimum proportion of samples a feature must be present in for it to be considered 
+#' when computing the normalisation coefficients. Default \code{sample_frac = 0}.
+#' @param ref_method \code{character()} Method used to compute the reference from
+#' the QC samples. Default \code{ref_method = 'mean'}. Allowed
+#' values are "mean" or "median".
+#' @return Object of class \code{SummarizedExperiment}. If input data are 
+#' matrix-like (e.g. an ordinary matrix, a data frame) object, the same R data 
+#' structure as the input will be returned with all values of the data type.
+#' 
 #' \code{numeric()}.
 #' 
 #' @examples 
@@ -81,34 +101,139 @@ calculate_ref_mean <- function(df_qc){
 #' 
 #' @export
 
-pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL) {
+pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL, qc_frac=0,
+    sample_frac=0,ref_method='mean') {
+    
+    # check df for issues
     df <- check_input_data(df=df, classes=classes)
+    
+    # add some rownames if not present
+    rm_rownames=FALSE
+    if (is.null(rownames(assay(df)))) {
+        rownames(df)=as.character(1:nrow(df))
+        rm_rownames=TRUE
+    }
+    
+    # if no reference then create one
     if (is.null(ref_mean)){
         if (qc_label == "all") {
+            # use all samples
             ref <- df
+            ref_class = classes
         } else {
+            # use only samples with the provided QC label
             ref <- df[, classes == qc_label]
+            ref_class = classes[classes == qc_label]
         }
-        ref_mean <- calculate_ref_mean(df_qc=assay(ref))
-    }
-    coef <- vector()
-    for (i in seq_len(dim(df)[2])) {
-        tempMat <- cbind(ref_mean, assay(df)[, i])
-        vecelim <- which(rowAnyMissings(tempMat))
-        if (length(vecelim) != 0) {
-            tempMat <- tempMat[-c(vecelim), , drop=FALSE]
+        ## apply missing value filter to reference
+        # only keep features present in qc_frac*100% samples
+        ref = filter_peaks_by_fraction(
+            df=ref,
+            min_frac = qc_frac,
+            classes = ref_class,
+            method='across',
+            qc_label=qc_label,
+            remove_peaks = TRUE
+        )
+        # check we have some features left
+        if (nrow(assay(ref))<1) {
+            stop(paste0('QC filtering was too strict and none of the selected ',
+            'reference features survived the filtering. Try reducing the value',
+            ' of qc_frac.')
+            )
         }
-        coef[i] <- median(as.numeric(tempMat[, 2]/tempMat[, 1]), na.rm=TRUE)
+        # record the number of reference samples used
+        n_ref = nrow(assay(ref))
+        
+        # average the reference samples
+        ref_mean <- calculate_ref_mean(df_qc=assay(ref),ref_method)
     }
-    assay(df) <- assay(df)/coef[col(assay(df))]
-    col_data <- DataFrame(pqn_coef=coef)
+    
+    # filter the samples before calculating coefficient
+    df_filt = filter_peaks_by_fraction(
+        df=df,
+        min_frac = sample_frac,
+        classes = classes,
+        method='across',
+        qc_label=qc_label,
+        remove_peaks = TRUE
+    )
+    
+    # check we have some features left
+    if (nrow(assay(df_filt))<1) {
+        stop(paste0('Sample filtering was too strict and none of the',
+        ' features survived the filtering. Try reducing the ',
+        'value of sample_frac.')
+        )
+    }
+
+    ## only keep features that survive both filters
+    U=intersect(rownames(assay(df_filt)),rownames(assay(ref)))
+    ref_mean=ref_mean[U]
+    df_filt=df_filt[U,]
+    
+    # check we have some features left
+    if (nrow(assay(df_filt))<1) {
+        stop(paste0('No features remain after filtering that are common to ',
+        'both the reference and the sample matrix. Try again with lower ',
+        'values for QC_frac and/or sample_frac.')
+        )
+    }
+    # record number of features
+    n_samp=nrow(df_filt)
+    
+    ## calculate coefficients
+    # divide each sample by reference
+    coef = apply(assay(df_filt),2,function(x) {
+            return(x / ref_mean)
+        }
+    )
+    # count number of coefficients per sample
+    coef_count = apply(coef,2,function(x){
+        return(sum(!is.na(x)))
+    })
+    # median coefficient for each sample
+    coef_med = matrixStats::colMedians(coef,na.rm=TRUE)
+    # index of coefficient used for normalisation
+    # (lowest index of, in event of ties)
+    coef_idx = apply(coef,2,function(x) {
+        return(which.min(abs(x - median(x,na.rm=TRUE)))[1])
+    })
+    # name of featured used for scaling
+    coef_idx_name=rownames(df_filt)[coef_idx] 
+    # convert to matrix
+    coef_med=matrix(coef_med,nrow=nrow(df),ncol=length(coef_med),byrow = TRUE)
+    
+    if (any(is.na(coef_med))) {
+        warning(paste0('A normlisation coefficient could not be computed for ',
+        'one or more samples.'))
+    }
+    
+    # apply normalisation
+    assay(df) <- assay(df) / coef_med 
+    col_data <- DataFrame(pqn_coef=coef_med[1,])
     colData(df) <- cbind(colData(df), col_data)
     meta_data <- metadata(df)
-    meta_data$processing_history$pqn_normalisation <- return_function_args()
+    meta_data$processing_history$pqn_normalisation <- c(
+        return_function_args(),
+        list('reference_feature_count'=n_ref,
+             'sample_feature_count'=n_samp,
+             'coef_feature_count'=coef_count,
+             'coef_idx'=coef_idx,
+             'coef_idx_name'=coef_idx_name,
+             'computed_ref'=ref_mean
+        )
+    )
     metadata(df) <- meta_data
     df <- return_original_data_structure(df)
     if (!is(df, "SummarizedExperiment")){
         attributes(df)$flags <- as.matrix(col_data)
     }
+    
+    # remove the temporary rownames if we added them earlier
+    if (rm_rownames) {
+        rownames(df)=NULL
+    }
+    
     return(df)
 }

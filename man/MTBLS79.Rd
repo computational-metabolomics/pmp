@@ -4,7 +4,8 @@
 \name{MTBLS79}
 \alias{MTBLS79}
 \title{Direct-infusion mass spectrometry (DIMS) data set}
-\format{A \link[SummarizedExperiment]{RangedSummarizedExperiment-class} 
+\format{
+A \link[SummarizedExperiment]{RangedSummarizedExperiment-class} 
 object. \cr
 \code{assay(MTBLS79)} Peak intensities of the DIMS data set. 
 Contains 172 samples and 2488 features. \cr
@@ -13,7 +14,8 @@ Contains 172 samples and 2488 features. \cr
     \code{Sample_Rep} - \code{character()}, sample replicate code. \cr
     \code{Class} - \code{character()}, sample class labels. \cr
     \code{Class2} - \code{character()}, alternative sample class labels
-    grouping together replicate samples. \cr}
+    grouping together replicate samples. \cr
+}
 \source{
 https://www.ebi.ac.uk/metabolights/MTBLS79
 }
