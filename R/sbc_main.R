@@ -66,6 +66,10 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
         log = log, spar = spar, batch = batch, minQC = minQC)
     QC_fit <- do.call(rbind, QC_fit)
     
+    meta_data <- metadata(df)
+    meta_data$processing_history$QCRSC <- return_function_args()
+    meta_data$processing_history$QCRSC$QC_fit=QC_fit
+    
     # Median value for each fature, and divide it by predicted value
     mpa <- matrixStats::rowMedians(assay(df), na.rm=TRUE)
     QC_fit <- QC_fit/mpa
@@ -74,8 +78,7 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
     assay(df) <- assay(df)/QC_fit
     assay(df)[assay(df) <= 0] <- NA
     
-    meta_data <- metadata(df)
-    meta_data$processing_history$QCRSC <- return_function_args()
+    
     metadata(df) <- meta_data
     df <- return_original_data_structure(df)
     
