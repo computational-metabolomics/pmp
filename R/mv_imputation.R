@@ -131,7 +131,7 @@ mv_imputation <- function(df, method, k=10, rowmax=0.5, colmax=0.5,
     remove these columns using the sample filter tool")
     }
     if (tolower(method) == "knn") {
-        obj <- suppressWarnings(impute.knn(assay(df), k=k, 
+        obj <- (impute.knn(assay(df), k=k, 
             rowmax=rowmax, colmax=colmax, maxp=maxp))
         assay(df) <- obj$data
     } else if (tolower(method) == "rf") {
