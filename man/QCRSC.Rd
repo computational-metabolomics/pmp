@@ -12,7 +12,8 @@ QCRSC(
   spar = 0,
   log = TRUE,
   minQC = 5,
-  qc_label = "QC"
+  qc_label = "QC",
+  spar_lim = c(-1.5, 1.5)
 )
 }
 \arguments{
@@ -47,6 +48,9 @@ correction won't be applied.}
 
 \item{qc_label}{\code{character(1)} or \code{NULL}, class label used to
 identify QC samples.}
+
+\item{spar_lim}{A 2 element numeric vector containing the min and max
+values of spar when searching for an optimum. Default \code{spar_lim = c(-1.5,1.5)}}
 }
 \value{
 Object of class \code{SummarizedExperiment}. If input data are a 
