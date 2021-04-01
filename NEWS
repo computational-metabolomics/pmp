@@ -1,6 +1,12 @@
+Changes 1.3.4
++ Added option to constrain spar values for QCRSC.
+
+Changes 1.2.1 and 1.3.3
++ Account for missing injections in QCRSC.
+
 Changes 1.3.2
-+ Added inputs/outputs for pqn
-+ Fixed glog plot bug
++ Added inputs/outputs for pqn.
++ Fixed glog plot bug.
 
 Changes 0.99.6
 + Updated vignettes.
