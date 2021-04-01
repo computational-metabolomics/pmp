@@ -28,7 +28,8 @@ NULL
 #' (QC) samples required for signal correction within feature per batch. For 
 #' features where signal was measured in less QC samples than threshold signal
 #' correction won't be applied.
-#'
+#' @param spar_lim A 2 element numeric vector containing the min and max
+#'values of spar when searching for an optimum. Default \code{spar_lim = c(-1.5,1.5)}
 #' @return Object of class \code{SummarizedExperiment}. If input data are a 
 #' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
 #' the same R data structure as input with all value of data type 
@@ -45,7 +46,7 @@ NULL
 #' @export
 
 QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
-    minQC = 5, qc_label="QC") {
+    minQC = 5, qc_label="QC", spar_lim = c(-1.5,1.5)) {
     
     df <- check_input_data(df=df, classes=classes)
     
@@ -63,14 +64,15 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
     qc_order <- order[classes == qc_label]
     QC_fit <- lapply(seq_len(nrow(df)), sbcWrapper, qcData = assay(qcData), 
         order = order, qcBatch = qc_batch, qcOrder = qc_order, 
-        log = log, spar = spar, batch = batch, minQC = minQC)
+        log = log, spar = spar, batch = batch, minQC = minQC,
+        spar_lim = spar_lim)
     QC_fit <- do.call(rbind, QC_fit)
     
     meta_data <- metadata(df)
     meta_data$processing_history$QCRSC <- return_function_args()
     meta_data$processing_history$QCRSC$QC_fit=QC_fit
     
-    # Median value for each fature, and divide it by predicted value
+    # Median value for each feature, and divide it by predicted value
     mpa <- matrixStats::rowMedians(assay(df), na.rm=TRUE)
     QC_fit <- QC_fit/mpa
     

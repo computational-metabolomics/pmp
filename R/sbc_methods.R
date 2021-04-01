@@ -31,17 +31,27 @@ logFit <- function (x, a=1, inverse=FALSE) {
 ##' @param spar Smoothing parameter of the fitted curve. Should be in the range
 ##'0 to 1. If set to 0 it will be estimated using leave-one-out
 ##'cross-validation.
+##' @param spar_lim A 2 element numeric vector containing the min and max
+##'values of spar when searching for an optimum. Default \code{spar_lim = c(-1.5,1.5)}
 ##' @return vector of cubic smoothing spline fitted values
 ##' @noRd
 
-splineSmoother <- function(x, y, newX, log=log, a=1, spar) {
+splineSmoother <- function(x, y, newX, log=log, a=1, spar, 
+    spar_lim=c(-1.5,1.5)) {
     if(log == TRUE) {
         y <- logFit(y, a=a)
     }
+    
+    control.spar=list(
+        low = spar_lim[1],
+        high = spar_lim[2]
+    )
+    
     if (spar == 0) {
         # Supress spline fitting CV messages cluttering terminal output
         smoothSplineMessages <- capture.output(sp.obj 
-            <- smooth.spline(x, y, cv=TRUE), file=NULL, type="message")
+            <- smooth.spline(x, y, cv=TRUE,control.spar=control.spar), 
+            file=NULL, type="message")
     } else {
         smoothSplineMessages <- character()
         sp.obj <- smooth.spline(x, y, spar=spar)
@@ -72,11 +82,13 @@ splineSmoother <- function(x, y, newX, log=log, a=1, spar) {
 ##' @param minQC Minimum number of QC samples required for signal correction.
 ##' @param order A numeric vector indicating the order in which samples
 ##'were measured.
+##' @param spar_lim A 2 element numeric vector containing the min and max
+##'values of spar when searching for an optimum. Default \code{spar_lim = c(-1.5,1.5)}
 ##' @return vector of corrected values of selected feature for QC data
 ##' @noRd
 
 sbcWrapper <- function(id, qcData, order, qcBatch, qcOrder, log=log, spar=spar,
-    batch=batch, minQC) {
+    batch=batch, minQC, spar_lim = c(-1.5,1.5)) {
     
     out <- tryCatch ({
 
@@ -108,7 +120,7 @@ sbcWrapper <- function(id, qcData, order, qcBatch, qcOrder, log=log, spar=spar,
         if (length(y) >= minQC) {
             # fit spline to QCs and get predictions for all samples in batch
             outl[batch==nbatch[nb]] <- splineSmoother(x=x, y=y, newX=order[batch==nbatch[nb]], log=log,
-            a=1, spar=spar)
+            a=1, spar=spar, spar_lim=spar_lim)
         } else {
             # otherwise replace with NA
             outl[batch==nbatch[nb]] = NA
