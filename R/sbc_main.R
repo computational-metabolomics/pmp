@@ -60,7 +60,7 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
     minQC = 5, qc_label="QC", spar_lim = c(-1.5,1.5), batch_ref='median_all', 
     batch_method='ratio',replace_zero=NA) {
     
-    df <- pmp:::check_input_data(df=df, classes=classes)
+    df <- check_input_data(df=df, classes=classes)
 
     found0=which(assay(df) == 0)
     assay(df)[found0] <- replace_zero
@@ -74,14 +74,14 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
     qcData <- df[, classes == qc_label]
     qc_batch <- batch[classes == qc_label]
     qc_order <- order[classes == qc_label]
-    QC_fit <- lapply(seq_len(nrow(df)), pmp:::sbcWrapper, qcData = assay(qcData), 
+    QC_fit <- lapply(seq_len(nrow(df)), sbcWrapper, qcData = assay(qcData), 
         order = order, qcBatch = qc_batch, qcOrder = qc_order, 
         log = log, spar = spar, batch = batch, minQC = minQC,
         spar_lim = spar_lim)
     QC_fit <- do.call(rbind, QC_fit)
     
     meta_data <- metadata(df)
-    meta_data$processing_history$QCRSC <- pmp:::return_function_args()
+    meta_data$processing_history$QCRSC <- return_function_args()
     meta_data$processing_history$QCRSC$QC_fit=QC_fit
     
     # Median value for each feature, and divide it by predicted value
