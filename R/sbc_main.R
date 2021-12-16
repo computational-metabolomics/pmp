@@ -30,6 +30,17 @@ NULL
 #' correction won't be applied.
 #' @param spar_lim A 2 element numeric vector containing the min and max
 #'values of spar when searching for an optimum. Default \code{spar_lim = c(-1.5,1.5)}
+#' @param batch_ref A numeric reference value that all batches are corrected to.
+#' Allowed character values include "median_all" (default) to use the median of all input 
+#' samples (including QCs) , "median_qc" to use the median of all qc samples,
+#' and "median_sample" to use the median of all samples excluding QCs as the
+#' reference.
+#' @param batch_method The method to use for correcting batches. Allowed values
+#' include "ratio" (default) to apply the correction using 
+#' division/multiplication or "offset" to apply the correction using 
+#' subtraction/addition.
+#' @param replace_zero A value used to replace all zero values after correction.
+#' Default is NA. Zeros are replaced before fitting, and then replaced at the end.
 #' @return Object of class \code{SummarizedExperiment}. If input data are a 
 #' matrix-like (e.g. an ordinary matrix, a data frame) object, function returns 
 #' the same R data structure as input with all value of data type 
@@ -46,9 +57,13 @@ NULL
 #' @export
 
 QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
-    minQC = 5, qc_label="QC", spar_lim = c(-1.5,1.5)) {
+    minQC = 5, qc_label="QC", spar_lim = c(-1.5,1.5), batch_ref='median_all', 
+    batch_method='ratio',replace_zero=NA) {
     
-    df <- check_input_data(df=df, classes=classes)
+    df <- pmp:::check_input_data(df=df, classes=classes)
+
+    found0=which(assay(df) == 0)
+    assay(df)[found0] <- replace_zero
     
     if (length(which(classes == qc_label)) <= 0) {
         message("QC samples are not defined! Please see help page for
@@ -56,30 +71,52 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
         stop()
     }
     
-    message("The number of NA and <= 0 values in peaksData before QC-RSC: ",
-        sum(is.na(assay(df)) | assay(df) <= 0))
-    
     qcData <- df[, classes == qc_label]
     qc_batch <- batch[classes == qc_label]
     qc_order <- order[classes == qc_label]
-    QC_fit <- lapply(seq_len(nrow(df)), sbcWrapper, qcData = assay(qcData), 
+    QC_fit <- lapply(seq_len(nrow(df)), pmp:::sbcWrapper, qcData = assay(qcData), 
         order = order, qcBatch = qc_batch, qcOrder = qc_order, 
         log = log, spar = spar, batch = batch, minQC = minQC,
         spar_lim = spar_lim)
     QC_fit <- do.call(rbind, QC_fit)
     
     meta_data <- metadata(df)
-    meta_data$processing_history$QCRSC <- return_function_args()
+    meta_data$processing_history$QCRSC <- pmp:::return_function_args()
     meta_data$processing_history$QCRSC$QC_fit=QC_fit
     
     # Median value for each feature, and divide it by predicted value
-    mpa <- matrixStats::rowMedians(assay(df), na.rm=TRUE)
-    QC_fit <- QC_fit/mpa
+    if (batch_ref=='median_all') {
+        # median of all samples (including QCs)
+        mpa <- matrixStats::rowMedians(assay(df), na.rm=TRUE)
+    } else if (batch_ref=='median_qc') {
+        # median of QC samples
+        mpa <- matrixStats::rowMedians(assay(qcData), na.rm=TRUE)
+    } else if (batch_ref =='median_sample') {
+        sData=df[,classes!=qc_label]
+        mpa <- matrixStats::rowMedians(assay(sData), na.rm=TRUE)
+    } else if (is.numeric(batch_ref)) {
+        # assume mpa is provided, so use the value
+        mpa=batch_ref
+    } else {
+        stop('Provided batch_ref must be numeric, "median_all", "median_qc" or "median_sample".')
+    }
     
-    # Divide measured value by correction factor
-    assay(df) <- assay(df)/QC_fit
-    assay(df)[assay(df) <= 0] <- NA
+     if (batch_method == 'ratio') {
+        # Divide measured value by correction factor
+        assay(df) <- assay(df)/QC_fit
+        # scale up to desired value
+        assay(df) <- assay(df)*mpa
+
+    } else if (batch_method == 'offset') {
+        # subtract fit, add offset
+        assay(df) <- (assay(df)-QC_fit) + mpa
+    } else {
+        stop('batch_method must be "offset" or "ratio".')
+    }
     
+    if (length(found0)>0) {
+        assay(df)[found0] <- 0
+    }
     
     metadata(df) <- meta_data
     df <- return_original_data_structure(df)

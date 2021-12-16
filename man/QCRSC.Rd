@@ -13,7 +13,10 @@ QCRSC(
   log = TRUE,
   minQC = 5,
   qc_label = "QC",
-  spar_lim = c(-1.5, 1.5)
+  spar_lim = c(-1.5, 1.5),
+  batch_ref = "median_all",
+  batch_method = "ratio",
+  replace_zero = NA
 )
 }
 \arguments{
@@ -51,6 +54,20 @@ identify QC samples.}
 
 \item{spar_lim}{A 2 element numeric vector containing the min and max
 values of spar when searching for an optimum. Default \code{spar_lim = c(-1.5,1.5)}}
+
+\item{batch_ref}{A numeric reference value that all batches are corrected to.
+Allowed character values include "median_all" (default) to use the median of all input 
+samples (including QCs) , "median_qc" to use the median of all qc samples,
+and "median_sample" to use the median of all samples excluding QCs as the
+reference.}
+
+\item{batch_method}{The method to use for correcting batches. Allowed values
+include "ratio" (default) to apply the correction using 
+division/multiplication or "offset" to apply the correction using 
+subtraction/addition.}
+
+\item{replace_zero}{A value used to replace all zero values after correction.
+Default is NA. Zeros are replaced before fitting, and then replaced at the end.}
 }
 \value{
 Object of class \code{SummarizedExperiment}. If input data are a 

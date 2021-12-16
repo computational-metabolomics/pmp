@@ -1,7 +1,7 @@
 Package: pmp
 Type: Package
 Title: Peak Matrix Processing and signal batch correction for metabolomics datasets
-Version: 1.7.0
+Version: 1.7.1
 Authors@R: c(
     person(
         c("Andris"),
@@ -50,7 +50,7 @@ Imports: stats, impute, pcaMethods, missForest, ggplot2, methods,
     SummarizedExperiment, S4Vectors, matrixStats, grDevices, reshape2, utils
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests: 
     testthat,
     covr,
