@@ -30,7 +30,8 @@ NULL
 #' correction won't be applied.
 #' @param spar_lim A 2 element numeric vector containing the min and max
 #'values of spar when searching for an optimum. Default \code{spar_lim = c(-1.5,1.5)}
-#' @param batch_ref A numeric reference value that all batches are corrected to.
+#' @param batch_ref Numeric reference value(s) that all batches are corrected to. Must
+#' be of length 1, or length equal to the number of features.
 #' Allowed character values include "median_all" (default) to use the median of all input 
 #' samples (including QCs) , "median_qc" to use the median of all qc samples,
 #' and "median_sample" to use the median of all samples excluding QCs as the
@@ -95,8 +96,15 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
         sData=df[,classes!=qc_label]
         mpa <- matrixStats::rowMedians(assay(sData), na.rm=TRUE)
     } else if (is.numeric(batch_ref)) {
-        # assume mpa is provided, so use the value
-        mpa=batch_ref
+        # assume mpa is provided, so use it
+        if (length(batch_ref)==1) {
+            mpa=rep(batch_ref,nrow(df))
+        }
+        # check length
+        if (length(mpa) != nrow(df)){
+            stop('if numeric length(batch_ref) must be equal to 1, or equal to the number of features.')
+        }
+        
     } else {
         stop('Provided batch_ref must be numeric, "median_all", "median_qc" or "median_sample".')
     }

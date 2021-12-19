@@ -55,7 +55,8 @@ identify QC samples.}
 \item{spar_lim}{A 2 element numeric vector containing the min and max
 values of spar when searching for an optimum. Default \code{spar_lim = c(-1.5,1.5)}}
 
-\item{batch_ref}{A numeric reference value that all batches are corrected to.
+\item{batch_ref}{Numeric reference value(s) that all batches are corrected to. Must
+be of length 1, or length equal to the number of features.
 Allowed character values include "median_all" (default) to use the median of all input 
 samples (including QCs) , "median_qc" to use the median of all qc samples,
 and "median_sample" to use the median of all samples excluding QCs as the
