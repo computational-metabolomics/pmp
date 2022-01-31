@@ -105,7 +105,7 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
             }
             mpa=batch_ref
         } else {
-            mpa=rep(mpa,nrow(df))
+            mpa=rep(batch_ref,nrow(df))
         }
         
     } else {
@@ -113,7 +113,7 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
     }
     
     # convert mpa to matrix
-    mpa = matrix(batch_ref,nrow=length(batch_ref),ncol=ncol(df),byrow=FALSE)
+    mpa = matrix(mpa,nrow=length(mpa),ncol=ncol(df),byrow=FALSE)
     
     if (batch_method == 'ratio') {
         # Divide measured value by correction factor
