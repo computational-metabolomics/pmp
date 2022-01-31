@@ -62,7 +62,7 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
     batch_method='ratio',replace_zero=NA) {
     
     df <- check_input_data(df=df, classes=classes)
-
+    
     found0=which(assay(df) == 0)
     assay(df)[found0] <- replace_zero
     
@@ -103,19 +103,24 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
             if (length(batch_ref) != nrow(df)){
                 stop('if numeric length(batch_ref) must be equal to 1, or equal to the number of features.')
             }
-            mpa = matrix(batch_ref,nrow=2,ncol=ncol(df),byrow=FALSE)
+            mpa=batch_ref
+        } else {
+            mpa=rep(mpa,nrow(df))
         }
-
+        
     } else {
         stop('Provided batch_ref must be numeric, "median_all", "median_qc" or "median_sample".')
     }
     
-     if (batch_method == 'ratio') {
+    # convert mpa to matrix
+    mpa = matrix(batch_ref,nrow=length(batch_ref),ncol=ncol(df),byrow=FALSE)
+    
+    if (batch_method == 'ratio') {
         # Divide measured value by correction factor
         assay(df) <- assay(df)/QC_fit
         # scale up to desired value
         assay(df) <- assay(df)*mpa
-
+        
     } else if (batch_method == 'offset') {
         # subtract fit, add offset
         assay(df) <- (assay(df)-QC_fit) + mpa
