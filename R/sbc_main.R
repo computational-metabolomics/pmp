@@ -86,25 +86,26 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
     meta_data$processing_history$QCRSC$QC_fit=QC_fit
     
     # Median value for each feature, and divide it by predicted value
-    if (batch_ref=='median_all') {
+    
+    if (batch_ref[1]=='median_all') {
         # median of all samples (including QCs)
         mpa <- matrixStats::rowMedians(assay(df), na.rm=TRUE)
-    } else if (batch_ref=='median_qc') {
+    } else if (batch_ref[1]=='median_qc') {
         # median of QC samples
         mpa <- matrixStats::rowMedians(assay(qcData), na.rm=TRUE)
-    } else if (batch_ref =='median_sample') {
+    } else if (batch_ref[1] =='median_sample') {
         sData=df[,classes!=qc_label]
         mpa <- matrixStats::rowMedians(assay(sData), na.rm=TRUE)
     } else if (is.numeric(batch_ref)) {
         # assume mpa is provided, so use it
-        if (length(batch_ref)==1) {
-            mpa=rep(batch_ref,nrow(df))
+        if (length(batch_ref)>1) {
+            # check length
+            if (length(batch_ref) != nrow(df)){
+                stop('if numeric length(batch_ref) must be equal to 1, or equal to the number of features.')
+            }
+            mpa = matrix(batch_ref,nrow=2,ncol=ncol(df),byrow=FALSE)
         }
-        # check length
-        if (length(mpa) != nrow(df)){
-            stop('if numeric length(batch_ref) must be equal to 1, or equal to the number of features.')
-        }
-        
+
     } else {
         stop('Provided batch_ref must be numeric, "median_all", "median_qc" or "median_sample".')
     }
