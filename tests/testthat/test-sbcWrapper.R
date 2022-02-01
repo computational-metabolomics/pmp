@@ -43,3 +43,6 @@ test_that ("sbcWrapper returns error", {
   expect_error(sbcWrapper(id=4, qcData=qcData, order=order, qcOrder=qc_order, qcBatch=qc_batch,
                     log=TRUE, spar=1, batch=batch, minQC=4))
 })
+
+
+

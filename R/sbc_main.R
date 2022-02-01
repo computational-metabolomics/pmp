@@ -132,6 +132,8 @@ QCRSC <- function(df, order, batch, classes, spar = 0, log = TRUE,
         assay(df)[found0] <- 0
     }
     
+    meta_data$processing_history$QCRSC$computed_batch_ref=mpa[,1]
+    
     metadata(df) <- meta_data
     df <- return_original_data_structure(df)
     
