@@ -70,7 +70,7 @@ test_that("PQN computation of reference works as expected for mean and median",{
 })
 
 
-test_that("PQN check reference when appling additional filtering",{
+test_that("PQN check reference when appling additional filtering.",{
   out <- pqn_normalisation(df=testData$data, classes=testData$class, 
     qc_label="QC",qc_frac = 1,sample_frac=1,ref_method = 'mean')
   mean_ref=attributes(out)$processing_history$pqn_normalisation$computed_ref
@@ -81,3 +81,24 @@ test_that("PQN check reference when appling additional filtering",{
   median_ref=attributes(out)$processing_history$pqn_normalisation$computed_ref
   expect_equal(median_ref[[1]],10773.31,tolerance = 0.0005)
 })
+
+
+
+test_that("PQN throws an error if incorrect ref method provided.",{
+    expect_error(out <- pqn_normalisation(df=testData$data, classes=testData$class, 
+        qc_label="QC",qc_frac = 1,sample_frac=1,ref_method = 'cake'))
+})
+
+test_that("PQN throws an error if QC filtering is too strict.",{
+    expect_error(out <- pqn_normalisation(df=testData$data, classes=testData$class, 
+        qc_label="QC",qc_frac = 1.1,sample_frac=1,ref_method = 'median'))
+})
+
+test_that("PQN throws an error if sample filtering is too strict.",{
+    expect_error(out <- pqn_normalisation(df=testData$data, classes=testData$class, 
+        qc_label="QC",qc_frac = 0.1,sample_frac=1.1,ref_method = 'median'))
+})
+
+
+
+
