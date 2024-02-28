@@ -1,7 +1,7 @@
 Package: pmp
 Type: Package
 Title: Peak Matrix Processing and signal batch correction for metabolomics datasets
-Version: 1.14.0
+Version: 1.14.1
 Authors@R: c(
     person(
         c("Andris"),
