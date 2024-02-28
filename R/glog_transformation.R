@@ -125,11 +125,12 @@ glog_plot_optimised_lambda <- function(df, optimised_lambda, classes, qc_label,
         length.out=plot_grid))
     sse_df$SSE <- vapply(X=sse_df$lambda, FUN=SSE, y0=0, y=assay(df_qc), 
         FUN.VALUE=numeric(1))
-    g <- ggplot(data=sse_df, aes_string(x='lambda',y='SSE')) +
+    g <- ggplot(data=sse_df, aes(x=data[['lambda']],y=data[['SSE']])) +
         geom_vline(xintercept=optimised_lambda, color="red") +
-        geom_line(size=1.1) + theme_bw() +
+        geom_line(linewidth=1.1) + theme_bw() +
         labs (title="glog parameter optimisation",
-            caption=paste("optimum = ",round(optimised_lambda,2), sep=""))
+            caption=paste("optimum = ",round(optimised_lambda,2), sep=""))+
+        xlab('lambda') + ylab('SSE')
     return (g)
 }
 

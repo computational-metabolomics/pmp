@@ -43,13 +43,13 @@ sbc_plot <- function(df, corrected_df, classes, batch, indexes = NULL,
     manual_color <- c("#386cb0", "#ef3b2c", "#7fc97f", "#fdb462", "#984ea3", 
         "#a6cee3", "#778899", "#fb9a99", "#ffff33")
     gg_THEME <- theme(panel.background = element_blank(), 
-        panel.grid.major = element_line(color = "gray80", size = 0.3), 
+        panel.grid.major = element_line(color = "gray80", linewidth = 0.3), 
         axis.line = element_line(color = "black"), 
         axis.text = element_text(color = "black"), 
         axis.title = element_text(color = "black"), 
         panel.grid.minor.x = element_line(color = "gray80", 
-        size = 0.3, linetype = "dashed"), 
-        panel.grid.minor.y = element_line(color = "gray80", size = 0.3))
+            linewidth = 0.3, linetype = "dashed"), 
+        panel.grid.minor.y = element_line(color = "gray80", linewidth = 0.3))
     plots <- list()
     if (is.null(indexes) & nrow(df) >= 100) {
         indexes <- seq_len(100)
@@ -64,7 +64,10 @@ sbc_plot <- function(df, corrected_df, classes, batch, indexes = NULL,
         A <- melt(A, id.vars = c("x", "batch", "shapes"))
         
         plots[[peakn]] <- ggplot(A, 
-            aes_(~x, ~value, col = ~batch, shape = ~shapes)) + 
+            aes(x = .data[['x']], 
+                y = .data[['value']], 
+                col = .data[['batch']], 
+                shape = .data[['shapes']])) + 
             facet_grid(variable ~ .) + geom_point() + 
             scale_shape_identity() + geom_point(size=2) +
             scale_colour_manual(values = manual_color) + 
