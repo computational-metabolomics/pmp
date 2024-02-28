@@ -19,8 +19,8 @@ test_that("Glog function returns expected output", {
     classes=testData$class, 
     qc_label="QC")
   
-  expect_equal(graph[[9]]$x, "lambda")
-  expect_equal(graph[[9]]$y, "SSE")
+  expect_equal(graph$labels$x, "lambda")
+  expect_equal(graph$labels$y, "SSE")
   
   attributes(out)$processing_history <- NULL
   expect_equal (as.data.frame(out), testData$glog_transformation)
