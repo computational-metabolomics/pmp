@@ -147,6 +147,9 @@ pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL, qc_frac=0,
         
         # average the reference samples
         ref_mean <- calculate_ref_mean(df_qc=assay(ref),ref_method)
+    } else {
+        ref = df
+        n_ref = NA
     }
     
     # filter the samples before calculating coefficient
