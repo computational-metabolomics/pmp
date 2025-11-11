@@ -1,3 +1,6 @@
+Changes 1.22.1
+- fix broken test due to changes in dependency
+
 Changes 1.15.1
 - fix plots due to breaking changes in ggplot2
 
