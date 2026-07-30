@@ -71,13 +71,35 @@ test_that("PQN computation of reference works as expected for mean and median",{
 
 
 test_that("PQN check reference when appling additional filtering",{
-  out <- pqn_normalisation(df=testData$data, classes=testData$class, 
+  out <- pqn_normalisation(df=testData$data, classes=testData$class,
     qc_label="QC",qc_frac = 1,sample_frac=1,ref_method = 'mean')
   mean_ref=attributes(out)$processing_history$pqn_normalisation$computed_ref
   expect_equal(mean_ref[[1]],19855.36,tolerance = 0.0005)
-  
-  out <- pqn_normalisation(df=testData$data, classes=testData$class, 
+
+  out <- pqn_normalisation(df=testData$data, classes=testData$class,
     qc_label="QC",qc_frac = 1,sample_frac=1,ref_method = 'median')
   median_ref=attributes(out)$processing_history$pqn_normalisation$computed_ref
   expect_equal(median_ref[[1]],10773.31,tolerance = 0.0005)
+})
+
+test_that("PQN normalisation accepts ref_mean", {
+  ref_out <- pqn_normalisation(df=testData$data, classes=testData$class,
+    qc_label="QC")
+  ref_mean <- attributes(ref_out)$processing_history$pqn_normalisation$computed_ref
+
+  out <- pqn_normalisation(df=testData$data, classes=testData$class,
+    qc_label="QC", ref_mean=ref_mean)
+
+  attributes(out)$processing_history <- NULL
+  attributes(ref_out)$processing_history <- NULL
+  expect_equal(out, ref_out)
+})
+
+test_that("PQN normalisation errors when ref_mean has no names", {
+  ref_mean <- unname(rowMeans(testData$data, na.rm=TRUE))
+  expect_error(
+    pqn_normalisation(df=testData$data, classes=testData$class,
+      qc_label="QC", ref_mean=ref_mean),
+    "ref_mean must be a named numeric vector"
+  )
 })

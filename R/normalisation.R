@@ -148,10 +148,15 @@ pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL, qc_frac=0,
         # average the reference samples
         ref_mean <- calculate_ref_mean(df_qc=assay(ref),ref_method)
     } else {
-        ref = df
-        n_ref = NA
+        # user-supplied ref_mean, no reference sample matrix was computed
+        if (is.null(names(ref_mean))) {
+            stop(paste0('ref_mean must be a named numeric vector, with names ',
+            'matching the feature (row) names of df.')
+            )
+        }
+        n_ref <- length(ref_mean)
     }
-    
+
     # filter the samples before calculating coefficient
     df_filt = filter_peaks_by_fraction(
         df=df,
@@ -171,7 +176,7 @@ pqn_normalisation <- function(df, classes, qc_label, ref_mean=NULL, qc_frac=0,
     }
 
     ## only keep features that survive both filters
-    U=intersect(rownames(assay(df_filt)),rownames(assay(ref)))
+    U=intersect(rownames(assay(df_filt)),names(ref_mean))
     ref_mean=ref_mean[U]
     df_filt=df_filt[U,]
     
