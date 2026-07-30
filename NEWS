@@ -1,3 +1,7 @@
+Changes 1.25.1
+- fix user-supplied reference for PQN
+- reset random seed state after knn
+
 Changes 1.23.1
 - fix broken test due to changes in RF imputation
 
