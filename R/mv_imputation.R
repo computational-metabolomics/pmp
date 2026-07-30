@@ -131,9 +131,15 @@ mv_imputation <- function(df, method, k=10, rowmax=0.5, colmax=0.5,
     remove these columns using the sample filter tool")
     }
     if (tolower(method) == "knn") {
-        obj <- (impute.knn(assay(df), k=k, 
+        obj <- (impute.knn(assay(df), k=k,
             rowmax=rowmax, colmax=colmax, maxp=maxp))
         assay(df) <- obj$data
+        # reset rng
+        if (!is.null(obj$rng.state)) {
+            assign(".Random.seed", obj$rng.state, envir=.GlobalEnv)
+        } else if (exists(".Random.seed", envir=.GlobalEnv)) {
+            rm(".Random.seed", envir=.GlobalEnv)
+        }
     } else if (tolower(method) == "rf") {
         mf_out <- missForest(t(assay(df)))
         print(mf_out$OOBerror)

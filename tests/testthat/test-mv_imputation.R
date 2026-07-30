@@ -63,3 +63,19 @@ test_that("Missing value imputation stops if wrong method is selected", {
   out <- testData$data
   expect_error(out <- mv_imputation(df=out, method="Kn"))
 })
+
+test_that("knn imputation does not alter the caller's RNG state", {
+  set.seed(123)
+  before <- .Random.seed
+  out <- mv_imputation(df=testData$data, method="knn", check_df=FALSE)
+  after <- .Random.seed
+  expect_identical(before, after)
+})
+
+test_that("knn imputation leaves no .Random.seed if none existed beforehand", {
+  if (exists(".Random.seed", envir=.GlobalEnv)) {
+    rm(".Random.seed", envir=.GlobalEnv)
+  }
+  out <- mv_imputation(df=testData$data, method="knn", check_df=FALSE)
+  expect_false(exists(".Random.seed", envir=.GlobalEnv, inherits=FALSE))
+})
